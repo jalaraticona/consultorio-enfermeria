@@ -1,0 +1,19 @@
+create table persona( ci int(20) NOT NULL PRIMARY KEY, expedido varchar(20), nombre varchar(100), paterno varchar(100), materno varchar(100), fec_nac date, sexo varchar(20))
+
+create table paciente( id_enf int NOT NULL AUTO_INCREMENT PRIMARY KEY, gestion int, ci int(20), FOREIGN KEY (ci) REFERENCES persona(ci) )
+
+create table paciente( id_paciente int NOT NULL AUTO_INCREMENT PRIMARY KEY, fec_reg date, ci int(20), FOREIGN KEY (ci) REFERENCES persona(ci) )
+
+create table usuarios( id_usuario int NOT NULL AUTO_INCREMENT PRIMARY KEY, user varchar(50), pass varchar(50), tipo varchar(20), estado varchar(20), id_enf int, FOREIGN KEY (id_enf) REFERENCES enfermera(id_enf) )
+
+create table insumos( id_insumo int NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo varchar(100), detalle text, fec_ing date, fec_exp date, stock int, id_enf int, FOREIGN KEY (id_enf) REFERENCES enfermera(id_enf) )
+
+create table servicio( id_servicio int NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(100), detalle text, costo float, tipo varchar(100) )
+
+create table curacion( id_curacion int NOT NULL AUTO_INCREMENT PRIMARY KEY, detalle text, id_servicio int, FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio) )
+
+create table vacuna( id_vacuna int NOT NULL AUTO_INCREMENT PRIMARY KEY, tipo varchar(100), detalle text, id_servicio int, FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio) )
+
+create table control( id_control int NOT NULL AUTO_INCREMENT PRIMARY KEY, peso float, talla float, id_servicio int, FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio) )
+
+create table registraHistoria( id_historia int NOT NULL AUTO_INCREMENT PRIMARY KEY, fec_reg date, id_enf int, id_paciente int, id_servicio int, FOREIGN KEY (id_enf) REFERENCES enfermera(id_enf), FOREIGN KEY (id_paciente) REFERENCES paciente(id_paciente), FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio) )
