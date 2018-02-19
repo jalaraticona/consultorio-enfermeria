@@ -53,7 +53,7 @@ $pdf->SetFont('helvetica', '', 9);
 
 // -----------------------------------------------------------------------------
 
-$an = $_POST["anio"];
+$anio_actual = $_POST["anio"];
 $me = $_POST["mes"];
 $ti = $_POST["tipo"];
 
@@ -70,7 +70,7 @@ $tbl = <<<EOD
 		<td><b>Responsable:</b> $nombre</td>
 	</tr>
 	<tr>
-		<td><b>Gestion:</b> $an</td>
+		<td><b>Gestion:</b> $anio_actual</td>
 		<td><b>Mes:</b> $me</td>
 		<td><b>Tipo de Reporte:</b> $ti</td>
 	</tr>
@@ -89,6 +89,26 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo FROM registrahistoria as re, servicio as se WHERE re.id_servicio = se.id_servicio and year(re.fec_reg) = ".$anio_actual." ";
+$datos = $u->getDatosPacienteSql($sql);
+$cur = 0; $iny = 0; $ven = 0; $sue = 0; $vac = 0; $neb = 0;
+if(sizeof($datos) > 0){
+	foreach ($datos as $dato) {
+		if($dato->nombre == "curacion pequeña" || $dato->nombre == "curacion mediana" || $dato->nombre == "retiro de puntos"){
+			$cur++;
+		}
+		if($dato->tipo == "vacuna"){
+			$vac++;
+		}
+		if($dato->nombre == "inyectable"){
+			$iny++;
+		}
+		if($dato->nombre == "nebulizacion"){
+			$neb++;
+		}
+	}
+}
+
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
@@ -100,23 +120,27 @@ $tbl = <<<EOD
 	<tbody>
 		<tr>
 			<td>Curaciones</td>
-			<td></td>
+			<td>$cur</td>
 		</tr>
 		<tr>
 			<td>Inyectables vía IM</td>
-			<td></td>
+			<td>$iny</td>
 		</tr>
 		<tr>
 			<td>Inyectables v+ia IV</td>
-			<td></td>
+			<td>$iny</td>
 		</tr>
 		<tr>
 			<td>Venoclisis y administración de sueros</td>
-			<td></td>
+			<td>$ven</td>
 		</tr>
 		<tr>
 			<td>Nebulización</td>
-			<td></td>
+			<td>$neb</td>
+		</tr>
+		<tr>
+			<td>Vacunas</td>
+			<td>$vac</td>
 		</tr>
 	</tbody>
 </table>
@@ -131,6 +155,42 @@ $tbl=<<<EOD
 	</tr>
 </table>
 EOD;
+
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo FROM registrahistoria as re, servicio as se WHERE re.id_servicio = se.id_servicio and se.nombre = 'difteria' and year(re.fec_reg) = ".$anio_actual." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
+$segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
+$terfefu = 0; $terfede = 0; $termafu = 0; $termade = 0;
+$cuafefu = 0; $cuafede = 0; $cuamafu = 0; $cuamade = 0;
+$quifefu = 0; $quifede = 0; $quimafu = 0; $quimade = 0;
+
+if(sizeof($datos) > 0){
+	/*foreach ($datos as $dato) {
+		if($dato->nombre == "curacion pequeña" || $dato->nombre == "curacion mediana" || $dato->nombre == "retiro de puntos"){
+			$cur++;
+		}
+		if($dato->tipo == "vacuna"){
+			$vac++;
+		}
+		if($dato->nombre == "inyectable"){
+			$iny++;
+		}
+		if($dato->nombre == "nebulizacion"){
+			$neb++;
+		}
+	}*/
+}
+$totpri = $prifede + $prifefu + $primade + $primafu;
+$totseg = $segfede + $segfefu + $segmade + $segmafu;
+$totter = $terfede + $terfefu + $termade + $termafu;
+$totcua = $cuafede + $cuafefu + $cuamade + $cuamafu;
+$totqui = $quifede + $quifefu + $quimade + $quimafu;
+
+$totfede = $prifede + $segfede + $terfede + $cuafede + $quifede;
+$totfefu = $prifefu + $segfefu + $terfefu + $cuafefu + $quifefu;
+$totmade = $primade + $segmade + $termade + $cuamade + $quimade;
+$totmafu = $primafu + $segmafu + $termafu + $cuamafu + $quimafu;
+$total = $totfede + $totmade + $totfefu + $totmafu;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
@@ -158,51 +218,51 @@ $tbl=<<<EOD
 		</tr>
 		<tr>
 			<td>1RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 		<tr>
 			<td>2RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$segfede</td>
+			<td>$segmade</td>
+			<td>$segfefu</td>
+			<td>$segmafu</td>
+			<td>$totseg</td>
 		</tr>
 		<tr>
 			<td>3RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$terfede</td>
+			<td>$termade</td>
+			<td>$terfefu</td>
+			<td>$termafu</td>
+			<td>$totter</td>
 		</tr>
 		<tr>
 			<td>4RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$cuafede</td>
+			<td>$cuamade</td>
+			<td>$cuafefu</td>
+			<td>$cuamafu</td>
+			<td>$totcua</td>
 		</tr>
 		<tr>
 			<td>5RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$quifede</td>
+			<td>$quimade</td>
+			<td>$quifefu</td>
+			<td>$quimafu</td>
+			<td>$totqui</td>
 		</tr>
 		<tr>
 			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$totfede</td>
+			<td>$totmade</td>
+			<td>$totfefu</td>
+			<td>$totmafu</td>
+			<td>$total</td>
 		</tr>
 	</tbody>
 </table>

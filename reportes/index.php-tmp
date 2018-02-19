@@ -49,18 +49,18 @@ $data = json_encode($data);
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
           ['Year', 'Vacunas', 'Curaciones', 'Nebulizaciones'],
-          ['Enero',  1000,      400,500],
-          ['Febrero',  1170,      460,500],
-          ['Marzo',  660,       1120,500],
-          ['Abril',  760,       120,500],
-          ['Mayo',  160,       110,500],
-          ['Junio',  460,       220,500],
-          ['Julio',  600,       420,500],
-          ['Agosto',  400,       190,500],
-          ['Septiembre',  60,       820,500],
-          ['Octubre',  210,       870,500],
-          ['Noviembre',  100,       650,500],
-          ['Diciembre',  1030,      760,500]
+          ['Enero',  1,      4,7],
+          ['Febrero',  11,      6,3],
+          ['Marzo',  6,       1,8],
+          ['Abril',  7,       2,9],
+          ['Mayo',  1,       1,12],
+          ['Junio',  4,       2,8],
+          ['Julio',  6,       4,6],
+          ['Agosto',  4,       9,1],
+          ['Septiembre',  9,       8,2],
+          ['Octubre',  2,       7,8],
+          ['Noviembre',  1,       6,3],
+          ['Diciembre',  13,      7,5]
         ]);
 
         var options = {
