@@ -144,7 +144,7 @@ $data = json_encode($data);
 												$i = 0;
 												foreach ($meses as $val) {
 													$a = $i + 1;
-												    echo "<option value=".$a.">".$meses[$i]."</option>";
+												    echo "<option value=".$a.">".$val."</option>";
 												    $i++;
 												}
 												?>

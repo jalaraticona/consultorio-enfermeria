@@ -72,7 +72,7 @@ define('PDF_HEADER_TITLE', 'Universidad Mayor de San Andrés');
 /**
  * Header description string.
  */
-define('PDF_HEADER_STRING', "Facultad de Medicina, Enfermería, Nutrición y Tecnología Médica\nCarrera de Enfermería");
+define('PDF_HEADER_STRING', "Facultad de Medicina, Enfermería, Nutrición y Tecnología Médica\nCarrera de Enfermería\nConsultorio de Enfermería");
 
 /**
  * Document unit of measure [pt=point, mm=millimeter, cm=centimeter, in=inch].
