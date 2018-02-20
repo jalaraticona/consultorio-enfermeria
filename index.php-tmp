@@ -19,22 +19,6 @@ if (isset($_SESSION["id"])) {
 		</style>
 	</head>
 	<body class="landing">
-		<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						<h4 class="modal-title" id="myModalLabel">Log In</h4>
-					</div>
-					<div class="modal-body">
-						<h1>Texto #manosenelcódigo</h1>
-					</div>
-					<div class="modal-footer">
-						<h4>pie de página</h4>
-					</div>
-				</div>
-			</div>
-		</div>
 		<div id="page-wrapper">
 			<!-- Header -->
 				<header id="header" class="alt">
@@ -43,9 +27,13 @@ if (isset($_SESSION["id"])) {
 						<ul>
 							<li>
 								<a href="#" class="icon fa-angle-down">Acerca de</a>
+								<ul>
+								    <li><a href="">Facebook Enfermería</a></li>
+								    <li><a href="">Web Enfermería</a></li>
+								    <li><a href="">Acerca del sistema</a></li>
+								</ul>
 							</li>
 							<li><a href="IniciarSesion.php" class="button">Iniciar Sesion</a></li>
-							<li><a href="javascript:void(0);" data-toggle="modal" data-target="#modal">Normal</a></li>
 						</ul>
 					</nav>
 				</header>
@@ -136,11 +124,11 @@ if (isset($_SESSION["id"])) {
 								<div class="6u 12u(narrower)">
 
 									<section class="box special">
-										<span class="image featured"><img src="images/pic02.jpg" alt="" /></span>
-										<h3>Sed lorem adipiscing</h3>
-										<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+										<span class="image featured"><img src="images/banner.jpg" alt="" /></span>
+										<h3>Consultorio de la carrera</h3>
+										<p>Foto consultorio de Enfermería.</p>
 										<ul class="actions">
-											<li><a href="#" class="button alt">Learn More</a></li>
+											<li><a href="#" class="button alt">Más información</a></li>
 										</ul>
 									</section>
 
@@ -148,11 +136,11 @@ if (isset($_SESSION["id"])) {
 								<div class="6u 12u(narrower)">
 
 									<section class="box special">
-										<span class="image featured"><img src="images/pic03.jpg" alt="" /></span>
-										<h3>Accumsan integer</h3>
-										<p>Integer volutpat ante et accumsan commophasellus sed aliquam feugiat lorem aliquet ut enim rutrum phasellus iaculis accumsan dolore magna aliquam veroeros.</p>
+										<span class="image featured"><img src="images/banner.jpg" alt="" /></span>
+										<h3>Inauguración carrera</h3>
+										<p>Dia de inauguración por parte de autoridades de la carrera de Enfermería.</p>
 										<ul class="actions">
-											<li><a href="#" class="button alt">Learn More</a></li>
+											<li><a href="#" class="button alt">Más información</a></li>
 										</ul>
 									</section>
 

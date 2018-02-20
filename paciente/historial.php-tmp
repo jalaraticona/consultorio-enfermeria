@@ -6,11 +6,13 @@ if (!isset($_SESSION["id"])) {
 if (!isset($_GET["ci"])) {
 	header("Location: index.php");
 }
-$u     = new usuario();
-$sql   = "SELECT rh.fec_reg, pe.ci, pe.nombre, pe.paterno, pe.materno, pe.fec_nac, pe.sexo, pa.id_paciente, se.nombre as servicio, se.tipo FROM registrahistoria as rh, persona as pe, paciente as pa, servicio as se WHERE pe.ci = pa.ci and pa.ci = ".$_GET['ci']." and rh.id_paciente = pa.id_paciente and se.id_servicio = rh.id_servicio ";
-$datos = $u->getDatosPacienteSql($sql);
+$u      = new usuario();
+$sql    = "SELECT * FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$_GET['ci']." ";
+$datos  = $u->getDatosPacienteSql($sql);
+$sql    = "SELECT re.fec_reg as fecha1, re.motivo, re.procedencia, re.lugar, re.dosis, se.nombre, se.tipo, pa.fec_reg as fecha2 FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$_GET['ci']." ";
+$datos2 = $u->getDatosPacienteSql($sql);
 if (sizeof($datos) == 0) {
-	header("Location: index.php")
+	header("Location: index.php");
 }
 ?>
 <!DOCTYPE HTML>
@@ -35,15 +37,7 @@ if (sizeof($datos) == 0) {
 					<nav id="nav">
 						<ul>
 							<li><a href="../principal/index.php">Inicio</a></li>
-							<li>
-								<a href="#" class="icon fa-angle-down">Operaciones</a>
-								<ul>
-									<li><a href="#">Agregar</a></li>
-									<li><a href="#">Contact</a></li>
-									<li><a href="#">Elements</a></li>
-								</ul>
-							</li>
-							<li><a href="../principal/index.php" class="button">Volver Atras</a></li>
+							<li><a href="../paciente/index.php" class="button">Volver Atras</a></li>
 						</ul>
 					</nav>
 				</header>
@@ -51,102 +45,38 @@ if (sizeof($datos) == 0) {
 			<!-- Main -->
 				<section id="main" class="container">
 					<header>
-						<h2>Lista de Pacientes Registrados</h2>
+						<h2>Resgistro de consultas del paciente</h2>
 					</header>
 					<div class="row">
 						<div class="12u">
 
 							<!-- Text -->
 								<section class="box">
-									<h4>Historia Clínica</h4>
-									<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
 									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>Nro.</th>
-													<th>Nombres</th>
-													<th>Apellido Paterno</th>
-													<th>Apellido Materno</th>
-													<th>C.I.</th>
-													<th>Fecha de Nacimiento</th>
-													<th>Sexo</th>
-													<th>Accion</th>
-													<th>Realizar Atención</th>
-													<th>Historia clinica</th>
-												</tr>
-											</thead>
-											<tbody>
-<?php
-$cont = 0;
-foreach ($datos as $dato) {
-	$cont++;
-	?>
-														<tr>
-															<td><?php echo $cont?></td>
-															<td><?php echo $dato->nombre?></td>
-															<td><?php echo $dato->paterno?></td>
-															<td><?php echo $dato->materno?></td>
-															<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
-															<td><?php echo $dato->fec_nac?></td>
-															<td><?php echo $dato->sexo?></td>
-															<td><a href="edit.php?ci=<?php echo $dato->ci?>" class="icon fa-pencil">editar</a><br>
-															<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
-															<td><a href="../atencion/historia.php?ci=<?php echo $dato->ci?>" class="icon fa-user"></a></td>
-															<td>
-															<a href="historial.php?ci=<?php echo $dato->ci?>" class="icon fa-file"></a>
-															</td>
-														</tr>
-	<?php
-}
-?>
-<tr>
-													<td colspan="10">
-														<div class="pull-right">
-															<ul class="pagination">
-															    <li><a href="index.php">Primera Página</a></li>
-<?php
-if ($pagina == 1) {
-	?>
-	<li class="disabled"><a href="javascript:void(0);" title="">Anterior</a></li>
-	<?php
-} else {
-	$anterior = $pagina-1;
-	?>
-																    	<li><a href="index.php?pagina=<?php echo $anterior?>">Anterior</a></li>
-	<?php
-}
-?>
-
-<?php
-for ($i = 1; $i < $total_paginas; $i++) {
-	?>
-																    	<li <?php if ($pagina == $i) {echo 'class="active"';}?>><a href="index.php?pagina=<?php echo $i;?>"><?php echo $i;
-	?></a></li>
-	<?php
-}
-?>
-
-<?php
-if ($cont == $cant_por_pagina and $pagina < $total_paginas) {
-	$proximo = $pagina+1;
-	?>
-																    	<li><a href="index.php?pagina=<?php echo $proximo?>">Siguiente</a></li>
-	<?php
-} else {
-	?>
-	<li class="disabled"><a href="javascript:void(0);">Siguiente</a></li>
-	<?php
-}
-?>
-															    <li><a href="index.php?pagina=<?php echo $total_paginas;?>">Ultima Pagina</a></li>
-															</ul>
-														</div>
-													</td>
-												</tr>
-											</tbody>
+										<table>
+											<tr>
+												<td colspan="6"><center><h3>..:: Registro de consultas del paciente ::..</h3></center></td>
+												<td>Hist. Nro.: <?php echo $datos[0]->id_paciente;?></td>
+											</tr>
+											<tr>
+												<td>Nombre del paciente:</td>
+												<td colspan="4"><?php echo $datos[0]->nombre." ".$datos[0]->paterno." ".$datos[0]->materno;?></td>
+												<td>Numero C.I.: </td>
+												<td><?php echo $datos[0]->ci." ".$datos[0]->expedido;?></td>
+											</tr>
+											<tr>
+												<td>Fecha de registro:</td>
+												<td><?php echo $datos[0]->fec_reg;?></td>
+												<td>Fecha de Nacimiento:</td>
+												<td><?php echo $datos[0]->fec_nac;?></td>
+												<td>Sexo: </td>
+												<td><?php echo $datos[0]->sexo;?></td>
+											</tr>
 										</table>
+										<hr border="2">
 									</div>
+									<br>
+									<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
 								</section>
 						</div>
 					</div>
