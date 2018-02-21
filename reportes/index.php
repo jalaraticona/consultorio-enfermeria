@@ -5,15 +5,31 @@ if(!isset($_SESSION["id"])){
 }
 $u = new usuario();
 $cantidad = array();
-$data = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
+$mensual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
 array_push($cantidad, 'Numero');
 for($i= 1; $i < 10; $i++){
-  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and id_servicio = ".$i."";
+  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = 2 and id_servicio = ".$i."";
   $datos = $u->getDatosPacienteSql($sql);
   array_push($cantidad, (int) $datos[0]->cant);
 }
-array_push($data, $cantidad);
-$data = json_encode($data);
+array_push($mensual, $cantidad);
+$mensual = json_encode($mensual);
+
+$cant = array();
+$anual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
+$meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+for ($j=0; $j < date('m') ; $j++) { 
+	array_push($cant, $meses[$j]);
+	for($i= 1; $i < 10; $i++){
+		$a = $j+1;
+	  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
+	  $datos = $u->getDatosPacienteSql($sql);
+	  array_push($cant, (int) $datos[0]->cant);
+	}
+	array_push($anual, $cant);
+	$cant = array();
+}
+$anual = json_encode($anual);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -29,11 +45,11 @@ $data = json_encode($data);
 
       function drawVisualization() {
         // Some raw data (not necessarily accurate)
-        var data = google.visualization.arrayToDataTable(<?php echo $data; ?>);
+        var data = google.visualization.arrayToDataTable(<?php echo $mensual; ?>);
 
 	    var options = {
-	      title : 'Pacientes atendidos por servicio',
-	      vAxis: {title: 'Cantidad Pacientes'},
+	      title : 'Grafica mensual de atenciones por servicio',
+	      vAxis: {title: 'Cantidad atendida'},
 	      hAxis: {title: 'mensual'},
 	      seriesType: 'bars',
 	      series: {10: {type: 'line'}}
@@ -46,26 +62,12 @@ $data = json_encode($data);
 	  //google.charts.setOnLoadCallback(drawChart);
 
       function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['Year', 'Vacunas', 'Curaciones', 'Nebulizaciones'],
-          ['Enero',  1,      4,7],
-          ['Febrero',  11,      6,3],
-          ['Marzo',  6,       1,8],
-          ['Abril',  7,       2,9],
-          ['Mayo',  1,       1,12],
-          ['Junio',  4,       2,8],
-          ['Julio',  6,       4,6],
-          ['Agosto',  4,       9,1],
-          ['Septiembre',  9,       8,2],
-          ['Octubre',  2,       7,8],
-          ['Noviembre',  1,       6,3],
-          ['Diciembre',  13,      7,5]
-        ]);
+        var data = google.visualization.arrayToDataTable(<?php echo $anual; ?>);
 
         var options = {
-          title: 'Consultorio de la carrera de Enfermería',
-          hAxis: {title: 'Mes',  titleTextStyle: {color: '#333'}},
-          vAxis: {minValue: 0}
+          title: 'grafica anual de atenciones por servicio',
+          hAxis: {title: 'Año <?php echo "20".date("y"); ?>',  titleTextStyle: {color: '#333'}},
+          vAxis: {tittle: 'Cantidad atendida',minValue: 0}
         };
 
         var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
@@ -107,6 +109,43 @@ $data = json_encode($data);
 							<!-- Text -->
 								<section class="box">
 									<center><h2>Estadisticas de atencion de pacientes por servicio</h2></center>
+									<form action="" method="post" accept-charset="utf-8">
+									
+									<div class="row uniform 50%">
+										<div class="6u 12u">
+											<label for="mes">Selecciona el Mes</label>
+											<select name="mes" >
+											<option value="0" selected>Todos los meses</option>
+											<?php 
+											$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
+											$max = sizeof($meses);
+											$i = 0;
+											foreach ($meses as $val) {
+												$a = $i + 1;
+											    echo "<option value=".$a.">".$val."</option>";
+											    $i++;
+											}
+											?>
+											</select>
+										</div>
+										<div class="6u 12u">
+											<label for="gestion">Selecciona la Gestión</label>
+											<select name="anio" >
+											<?php 
+											for ($i=2010; $i <= date("Y"); $i++) { 
+												if($i == date("Y")){
+													echo "<option value=".$i." selected>".$i."</option>";
+												}
+												else{
+													echo "<option value=".$i.">".$i."</option>";
+												}
+											}
+											?>
+											</select>
+										</div>
+									</div>
+									</form>
+
 									<br>
 									<input type="button" value="Mensual" class="button" onclick="drawVisualization();">
 									<input type="button" value="Anual" class="button" onclick="drawChart();">
@@ -120,7 +159,23 @@ $data = json_encode($data);
 									<form action="generar.php" method="post" target="_blank">
 									<div class="row uniform 50%">
 											<div class="4u 12u(narrower)">
-												<label for="gestion">Gestión</label>
+												<label for="mes">Selecciona el Mes</label>
+												<select name="mes" >
+												<option value="0" selected>Todos los meses</option>
+												<?php 
+												$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
+												$max = sizeof($meses);
+												$i = 0;
+												foreach ($meses as $val) {
+													$a = $i + 1;
+												    echo "<option value=".$a.">".$val."</option>";
+												    $i++;
+												}
+												?>
+												</select>
+											</div>
+											<div class="4u 12u(narrower)">
+												<label for="gestion">Selecciona la Gestión</label>
 												<select name="anio" >
 												<?php 
 												for ($i=2010; $i <= date("Y"); $i++) { 
@@ -130,22 +185,6 @@ $data = json_encode($data);
 													else{
 														echo "<option value=".$i.">".$i."</option>";
 													}
-												}
-												?>
-												</select>
-											</div>
-											<div class="4u 12u(narrower)">
-												<label for="mes">Mes</label>
-												<select name="mes" >
-												<option value="0" selected>Toda la Gestión</option>
-												<?php 
-												$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
-												$max = sizeof($meses);
-												$i = 0;
-												foreach ($meses as $val) {
-													$a = $i + 1;
-												    echo "<option value=".$a.">".$val."</option>";
-												    $i++;
 												}
 												?>
 												</select>
