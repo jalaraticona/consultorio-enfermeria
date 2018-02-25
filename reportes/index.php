@@ -38,7 +38,7 @@ $anual = json_encode($anual);
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
-		<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+		
     <script type="text/javascript">
       google.charts.load('current', {'packages':['corechart']});
       google.charts.setOnLoadCallback(drawVisualization);
@@ -228,6 +228,7 @@ $anual = json_encode($anual);
 			<script src="../assets/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="../assets/js/main.js"></script>
+			<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 	</body>
 </html>

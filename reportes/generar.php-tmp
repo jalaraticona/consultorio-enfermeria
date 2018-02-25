@@ -1,6 +1,16 @@
 <?php
 require_once ("../public/usuario.php");
 require_once ('tcpdf/tcpdf.php');
+function edad($fecha) {
+	list($anyo, $mes, $dia) = explode("-", $fecha);
+	$anyo_dif               = date("Y")-$anyo;
+	$mes_dif                = date("m")-$mes;
+	$dia_dif                = date("d")-$dia;
+	if ($dia_dif < 0 || $mes_dif < 0) {$anyo_dif--;
+	}
+
+	return $anyo_dif;
+}
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -173,6 +183,8 @@ $tbl = <<<EOD
 </table>
 EOD
 	;
+	$pdf->writeHTML($tbl, true, false, false, false, '');
+
 	$sql     = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'difteria' and year(re.fec_reg) = ".$anio_actual." ";
 	$datos   = $u->getDatosPacienteSql($sql);
 	$prifefu = 0;
@@ -291,8 +303,6 @@ EOD
 	$totmafu = $primafu+$segmafu+$termafu+$cuamafu+$quimafu;
 	$total   = $totfede+$totmade+$totfefu+$totmafu;
 
-	$pdf->writeHTML($tbl, true, false, false, false, '');
-
 	$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
@@ -371,6 +381,89 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+if ($dos == "primera") {
+$prifede++;
+}
+if ($dos == "segunda") {
+$segfede++;
+}
+if ($dos == "tercera") {
+$terfede++;
+}
+}
+if ($lug == "fuera") {
+if ($dos == "primera") {
+$prifefu++;
+}
+if ($dos == "segunda") {
+$segfefu++;
+}
+if ($dos == "tercera") {
+$terfefu++;
+}
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+if ($dos == "primera") {
+$primade++;
+}
+if ($dos == "segunda") {
+$segmade++;
+}
+if ($dos == "tercera") {
+$termade++;
+}
+}
+if ($lug == "fuera") {
+if ($dos == "primera") {
+$primafu++;
+}
+if ($dos == "segunda") {
+$segmafu++;
+}
+if ($dos == "tercera") {
+$termafu++;
+}
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+$totseg = $segfede+$segfefu+$segmade+$segmafu;
+$totter = $terfede+$terfefu+$termade+$termafu;
+
+$totfede = $prifede+$segfede+$terfede;
+$totfefu = $prifefu+$segfefu+$terfefu;
+$totmade = $primade+$segmade+$termade;
+$totmafu = $primafu+$segmafu+$termafu;
+$total = $totfede+$totmade+$totfefu+$totmafu;
+
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
@@ -395,43 +488,130 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td>1RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 		<tr>
 			<td>2RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$segfede</td>
+			<td>$segmade</td>
+			<td>$segfefu</td>
+			<td>$segmafu</td>
+			<td>$totseg</td>
 		</tr>
 		<tr>
 			<td>3RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$terfede</td>
+			<td>$termade</td>
+			<td>$terfefu</td>
+			<td>$termafu</td>
+			<td>$totter</td>
 		</tr>
 		<tr>
 			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$totfede</td>
+			<td>$totmade</td>
+			<td>$totfefu</td>
+			<td>$totmafu</td>
+			<td>$total</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
 
-	$tbl = <<<EOD
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar, pe.fec_nac FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+$fecha = $dato->fec_nac;
+$edad = edad($fecha);
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+if ($edad < 6) {
+$prifede++;
+}
+if ($edad > 5 and $edad < 66) {
+$segfede++;
+}
+if ($edad > 65) {
+$terfede++;
+}
+}
+if ($lug == "fuera") {
+if ($edad < 6) {
+$prifefu++;
+}
+if ($edad > 5 and $edad < 66) {
+$segfefu++;
+}
+if ($edad > 65) {
+$terfefu++;
+}
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+if ($edad < 6) {
+$primade++;
+}
+if ($edad > 5 and $edad < 66) {
+$segmade++;
+}
+if ($edad > 65) {
+$termade++;
+}
+}
+if ($lug == "fuera") {
+if ($edad < 6) {
+$primafu++;
+}
+if ($edad > 5 and $edad < 66) {
+$segmafu++;
+}
+if ($edad > 65) {
+$termafu++;
+}
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+$totseg = $segfede+$segfefu+$segmade+$segmafu;
+$totter = $terfede+$terfefu+$termade+$termafu;
+
+$totfede = $prifede+$segfede+$terfede;
+$totfefu = $prifefu+$segfefu+$terfefu;
+$totmade = $primade+$segmade+$termade;
+$totmafu = $primafu+$segmafu+$termafu;
+$total = $totfede+$totmade+$totfefu+$totmafu;
+
+$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
 		<tr>
@@ -454,44 +634,89 @@ EOD
 			<td align="center">TOTAL</td>
 		</tr>
 		<tr>
-			<td>Personal de salud</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>De 1 a 5 años</td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 		<tr>
-			<td>Adultos mayores</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>De 6 a 65 años</td>
+			<td>$segfede</td>
+			<td>$segmade</td>
+			<td>$segfefu</td>
+			<td>$segmafu</td>
+			<td>$totseg</td>
 		</tr>
 		<tr>
-			<td>Otros</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>Mayor a 65 años (Adulto mayor)</td>
+			<td>$terfede</td>
+			<td>$termade</td>
+			<td>$terfefu</td>
+			<td>$termafu</td>
+			<td>$totter</td>
 		</tr>
 		<tr>
 			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$totfede</td>
+			<td>$totmade</td>
+			<td>$totfefu</td>
+			<td>$totmafu</td>
+			<td>$total</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
 
-	$tbl = <<<EOD
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar, pe.fec_nac FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+$prifede++;
+}
+if ($lug == "fuera") {
+$prifefu++;
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+$primade++;
+}
+if ($lug == "fuera") {
+$primafu++;
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+
+$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
 		<tr>
@@ -515,28 +740,22 @@ EOD
 		</tr>
 		<tr>
 			<td>Unica</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
 
 } else {
-	$tbl = <<<EOD
+$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<tr>
 		<td align="center"><b>PRODUCCION DE SERVICIOS: ACTIVIDADES DE ENFERMERIA</b></td>
@@ -819,6 +1038,89 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+if ($dos == "primera") {
+$prifede++;
+}
+if ($dos == "segunda") {
+$segfede++;
+}
+if ($dos == "tercera") {
+$terfede++;
+}
+}
+if ($lug == "fuera") {
+if ($dos == "primera") {
+$prifefu++;
+}
+if ($dos == "segunda") {
+$segfefu++;
+}
+if ($dos == "tercera") {
+$terfefu++;
+}
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+if ($dos == "primera") {
+$primade++;
+}
+if ($dos == "segunda") {
+$segmade++;
+}
+if ($dos == "tercera") {
+$termade++;
+}
+}
+if ($lug == "fuera") {
+if ($dos == "primera") {
+$primafu++;
+}
+if ($dos == "segunda") {
+$segmafu++;
+}
+if ($dos == "tercera") {
+$termafu++;
+}
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+$totseg = $segfede+$segfefu+$segmade+$segmafu;
+$totter = $terfede+$terfefu+$termade+$termafu;
+
+$totfede = $prifede+$segfede+$terfede;
+$totfefu = $prifefu+$segfefu+$terfefu;
+$totmade = $primade+$segmade+$termade;
+$totmafu = $primafu+$segmafu+$termafu;
+$total = $totfede+$totmade+$totfefu+$totmafu;
+
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
@@ -843,43 +1145,130 @@ $tbl = <<<EOD
 		</tr>
 		<tr>
 			<td>1RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 		<tr>
 			<td>2RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$segfede</td>
+			<td>$segmade</td>
+			<td>$segfefu</td>
+			<td>$segmafu</td>
+			<td>$totseg</td>
 		</tr>
 		<tr>
 			<td>3RA</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$terfede</td>
+			<td>$termade</td>
+			<td>$terfefu</td>
+			<td>$termafu</td>
+			<td>$totter</td>
 		</tr>
 		<tr>
 			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$totfede</td>
+			<td>$totmade</td>
+			<td>$totfefu</td>
+			<td>$totmafu</td>
+			<td>$total</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
 
-	$tbl = <<<EOD
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar, pe.fec_nac FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+$fecha = $dato->fec_nac;
+$edad = edad($fecha);
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+if ($edad < 6) {
+$prifede++;
+}
+if ($edad > 5 and $edad < 66) {
+$segfede++;
+}
+if ($edad > 65) {
+$terfede++;
+}
+}
+if ($lug == "fuera") {
+if ($edad < 6) {
+$prifefu++;
+}
+if ($edad > 5 and $edad < 66) {
+$segfefu++;
+}
+if ($edad > 65) {
+$terfefu++;
+}
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+if ($edad < 6) {
+$primade++;
+}
+if ($edad > 5 and $edad < 66) {
+$segmade++;
+}
+if ($edad > 65) {
+$termade++;
+}
+}
+if ($lug == "fuera") {
+if ($edad < 6) {
+$primafu++;
+}
+if ($edad > 5 and $edad < 66) {
+$segmafu++;
+}
+if ($edad > 65) {
+$termafu++;
+}
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+$totseg = $segfede+$segfefu+$segmade+$segmafu;
+$totter = $terfede+$terfefu+$termade+$termafu;
+
+$totfede = $prifede+$segfede+$terfede;
+$totfefu = $prifefu+$segfefu+$terfefu;
+$totmade = $primade+$segmade+$termade;
+$totmafu = $primafu+$segmafu+$termafu;
+$total = $totfede+$totmade+$totfefu+$totmafu;
+
+$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
 		<tr>
@@ -902,48 +1291,93 @@ EOD
 			<td align="center">TOTAL</td>
 		</tr>
 		<tr>
-			<td>Personal de salud</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>De 1 a 5 años</td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 		<tr>
-			<td>Adultos mayores</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>De 6 a 65 años</td>
+			<td>$segfede</td>
+			<td>$segmade</td>
+			<td>$segfefu</td>
+			<td>$segmafu</td>
+			<td>$totseg</td>
 		</tr>
 		<tr>
-			<td>Otros</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>Mayor a 65 años (Adulto mayor)</td>
+			<td>$terfede</td>
+			<td>$termade</td>
+			<td>$terfefu</td>
+			<td>$termafu</td>
+			<td>$totter</td>
 		</tr>
 		<tr>
 			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td>$totfede</td>
+			<td>$totmade</td>
+			<td>$totfefu</td>
+			<td>$totmafu</td>
+			<td>$total</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
 
-	$tbl = <<<EOD
+$pdf->writeHTML($tbl, true, false, false, false, '');
+
+$sql = "SELECT re.fec_reg, se.nombre, se.tipo, pe.sexo, re.dosis, re.lugar, pe.fec_nac FROM registrahistoria as re, servicio as se, persona as pe, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and pe.ci = pa.ci and se.nombre = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$datos = $u->getDatosPacienteSql($sql);
+$prifefu = 0;
+$prifede = 0;
+$primafu = 0;
+$primade = 0;
+
+$segfefu = 0;
+$segfede = 0;
+$segmafu = 0;
+$segmade = 0;
+
+$terfefu = 0;
+$terfede = 0;
+$termafu = 0;
+$termade = 0;
+
+
+if (sizeof($datos) > 0) {
+foreach ($datos as $dato) {
+$sex = $dato->sexo;
+$lug = $dato->lugar;
+$dos = $dato->dosis;
+if ($sex == "femenino") {
+if ($lug == "dentro") {
+$prifede++;
+}
+if ($lug == "fuera") {
+$prifefu++;
+}
+}
+if ($sex == "masculino") {
+if ($lug == "dentro") {
+$primade++;
+}
+if ($lug == "fuera") {
+$primafu++;
+}
+}
+}
+}
+$totpri = $prifede+$prifefu+$primade+$primafu;
+
+$tbl = <<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
 	<thead>
 		<tr>
-			<td colspan="6" align="center"><b>VACUNACION FIEBRE AMARILLA (DOSIS UNICA</b></td>
+			<td colspan="6" align="center"><b>VACUNACION FIEBRE AMARILLA (DOSIS UNICA)</b></td>
 		</tr>
 		<tr>
 			<td></td>
@@ -963,25 +1397,19 @@ EOD
 		</tr>
 		<tr>
 			<td>Unica</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-		</tr>
-		<tr>
-			<td>TOTAL</td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			<td
+;
+$prifede</td>
+			<td>$primade</td>
+			<td>$prifefu</td>
+			<td>$primafu</td>
+			<td>$totpri</td>
 		</tr>
 	</tbody>
 </table>
-EOD
-	;
-	$pdf->writeHTML($tbl, true, false, false, false, '');
+EOD;
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
 }
 
 //Close and output PDF document

@@ -127,6 +127,10 @@ if(isset($_POST["grabar"])){
 													</select></td>
 												</tr>
 												<tr>
+													<td>Cargo o función del paciente: </td>
+													<td colspan="2"><input type="text" name="proced" id="proced" value="<?php echo $datos[0]->procedencia ?>" required="true"/></td>
+												</tr>
+												<tr>
 													<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>
 												</tr>
 												<tr>

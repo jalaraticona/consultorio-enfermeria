@@ -6,12 +6,22 @@ if (!isset($_SESSION["id"])) {
 if (!isset($_GET["ci"])) {
 	header("Location: index.php");
 }
+function edad($fecha) {
+	list($anyo, $mes, $dia) = explode("-", $fecha);
+	$anyo_dif               = date("Y")-$anyo;
+	$mes_dif                = date("m")-$mes;
+	$dia_dif                = date("d")-$dia;
+	if ($dia_dif < 0 || $mes_dif < 0) {$anyo_dif--;
+	}
+
+	return $anyo_dif;
+}
 $u      = new usuario();
-$sql    = "SELECT * FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$_GET['ci']." ";
+$sql    = "SELECT pe.*, pa.id_paciente, pa.procedencia, pa.fec_reg FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$_GET['ci']." ";
 $datos  = $u->getDatosPacienteSql($sql);
-$sql    = "SELECT re.fec_reg as fecha1, re.motivo, re.procedencia, re.lugar, re.dosis, se.nombre, se.tipo, pa.fec_reg as fecha2 FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$_GET['ci']." ";
+$sql    = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$_GET['ci']." ";
 $datos2 = $u->getDatosPacienteSql($sql);
-if (sizeof($datos) == 0) {
+if (sizeof($datos2) == 0) {
 	header("Location: index.php");
 }
 ?>
@@ -55,12 +65,15 @@ if (sizeof($datos) == 0) {
 									<div class="table-wrapper">
 										<table>
 											<tr>
-												<td colspan="6"><center><h3>..:: Registro de consultas del paciente ::..</h3></center></td>
-												<td>Hist. Nro.: <?php echo $datos[0]->id_paciente;?></td>
+												<td colspan="7"><center><h3>..:: Registro de consultas del paciente ::..</h3></center></td>
+												<td>Nro.: <?php echo $datos[0]->id_paciente;?></td>
+											</tr>
+											<tr>
+												<td colspan="8"></td>
 											</tr>
 											<tr>
 												<td>Nombre del paciente:</td>
-												<td colspan="4"><?php echo $datos[0]->nombre." ".$datos[0]->paterno." ".$datos[0]->materno;?></td>
+												<td colspan="5"><?php echo $datos[0]->nombre." ".$datos[0]->paterno." ".$datos[0]->materno;?></td>
 												<td>Numero C.I.: </td>
 												<td><?php echo $datos[0]->ci." ".$datos[0]->expedido;?></td>
 											</tr>
@@ -69,14 +82,52 @@ if (sizeof($datos) == 0) {
 												<td><?php echo $datos[0]->fec_reg;?></td>
 												<td>Fecha de Nacimiento:</td>
 												<td><?php echo $datos[0]->fec_nac;?></td>
+												<td>Edad:</td>
+												<td><?php echo edad($datos[0]->fec_nac);?> años</td>
 												<td>Sexo: </td>
 												<td><?php echo $datos[0]->sexo;?></td>
 											</tr>
 										</table>
 										<hr border="2">
+										<table class="alt">
+											<thead>
+												<tr>
+													<th>Nro.</th>
+													<th>Fecha de registro</th>
+													<th>Motivo de consulta</th>
+													<th>Servicio</th>
+													<th>Lugar</th>
+												</tr>
+											</thead>
+											<tbody>
+<?php
+$i = 1;
+foreach ($datos2 as $info) {
+	$fecha  = $info->fec_reg;
+	$motivo = $info->motivo;
+	if ($info->tipo == "vacuna") {
+		$servicio = $info->nombre." ".$info->dosis." dosis";
+	} else {
+		$servicio = $info->nombre;
+	}
+	$lugar = $info->lugar." del consultorio";
+	?>
+														<tr>
+															<td><?php echo $i;?></td>
+															<td><?php echo $fecha;?></td>
+															<td><?php echo $motivo;?></td>
+															<td><?php echo $servicio;?></td>
+															<td><?php echo $lugar;?></td>
+														</tr>
+	<?php
+	$i++;
+}
+?>
+											</tbody>
+										</table>
 									</div>
 									<br>
-									<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
+									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $datos[0]->ci;?>" class="button special small icon fa-plus" >Realizar atención</a></center>
 								</section>
 						</div>
 					</div>

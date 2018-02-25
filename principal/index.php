@@ -6,7 +6,8 @@ if(!isset($_SESSION["id"])){
 $u = new usuario();
 $sql = "SELECT pe.* FROM persona as pe, enfermera as en WHERE en.id_enf = ".$_SESSION["id_enf"]." and en.ci = pe.ci";
 $datos = $u->getDatosInsumosSql($sql);
-$nombre = $datos[0]->nombre;
+$nombre_user = $datos[0]->nombre;
+$se = $datos[0]->sexo;
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -43,7 +44,7 @@ $nombre = $datos[0]->nombre;
 		<script type="text/javascript">
 		<?php
 		if($sw == 1){
-			$men = "Los siguientes insumos daducaran en los siguientes 30 dias, tomar en cuenta....<br><br>";
+			$men = "Los siguientes insumos tienen fecha de caducidad en los siguientes 30 dias, tomar en cuenta....<br><br>";
 			$men.= "<table><thead><tr><th>Nro.</th><th>Nombres</th><th>Tipo</th><th> Fecha de expiración</th><th>Stock</th></tr></thead><tbody>";
 			foreach($est as $informacion){
 				$nombre = $informacion->nombre;
@@ -70,8 +71,15 @@ $nombre = $datos[0]->nombre;
 					<h1>UNIVERSIDAD MAYOR DE SAN ANDRÉS - CARRERA DE ENFERMERÍA</h1>
 					<nav id="nav">
 						<ul>
-
-							<li>Bienvenid@.. <?php echo $nombre; ?></li>
+							
+							<li><a><?php 
+							if($se == "femenino"){
+								echo "Bienvenida ".$nombre_user;
+							} 
+							else{
+								echo "Bienvenido ".$nombre_user;
+							}
+							?></a></li>
 							<li><a href="index.php">Inicio</a></li>
 							<li>
 								<a href="#" class="icon fa-angle-down">operaciones</a>
@@ -140,10 +148,10 @@ $nombre = $datos[0]->nombre;
 					<ul class="icons">
 						<li><a href="http://umsa.bo" class="icon fa-database"><span class="label">Twitter</span></a></li>
 						<li><a href="https://es-la.facebook.com/EnfermeriaUMSAFMENT/" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
-						<li><a href="#" class="icon fa-google-plus"><span class="label">Google+</span></a></li>
+						<li><a href="#" class="icon fa-google-plus" target="_blank"><span class="label">Google+</span></a></li>
 					</ul>
 					<ul class="copyright">
-						<li>&copy; UMSA - Derechos Reservados</li><li>Desarrollado: <a href="http://www.facebook.com/laraticona.jorge">MAIDEN SYSTEMS</a></li>
+						<li>&copy; UMSA - Derechos Reservados</li><li>Desarrollo: <a href="https://es-es.facebook.com/jorge.laraticona">MAIDEN</a></li>
 					</ul>
 				</footer>
 

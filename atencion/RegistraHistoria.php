@@ -98,10 +98,6 @@ if (isset($_POST["id_pac"])) {
 													<td><input type="text" name="motivo" id="motivo" placeholder="Ingrese el motivo de la consulta"></td>
 												</tr>
 												<tr>
-													<td>Procendencia: </td>
-													<td><input type="text" name="procedencia" id="procedencia" placeholder="Lugar de procedencia del paciente"></td>
-												</tr>
-												<tr>
 													<td>Lugar en que realiza el servicio: </td>
 													<td><select name="lugar" id="lugar">
 														<option value="" selected>..:: Seleccione ::..</option>

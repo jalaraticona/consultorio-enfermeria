@@ -41,7 +41,7 @@ class usuario extends Conectar {
 	public function insertarPaciente() {
 		$sql = "insert into persona values ('".$_POST["ci"]."','".$_POST["expedido"]."','".$_POST["nombre"]."','".$_POST["paterno"]."','".$_POST["materno"]."','".$_POST["fec_nac"]."','".$_POST["sexo"]."')";
 		$this->db->query($sql);
-		$sql = "insert into paciente values (null,CURRENT_DATE(),'".$_POST["ci"]."')";
+		$sql = "insert into paciente values (null,CURRENT_DATE(),'".$_POST["proced"]."','".$_POST["ci"]."')";
 		$this->db->query($sql);
 	}
 	public function updatePaciente() {
@@ -56,6 +56,10 @@ class usuario extends Conectar {
 				sexo = '".$_POST["sexo"]."'
 				where ci = '".$_POST["ci"]."'";
 		$this->db->query($sql);
+		$sql = "update paciente
+				set procedencia = '".$_POST["proced"]."'
+				where ci = '".$_POST["ci"]."' ";
+		$this->db->query($sql);
 	}
 	public function deletePaciente() {
 		$sql = "delete from insumos
@@ -66,7 +70,7 @@ class usuario extends Conectar {
 		//$this->db->query($sql);
 	}
 	public function getDatoPorCiPaciente($ci) {
-		$sql     = "select * from persona where ci = '".$ci."'";
+		$sql     = "SELECT pe.*, pa.procedencia FROM persona as pe, paciente as pa WHERE pa.ci = pe.ci and pe.ci = '".$ci."'";
 		$datos   = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -141,7 +145,7 @@ class usuario extends Conectar {
 
 	//Historia consultas
 	public function insertarHistoria() {
-		$sql = "insert into registrahistoria values (null, '".$_POST["motivo"]."', CURRENT_DATE(), '".$_POST["procedencia"]."', '".$_POST["lugar"]."', '".$_POST["dosis"]."', '".$_SESSION["id_enf"]."','".$_POST["id_pac"]."','".$_POST["servicio"]."')";
+		$sql = "insert into registrahistoria values (null, '".$_POST["motivo"]."', CURRENT_DATE(), '".$_POST["lugar"]."', '".$_POST["dosis"]."', '".$_SESSION["id_enf"]."','".$_POST["id_pac"]."','".$_POST["servicio"]."')";
 		$this->db->query($sql);
 	}
 

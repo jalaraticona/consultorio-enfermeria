@@ -107,6 +107,7 @@ if(isset($_POST["grabar"])){
 													<td><input type="number" name="ci" id="ci" placeholder="Cedula Identidad" value="<?php echo set_value_input(array(),'ci','ci'); ?>" required="true"/>
 													</td>
 													<td>
+													<div class="select-wrapper">	
 													<select name="expedido" id="expedido" required="true">
 														<option value="" <?php echo set_value_select(array(),'expedido','expedido',''); ?>>Seleccione.......</option>
 														<option value="la paz"<?php echo set_value_select(array(),'expedido','expedido','la paz'); ?>>La Paz</option>
@@ -119,6 +120,7 @@ if(isset($_POST["grabar"])){
 														<option value="chuquisaca"<?php echo set_value_select(array(),'expedido','expedido','chuquisaca'); ?>>Chuquisaca</option>
 														<option value="tarija"<?php echo set_value_select(array(),'expedido','expedido','tarija'); ?>>Tarija</option>
 													</select></td>
+													</div>
 												</tr>
 												<tr>
 													<td>Fecha de Nacimiento:</td>
@@ -126,11 +128,18 @@ if(isset($_POST["grabar"])){
 												</tr>
 												<tr>
 													<td>Sexo: </td>
-													<td colspan="2"><select name="sexo" id="sexo" required="true">
+													<td colspan="2">
+													<div class="select-wrapper">
+													<select name="sexo" id="sexo" required="true">
 														<option value="" <?php echo set_value_select(array(),'sexo','sexo',''); ?>>Seleccione.......</option>
 														<option value="masculino" <?php echo set_value_select(array(),'sexo','sexo','masculino'); ?>>Masculino</option>
 														<option value="femenino" <?php echo set_value_select(array(),'sexo','sexo','femenino'); ?>>Femenino</option>
 													</select></td>
+													</div>
+												</tr>
+												<tr>
+													<td>Cargo o funcion del paciente: </td>
+													<td colspan="2"><input type="text" name="proced" id="proced" placeholder="Especifique la procedencia o cargo del paciente" value="<?php echo set_value_input(array(),'proced','proced'); ?>"></td>
 												</tr>
 												<tr>
 													<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>
