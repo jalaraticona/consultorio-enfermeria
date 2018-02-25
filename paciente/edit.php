@@ -4,10 +4,12 @@ if(!isset($_SESSION["id"])){
 	header("Location: ../iniciarSesion.php");
 }
 $u = new usuario();
-if(!isset($_GET["ci"]) or !is_numeric($_GET["ci"])){
+$var = str_replace ( " " , "+" , $_GET["ci"] );
+$des = $u->desencriptar($var);
+if(!isset($_GET["ci"]) and !is_numeric($des)){
 	die("Error 404");
 }
-$datos = $u->getDatoPorCiPaciente($_GET["ci"]);
+$datos = $u->getDatoPorCiPaciente($des);
 if(sizeof($datos) == 0){
 	die("Error 404");
 }

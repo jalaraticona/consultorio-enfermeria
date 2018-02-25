@@ -110,7 +110,7 @@ if (isset($_POST["id_pac"])) {
 												<tr>
 													<td>Servicio a brindar: </td>
 													<td>
-														<select name="servicio" id="servicio">
+														<select name="servicio" name="servicio" id="servicio">
 <?php
 foreach ($datose as $dato) {
 	$id_s     = $dato->id_servicio;
@@ -129,7 +129,8 @@ foreach ($datose as $dato) {
 												</div>
 												<tr>
 													<td>Nro de dosis: </td>
-													<td><select name="dosis" id="dosis">
+													<td><select name="dosis" id="dosis" disabled="true">
+														<option value="0" selected>Nro de dosis</option>
 														<option value="primera">1ra dosis</option>
 														<option value="segunda">2da dosis</option>
 														<option value="tercera">3ra dosis</option>

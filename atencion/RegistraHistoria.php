@@ -3,7 +3,10 @@ require_once("../public/usuario.php");
 if(!isset($_SESSION["id"])){
 	header("Location: ../iniciarSesion.php");
 }
-if(!isset($_GET["ci"]) or !is_numeric($_GET["ci"])){
+$u = new usuario();
+$var = str_replace ( " " , "+" , $_GET["ci"] );
+$des = $u->desencriptar($var);
+if(!isset($_GET["ci"]) or !is_numeric($des)){
 	die("Error 404");
 }
 function edad1($fecha){
@@ -15,9 +18,8 @@ function edad1($fecha){
       return $anyo_dif;
 }
 $mensaje='';
-$u = new usuario();
-if(isset($_GET["ci"])){
-	$sql = "select pe.*, pa.id_paciente from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$_GET['ci']."";
+if(isset($_GET["ci"]) and is_numeric($des)){
+	$sql = "select pe.*, pa.id_paciente from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$des."";
 	$datop = $u->getDatosPacienteSql($sql);
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
@@ -99,16 +101,21 @@ if (isset($_POST["id_pac"])) {
 												</tr>
 												<tr>
 													<td>Lugar en que realiza el servicio: </td>
-													<td><select name="lugar" id="lugar">
+													<td>
+													<div class="select-wrapper">
+													<select name="lugar" id="lugar">
 														<option value="" selected>..:: Seleccione ::..</option>
 														<option value="dentro">Dentro del servicio</option>
 														<option value="fuera">Fuera del servicio</option>
-													</select></td>
+													</select>
+													</div>
+													</td>
 												</tr>
 												<tr>
 													<td>Servicio a brindar: </td>
 													<td>	
-														<select name="servicio" id="servicio">
+														<div class="select-wrapper">
+														<select name="servicio" name="servicio" id="servicio">
 														<?php
 														foreach ($datose as $dato) {
 															$id_s = $dato->id_servicio;
@@ -119,21 +126,25 @@ if (isset($_POST["id_pac"])) {
 														} 
 														?>
 														</select>
+														</div>
 													</td>
 												</tr>
-												<div id="resul">
-													
-												</div>
 												<tr>
 													<td>Nro de dosis: </td>
-													<td><select name="dosis" id="dosis">
+													<td>
+														<div class="select-wrapper">
+														<select name="dosis" id="dosis" disabled="true">
+														<option value="0" selected>Nro de dosis</option>
 														<option value="primera">1ra dosis</option>
 														<option value="segunda">2da dosis</option>
 														<option value="tercera">3ra dosis</option>
 														<option value="cuarta">4ta dosis</option>
 														<option value="quinta">5ta dosis</option>
-													</select></td>
+														</select></td>
+														</div>
 												</tr>
+
+												
 											</table>
 											<input type="hidden" name="id_pac" id="id_pac" value="<?php echo $id_pac; ?>">
 											<div class="row uniform">
@@ -145,6 +156,11 @@ if (isset($_POST["id_pac"])) {
 												</div>
 											</div>
 										</form>
+										<table>
+											<div id="resul">
+													
+											</div>
+										</table>
 									</div>
 								</section>
 						</div>

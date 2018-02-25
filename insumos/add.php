@@ -67,7 +67,6 @@ if(isset($_POST["grabar"])){
 							<!-- Form -->
 								<section class="box">
 								<h3>Se pide por favor llenar el Nombre de los insumos bajo la siguiente lista:</h3>
-								<p><h4>Vacuna </h4></p>
 									<form method="post" action="">
 										<?php 
 										if($mensaje != ''){

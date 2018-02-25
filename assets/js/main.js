@@ -42,9 +42,16 @@
 	$(document).ready(function(){
 		var consulta;
 		//comprobamos si se pulsa una tecla
-		$("select[id=servicio]").change(function(){
+		$("#servicio").change(function(){
 			//obtenemos el texto introducido en el campo de búsqueda
-			consulta = $("select[id=servicio]").val();
+			consulta = $("#servicio").val();
+
+			if (consulta == 7 || consulta == 8 || consulta == 9 || consulta == 10 || consulta == 11){
+				$('#dosis').removeAttr('disabled');
+			}
+			else{
+				$('#dosis').attr('disabled', 'disabled');
+			}
 			//hace la búsqueda
 			$.ajax({
 				type: "POST",
@@ -64,7 +71,7 @@
 				                                         
 				}
 			});
-		});                                                  
+		});                                                 
 	});
 
 	$(function() {

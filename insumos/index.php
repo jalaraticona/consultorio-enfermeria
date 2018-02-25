@@ -42,6 +42,15 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 	</head>
 	<body>
+		<script type="text/javascript">
+		a = <?php echo $_GET["m"];?>;
+		if(a == 1){
+			alertify.success('Datos del paciente registrados correctamente.');
+		}
+		if(a == 2){
+			alertify.warning('Datos del paciente modificados correctamente.');
+		}
+		</script>
 		<div id="page-wrapper">
 
 			<!-- Header -->
@@ -68,33 +77,6 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 					<header>
 						<h2>Insumos Registrados</h2>
 					</header>
-					<?php
-						if(isset($_GET["m"])){
-							switch ($_GET["m"]) {
-								case '1':
-									?>
-									<div class="alert alert-success">
-										Los datos se han registrado correctamente.
-									</div>
-									<?php
-								break;
-								case '2':
-									?>
-									<div class="alert alert-success">
-										Los datos se han modificado correctamente.
-									</div>
-									<?php
-								break;
-								case '3':
-									?>
-									<div class="alert alert-success">
-										Se ha eliminado correctamente el resgistro seleccionado.
-									</div>
-									<?php
-								break;
-							}
-						}
-					?>
 					<div class="row">
 						<div class="12u">
 
@@ -132,7 +114,8 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														<td><?php echo $dato->fec_exp?></td>
 														<td><?php echo $dato->stock?></td>
 														<td><?php echo $dato->estado?></td>
-														<td><a href="edit.php?id_insumo=<?php echo $dato->id_insumo?>" class="icon fa-pencil">editar</a><br>
+														<td><a href="edit.php?id_insumo=<?php $enc = $u->encriptar($dato->id_insumo);
+														echo $enc;?>" class="icon fa-pencil">editar</a><br>
 														<a href="javascript:void(0);" onclick="eliminar('delete.php?id_insumo=<?php echo $dato->id_insumo?>');" class="icon fa-trash">eliminar</a></td>
 													</tr>
 													<?php

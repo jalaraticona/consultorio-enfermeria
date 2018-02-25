@@ -3,7 +3,10 @@ require_once("../public/usuario.php");
 if(!isset($_SESSION["id"])){
 	header("Location: ../iniciarSesion.php");
 }
-if(!isset($_GET["ci"])){
+$u = new usuario();
+$var = str_replace ( " " , "+" , $_GET["ci"] );
+$des = $u->desencriptar($var);
+if(!isset($_GET["ci"]) or !is_numeric($des)){
 	header("Location: index.php");
 }
 function edad($fecha){
@@ -14,10 +17,9 @@ function edad($fecha){
       if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
       return $anyo_dif;
 }
-$u = new usuario();
-$sql = "SELECT pe.*, pa.id_paciente, pa.procedencia, pa.fec_reg FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$_GET['ci']." ";
+$sql = "SELECT pe.*, pa.id_paciente, pa.procedencia, pa.fec_reg FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$des." ";
 $datos = $u->getDatosPacienteSql($sql);
-$sql = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$_GET['ci']." ";
+$sql = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$des." ";
 $datos2 = $u->getDatosPacienteSql($sql);
 if(sizeof($datos2) == 0){
 	header("Location: index.php");
@@ -30,6 +32,13 @@ if(sizeof($datos2) == 0){
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<style type="text/css" media="screen">
+		#div1{	
+			overflow-y:scroll;
+     		height:500px;
+     		width:auto;
+		}
+		</style>
 		<script src="alertify/alertify.js"></script>
 		<link rel="stylesheet" href="alertify/css/alertify.css">
 		<link rel="stylesheet" href="alertify/css/themes/default.min.css">
@@ -87,6 +96,7 @@ if(sizeof($datos2) == 0){
 											</tr>
 										</table>
 										<hr border="2">
+										<div id="div1">
 										<table class="alt">
 											<thead>
 												<tr>
@@ -124,6 +134,7 @@ if(sizeof($datos2) == 0){
 												?>
 											</tbody>
 										</table>
+										</div>
 									</div>
 									<br>
 									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $datos[0]->ci;?>" class="button special small icon fa-plus" >Realizar atención</a></center>

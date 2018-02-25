@@ -32,6 +32,13 @@ if (sizeof($datos2) == 0) {
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
+		<style type="text/css" media="screen">
+		#div1{
+			overflow-y:scroll;
+     		height:500px;
+     		width:auto;
+		}
+		</style>
 		<script src="alertify/alertify.js"></script>
 		<link rel="stylesheet" href="alertify/css/alertify.css">
 		<link rel="stylesheet" href="alertify/css/themes/default.min.css">
@@ -89,6 +96,7 @@ if (sizeof($datos2) == 0) {
 											</tr>
 										</table>
 										<hr border="2">
+										<div id="div1">
 										<table class="alt">
 											<thead>
 												<tr>
@@ -125,6 +133,7 @@ foreach ($datos2 as $info) {
 ?>
 											</tbody>
 										</table>
+										</div>
 									</div>
 									<br>
 									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $datos[0]->ci;?>" class="button special small icon fa-plus" >Realizar atención</a></center>

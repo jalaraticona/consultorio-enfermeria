@@ -118,11 +118,16 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														<td><?php echo $dato->fec_nac?></td>
 														<td><?php echo $dato->sexo?></td>
 														<td><?php echo $dato->procedencia?></td>
-														<td><a href="edit.php?ci=<?php echo $dato->ci?>" class="icon fa-pencil">editar</a><br>
+														<td><a href="edit.php?ci=<?php $enc = $u->encriptar($dato->ci);
+														echo $enc;?>" class="icon fa-pencil">editar</a><br>
 														<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
-														<td><a href="../atencion/historia.php?ci=<?php echo $dato->ci?>" class="icon fa-user"></a></td>
+														<td><a href="../atencion/RegistraHistoria.php?ci=<?php
+														$enc = $u->encriptar($dato->ci);
+														 echo $enc;?>" class="icon fa-user"></a></td>
 														<td>
-														<a href="historial.php?ci=<?php echo $dato->ci?>" class="icon fa-file"></a>
+														<a href="historial.php?ci=<?php
+														$enc = $u->encriptar($dato->ci);
+														 echo $enc;?>" class="icon fa-file"></a>
 														</td>
 													</tr>
 													<?php
