@@ -17,13 +17,14 @@ function edad($fecha){
       if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
       return $anyo_dif;
 }
-$sql = "SELECT pe.*, pa.id_paciente, pa.procedencia, pa.fec_reg FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$des." ";
+$sql = "SELECT pe.*, pa.id_paciente, pa.residencia, pa.fec_reg, pa.categoria, pa.carrera_cargo FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$des." ";
 $datos = $u->getDatosPacienteSql($sql);
 $sql = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$des." ";
 $datos2 = $u->getDatosPacienteSql($sql);
 if(sizeof($datos2) == 0){
 	header("Location: index.php");
 }
+$enc = $u->encriptar($datos[0]->ci);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -94,6 +95,14 @@ if(sizeof($datos2) == 0){
 												<td>Sexo: </td>
 												<td><?php echo $datos[0]->sexo; ?></td>
 											</tr>
+											<tr>
+												<td colspan="2">Municipio residencia:</td>
+												<td><?php echo $datos[0]->residencia; ?></td>
+												<td>Categoria:</td>
+												<td><?php echo $datos[0]->categoria; ?></td>
+												<td>Carrera o Cargo: </td>
+												<td colspan="2"><?php echo $datos[0]->carrera_cargo; ?></td>
+											</tr>
 										</table>
 										<hr border="2">
 										<div id="div1">
@@ -137,7 +146,7 @@ if(sizeof($datos2) == 0){
 										</div>
 									</div>
 									<br>
-									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $datos[0]->ci;?>" class="button special small icon fa-plus" >Realizar atención</a></center>
+									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $enc;?>" class="button special small icon fa-plus" >Realizar atención</a></center>
 								</section>
 						</div>
 					</div>

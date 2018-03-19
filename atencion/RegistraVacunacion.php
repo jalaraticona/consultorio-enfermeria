@@ -93,11 +93,11 @@ if (isset($_POST["id_pac"])) {
 										<form name="form" action="#" method="post">
 											<table class="alt">
 												<tr>
-													<td colspan="2"><center><h3>..:: Realizar Procedimiento Enfermero ::..</h3></center></td>
+													<td colspan="2"><center><h3>..:: REGISTRO DE CONSULTA ::..</h3></center></td>
 												</tr>
 												<tr>
 													<td>Motivo de consulta: </td>
-													<td><textarea type="text" name="motivo" id="motivo" placeholder="Ingrese el motivo de la consulta"></textarea></td>
+													<td><input type="text" name="motivo" id="motivo" placeholder="Ingrese el motivo de la consulta"></td>
 												</tr>
 												<tr>
 													<td>Lugar en que realiza el servicio: </td>
@@ -116,27 +116,45 @@ if (isset($_POST["id_pac"])) {
 													<td>	
 														<div class="select-wrapper">
 														<select name="servicio" name="servicio" id="servicio">
-															<option value="" selected>..:: Seleccione el servicio ::..</option>
 														<?php
 														foreach ($datose as $dato) {
 															$id_s = $dato->id_servicio;
 														 	$servicio = $dato->nombre;
-														 	$tipo = $dato->tipo;
-														 	if($tipo != 'vacuna'){
-														 		echo "<option value=".$id_s.">".$servicio."</option>";
-														 	}
+														 	?>
+														 	<option value="<?php echo $id_s; ?>"><?php echo $servicio; ?></option>
+														 	<?php
 														} 
 														?>
 														</select>
 														</div>
-														<input type="hidden" name="id_pac" id="id_pac" value="<?php echo $id_pac; ?>">
 													</td>
 												</tr>
 												<tr>
-													<td><center><input type="submit" value="Registrar Consulta" /></center></td>
-													<td><center><input type="reset" value="Limpiar Datos" class="alt" /></center></td>
+													<td>Nro de dosis: </td>
+													<td>
+														<div class="select-wrapper">
+														<select name="dosis" id="dosis" disabled="true">
+														<option value="0" selected>Nro de dosis</option>
+														<option value="primera">1ra dosis</option>
+														<option value="segunda">2da dosis</option>
+														<option value="tercera">3ra dosis</option>
+														<option value="cuarta">4ta dosis</option>
+														<option value="quinta">5ta dosis</option>
+														</select></td>
+														</div>
 												</tr>
+
+												
 											</table>
+											<input type="hidden" name="id_pac" id="id_pac" value="<?php echo $id_pac; ?>">
+											<div class="row uniform">
+												<div class="12u">
+													<ul class="actions"><br>
+														<li><input type="submit" value="Registrar" /></li>
+														<li><input type="reset" value="Limpiar Datos" class="alt" /></li>
+													</ul>
+												</div>
+											</div>
 										</form>
 										<table>
 											<div id="resul">

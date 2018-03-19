@@ -24,7 +24,7 @@ else{
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
 $sql1 = "select count(*) as cuantos from paciente;";
 $cantidad = $u->getDatosPacienteSql($sql1);
-$sql2 = "select pe.*, pa.procedencia from paciente as pa, persona as pe where pa.ci = pe.ci
+$sql2 = "select pe.*, pa.residencia, pa.categoria, pa.carrera_cargo from paciente as pa, persona as pe where pa.ci = pe.ci
 		limit ".$empezar_desde.",".$cant_por_pagina." ";
 $datos = $u->getDatosPacienteSql($sql2);
 
@@ -61,14 +61,6 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 					<nav id="nav">
 						<ul>
 							<li><a href="../principal/index.php">Inicio</a></li>
-							<li>
-								<a href="#" class="icon fa-angle-down">Operaciones</a>
-								<ul>
-									<li><a href="#">Agregar</a></li>
-									<li><a href="#">Contact</a></li>
-									<li><a href="#">Elements</a></li>
-								</ul>
-							</li>
 							<li><a href="../principal/index.php" class="button">Volver Atras</a></li>
 						</ul>
 					</nav>
@@ -97,7 +89,9 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 													<th>C.I.</th>
 													<th>Fecha de Nacimiento</th>
 													<th>Sexo</th>
-													<th>Funcion/ Categoría</th>
+													<th>Municipio de residencia</th>
+													<th>Categoría</th>
+													<th>Carrera/cargo</th>
 													<th>Accion</th>
 													<th>Realizar Atención</th>
 													<th>Historia clinica</th>
@@ -108,6 +102,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 												$cont = 0;
 												foreach($datos as $dato){
 													$cont++;
+													$enc = $u->encriptar($dato->ci);
 													?>
 													<tr>
 														<td><?php echo $cont ?></td>
@@ -117,16 +112,18 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
 														<td><?php echo $dato->fec_nac?></td>
 														<td><?php echo $dato->sexo?></td>
-														<td><?php echo $dato->procedencia?></td>
+														<td><?php echo $dato->residencia?></td>
+														<td><?php echo $dato->categoria?></td>
+														<td><?php echo $dato->carrera_cargo?></td>
 														<td><a href="edit.php?ci=<?php $enc = $u->encriptar($dato->ci);
 														echo $enc;?>" class="icon fa-pencil">editar</a><br>
 														<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
 														<td><a href="../atencion/RegistraHistoria.php?ci=<?php
-														$enc = $u->encriptar($dato->ci);
+														 echo $enc;?>" class="icon fa-user"></a>
+														 <a href="../atencion/RegistraVacunacion.php?ci=<?php
 														 echo $enc;?>" class="icon fa-user"></a></td>
 														<td>
 														<a href="historial.php?ci=<?php
-														$enc = $u->encriptar($dato->ci);
 														 echo $enc;?>" class="icon fa-file"></a>
 														</td>
 													</tr>
@@ -134,7 +131,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 												}
 												?>
 												<tr>
-													<td colspan="11">
+													<td colspan="13">
 														<div class="pull-right">
 															<ul class="pagination">
 															    <li><a href="index.php">Primera Página</a></li>

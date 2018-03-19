@@ -129,8 +129,58 @@ if(isset($_POST["grabar"])){
 													</select></td>
 												</tr>
 												<tr>
-													<td>Cargo o función del paciente: </td>
-													<td colspan="2"><input type="text" name="proced" id="proced" value="<?php echo $datos[0]->procedencia ?>" required="true"/></td>
+													<td>Municipio de residencia: </td>
+													<td colspan="2">
+														<div class="select-wrapper">
+															<select name="residencia" id="residencia" required="true">
+																<?php $municipios = ['ixiamas','san buena ventura','sica sica','calamarca','collana','colquencha','patacamaya','umala','general juan jose perez (charazani)','curva','puerto acosta','mocomoco','puerto carabuco','escoma','humanata','caranavi','alto beni','apolo','pelechuco','san pedro de curahuara','chacarilla','papel pampa','viacha','andres de machaca','desaguadero','guaqui','jesús de machaca','taraco','tiahuanaco','inquisivi','cajuata','colquiri','ichoca','licoma pampa','quime','santiago de machaca','catacora','sorata','combaya','guanay','mapiri','quiabaya','tacacoma','teoponte','tipuani','luribay','cairoma','malla','sapahaqui','yaco','pucarani','batallas','laja','puerto perez','copacabana','san pedro de tiquina','tito yupanqui','chuma','aucapata','ayata','palca','achocalla','el alto','la paz','mecapaca','coroico','coripata','achacachi','ancoraimes','chua cocani','huarina','huatajata','santiago de huata','coro coro','calacoto','caquiaviri','charana','comanche','nazacara de pacajes','santiago de callapa','waldo ballivian','chulumani','irupana','la asunta','palos blancos','yanacachi'];
+																for ($i = 0; $i < sizeof($municipios) ; $i++) {
+																 	if($datos[0]->residencia == $municipios[$i]){
+																 		echo "<option value=".$municipios[$i]." selected>".$municipios[$i]."</option>";
+																 	}
+																 	else{
+																 		echo "<option value=".$municipios[$i].">".$municipios[$i]."</option>";
+																 	}
+																 } ?>
+															</select>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Categoria: </td>
+													<td colspan="2">
+														<div class="select-wrapper">
+															<select name="categoria" id="categoria">
+																<?php $categorias = ['universitario','docente','personal administrativo','externo'];
+																for ($i = 0; $i < sizeof($categorias) ; $i++) {
+																 	if($datos[0]->categoria == $categorias[$i]){
+																 		echo "<option value=".$categorias[$i]." selected>".$categorias[$i]."</option>";
+																 	}
+																 	else{
+																 		echo "<option value=".$categorias[$i].">".$categorias[$i]."</option>";
+																 	}
+																 } ?>
+															</select>
+														</div>
+													</td>
+												</tr>
+												<tr>
+													<td>Carrera o cargo: </td>
+													<td colspan="2">
+														<div class="select-wrapper">
+															<select name="carrera" id="carrera">
+																<?php $carreras = ['ingenieria agronomica','tecnica superior agropecuaria de viacha','administracion de empresas','auditoria','economia','biologia','estadistica','fisica','informatica','matematicas','quimica','antropologia y arqueologia','ciencias de la comunicacion social','sociologia','trabajo social','bibliotecologia y cs. informacion','ciencias de la educacion','filosofia','historia','linguistica e idiomas','literatura','psicologia','turismo','derecho','ciencias politicas','bioquimica','quimica farmaceutica','ingenieria geografica','ingenieria geologica y medio ambiente','ing. civil','ing. electrica','ing. electronica','ing. industrial','ing. mecanica','ing. metalurgica y materiales','ing. petrolera','ing. quimica','medicina','enfermeria','nutricion y dietetica','odontologia','construcciones civiles','topografia y geodesia','electricidad','electronica y telecomunicaciones','electromecanica','mecanica automotriz','mecanica de aviacion','mecanica industrial','quimica industrial'];
+																for ($i = 0; $i < sizeof($carreras) ; $i++) {
+																 	if($datos[0]->categoria == $carreras[$i]){
+																 		echo "<option value=".$carreras[$i]." selected>".$carreras[$i]."</option>";
+																 	}
+																 	else{
+																 		echo "<option value=".$carreras[$i].">".$carreras[$i]."</option>";
+																 	}
+																 } ?>
+															</select>
+														</div>
+													</td>
 												</tr>
 												<tr>
 													<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>

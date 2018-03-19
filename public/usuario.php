@@ -39,26 +39,58 @@ class usuario extends Conectar{
 		return $arreglo;
 	}
 	public function insertarPaciente(){
-		$sql = "insert into persona values ('".$_POST["ci"]."','".$_POST["expedido"]."','".$_POST["nombre"]."','".$_POST["paterno"]."','".$_POST["materno"]."','".$_POST["fec_nac"]."','".$_POST["sexo"]."')";
+		$ci = $_POST["ci"];
+		$expedido = $_POST["expedido"];
+		$nombre = $_POST["nombre"];
+		$paterno = $_POST["paterno"];
+		$materno = $_POST["materno"];
+		$fec_nac = $_POST["fec_nac"];
+		$sexo = $_POST["sexo"];
+		$residencia = $_POST["residencia"];
+		$categoria = $_POST["categoria"];
+		if($categoria == 'universitario'){
+			$carrera = $_POST["carrera"];
+		}
+		else{
+			$carrera = "---";
+		}
+		$sql = "insert into persona values ('".$ci."','".$expedido."','".$nombre."','".$paterno."','".$materno."','".$fec_nac."','".$sexo."')";
 		$this->db->query($sql);
-		$sql = "insert into paciente values (null,CURRENT_DATE(),'".$_POST["proced"]."','".$_POST["ci"]."')";
+		$sql = "insert into paciente values (null,CURRENT_DATE(),'".$residencia."','".$categoria."','".$carrera."','".$ci."')";
 		$this->db->query($sql);
 	}
 	public function updatePaciente(){
+		$ci = $_POST["ci"];
+		$expedido = $_POST["expedido"];
+		$nombre = $_POST["nombre"];
+		$paterno = $_POST["paterno"];
+		$materno = $_POST["materno"];
+		$fec_nac = $_POST["fec_nac"];
+		$sexo = $_POST["sexo"];
+		$residencia = $_POST["residencia"];
+		$categoria = $_POST["categoria"];
+		if($categoria == 'universitario'){
+			$carrera = $_POST["carrera"];
+		}
+		else{
+			$carrera = "---";
+		}
 		$sql = "update persona 
 				set 
-				ci = '".$_POST["ci"]."',
-				expedido = '".$_POST["expedido"]."',
-				nombre = '".$_POST["nombre"]."',
-				paterno = '".$_POST["paterno"]."',
-				materno = '".$_POST["materno"]."',
-				fec_nac = '".$_POST["fec_nac"]."',
-				sexo = '".$_POST["sexo"]."'
-				where ci = '".$_POST["ci"]."'";
+				ci = '".$ci."',
+				expedido = '".$expedido."',
+				nombre = '".$nombre."',
+				paterno = '".$paterno."',
+				materno = '".$materno."',
+				fec_nac = '".$fec_nac."',
+				sexo = '".$sexo."'
+				where ci = '".$ci."'";
 		$this->db->query($sql);
 		$sql = "update paciente 
-				set procedencia = '".$_POST["proced"]."'
-				where ci = '".$_POST["ci"]."' ";
+				set residencia = '".$residencia."',
+				categoria = '".$categoria."',
+				carrera_cargo = '".$carrera."'
+				where ci = '".$ci."' ";
 		$this->db->query($sql);
 	}
 	public function deletePaciente(){
@@ -70,7 +102,7 @@ class usuario extends Conectar{
 		//$this->db->query($sql);
 	}
 	public function getDatoPorCiPaciente($ci){
-		$sql = "SELECT pe.*, pa.procedencia FROM persona as pe, paciente as pa WHERE pa.ci = pe.ci and pe.ci = '".$ci."'";
+		$sql = "SELECT pe.*, pa.residencia, pa.categoria, pa.carrera_cargo FROM persona as pe, paciente as pa WHERE pa.ci = pe.ci and pe.ci = '".$ci."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -145,7 +177,24 @@ class usuario extends Conectar{
 
 	//Historia consultas
 	public function insertarHistoria(){
-		$sql = "insert into registrahistoria values (null, '".$_POST["motivo"]."', CURRENT_DATE(), '".$_POST["lugar"]."', '".$_POST["dosis"]."', '".$_SESSION["id_enf"]."','".$_POST["id_pac"]."','".$_POST["servicio"]."')";
+		$motivo = $_POST["motivo"];
+		$lugar = $_POST["lugar"];
+		$dosis = "---";
+		$id_enf = $_SESSION["id_enf"];
+		$id_pac = $_POST["id_pac"];
+		$id_ser = $_POST["servicio"];
+		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$this->db->query($sql);
+	}
+
+	public function insertarVacuna(){
+		$motivo = $_POST["motivo"];
+		$lugar = $_POST["lugar"];
+		$dosis = $_POST["dosis"];
+		$id_enf = $_SESSION["id_enf"];
+		$id_pac = $_POST["id_pac"];
+		$id_ser = $_POST["servicio"];
+		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 	}
 
@@ -185,14 +234,16 @@ class usuario extends Conectar{
 	//funciones de ayuda
 	public function encriptar($cadena){
         $key='';  // Una clave de codificacion, debe usarse la misma para encriptar y desencriptar
-        $encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $cadena, MCRYPT_MODE_CBC, md5(md5($key))));
-        return $encrypted; //Devuelve el string encriptado
+        //$encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $cadena, MCRYPT_MODE_CBC, md5(md5($key))));
+        $enc = base64_encode($cadena);
+        return $enc; //Devuelve el string encriptado
     }
      
     public function desencriptar($cadena){
         $key='';  // Una clave de codificacion, debe usarse la misma para encriptar y desencriptar
-        $decrypted = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cadena), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-        return $decrypted;  //Devuelve el string desencriptado
+        //$decrypted = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cadena), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
+        $dec = base64_decode($cadena);
+        return $dec;  //Devuelve el string desencriptado
     }
 }
 ?>

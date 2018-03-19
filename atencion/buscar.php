@@ -33,7 +33,7 @@ function buscar($b) {
 
                   $enc = $pre->encriptar($ci);
                    
-                  echo "<tr><td>".$id_paciente."</td><td>".$nombre."</td><td>".$paterno."</td><td>".$materno."</td><td>".$ci." ".$expedido."</td><td>".$edad." años</td><td>".$sexo."</td><td><a href='../paciente/edit.php?ci=".$ci."' class='icon fa-pencil'>editar</a></td>
+                  echo "<tr><td>".$id_paciente."</td><td>".$nombre."</td><td>".$paterno."</td><td>".$materno."</td><td>".$ci." ".$expedido."</td><td>".$edad." años</td><td>".$sexo."</td><td><a href='../paciente/edit.php?ci=".$enc."' class='icon fa-pencil'>editar</a></td>
                         <td><a href='RegistraHistoria.php?ci=".$enc."' class='button small icon fa-plus'>Atender</a><br></td></tr>";    
             }
             echo "</tbody>";

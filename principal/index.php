@@ -34,12 +34,12 @@ $se = $datos[0]->sexo;
 		$est = $u->getDatosInsumosSql($sql);
 		$sw = 0;
 		foreach($est as $info){
-				$fec_exp = $info->fec_exp;
-				$fecha = date("m") - date('m', strtotime($fec_exp));
-				if($fecha == 0){
-					$sw = 1;
-				}
+			$fec_exp = $info->fec_exp;
+			$fecha = date("m") - date('m', strtotime($fec_exp));
+			if($fecha == 0){
+				$sw = 1;
 			}
+		}
 		?>
 		<script type="text/javascript">
 		<?php
