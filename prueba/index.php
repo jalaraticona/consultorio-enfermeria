@@ -6,7 +6,7 @@ $nombre = "2";
 //$dec = $u->desencriptar("$cod");
 //echo $nombre."   -----   ".$cod."     ----   ".$dec;
 
-echo "<br>";
+/*echo "<br>";
 $fecha = date("m/d/y");
 echo $fecha;
 echo "<br>";
@@ -42,11 +42,15 @@ $iv = implode(array_map('chr', array(0, 0, 0, 0, 0, 0, 0, 0)));
 $cod = openssl_encrypt($message, 'des-ede3', $key, OPENSSL_RAW_DATA, $iv);
 
 echo $cod;
-echo "<br>";
+echo "<br>";*/
 
 //$cadena_decodificada=urldecode($cadena_codificada);
 //echo $cadena_decodificada;
 
-
+//$sql = "SELECT MAX(rd.id_reg_diario) as dia FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria' ";
+$sql = "SELECT id_reg_diario, saldo FROM registrodiario
+    WHERE id_reg_diario = ( SELECT MAX(rd.id_reg_diario) FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria')";
+$datos2 = $u->getDatosPacienteSql($sql);
+print_r(sizeof($datos2)." ".$datos2[0]->id_reg_diario." ".$datos2[0]->saldo);exit;
 
 ?>

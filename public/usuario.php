@@ -130,10 +130,58 @@ class usuario extends Conectar{
 		return $arreglo;
 	}
 	public function insertarInsumo(){
-		$sql = "insert into insumos values (null,'".$_POST["nombre"]."','".$_POST["tipo"]."','".$_POST["detalle"]."','".$_POST["fec_ing"]."','".$_POST["fec_exp"]."','".$_POST["stock"]."','usable','".$_SESSION["id_enf"]."')";
+		$comprobante = $_POST["comprobante"];
+		$lote = $_POST["lote"];
+		$origen = $_POST["origen"];
+		$red = $_POST["red"];
+		$nombre = $_POST["nombre"];
+		$tipo = $_POST["tipo"];
+		$fec_ing = $_POST["fec_ing"];
+		$fec_exp = $_POST["fec_exp"];
+		$stock = $_POST["stock"];
+		$estado = "usable";
+		$id_enf = $_SESSION["id_enf"];
+		if($tipo == 'jeringa'){
+			$medida = $_POST["medida"];
+		}
+		else{
+			$medida = "---";
+		}
+		$sql = "insert into insumos values (null,'".$nombre."','".$medida."','".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."') ";
 		$this->db->query($sql);
+		$sql = "SELECT MAX(id_insumo) as id FROM insumos";
+		$dato = $this->db->query($sql);
+		$arreglo = array();
+		while ($reg = $dato->fetch_object()) {
+			$arreglo[] = $reg;
+		}
+		$id = $arreglo[0]->id;
+		$sql = "SELECT saldo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(rd.id_reg_diario) FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = '".$nombre."' )";
+		$dato = $this->db->query($sql);
+		if(sizeof($dato) == 0){
+			$sql = "INSERT INTO registrodiario VALUES (null, '".$fec_ing."', '0', '".$stock."', '".$stock."', '0', '".$origen."', '0', '0', '0', '0', '0', '".$stock."', '".$id_enf."', '".$id."' ) ";
+			$this->db->query($sql);
+		}
+		else{
+			$otro = array();
+			while ($reg = $dato->fetch_object()) {
+				$otro[] = $reg;
+			}
+			$saldo = $otro[0]->saldo;
+			$total = $saldo + $stock;
+			$sql = "INSERT INTO registrodiario VALUES (null, '".$fec_ing."', '".$saldo."', '".$stock."', '".$total."', '0', '".$origen."', '0', '0', '0', '0', '0', '".$total."', '".$id_enf."', '".$id."' ) ";
+			$this->db->query($sql);
+		}
+
+		//$sql = "SELECT MAX(id_insumo) AS id FROM insumos where nombre=".$nombre." ";
+		//$dato = $this->db->query($sql);
+		//$num = $dato[0]->id;
+		//$sql = "SELECT MAX(id_reg_diario) as id, saldo  FROM registrodiariovacuna WHERE id_insumo = ".$num." ";
+		//if(!isset($datos)){
+			//$sql = "insert into registrodiariovacuna values (null, CURRENT_DATE(), 0, '".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."')";
+		//}
 	}
-	public function updateInsumo(){
+	public function updateVacuna(){
 		$sql = "update insumos 
 				set 
 				nombre = '".$_POST["nombre"]."',
@@ -187,7 +235,7 @@ class usuario extends Conectar{
 		$this->db->query($sql);
 	}
 
-	public function insertarVacuna(){
+	/*public function insertarVacuna(){
 		$motivo = $_POST["motivo"];
 		$lugar = $_POST["lugar"];
 		$dosis = $_POST["dosis"];
@@ -196,7 +244,7 @@ class usuario extends Conectar{
 		$id_ser = $_POST["servicio"];
 		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
-	}
+	}*/
 
 	//Usuario consultas
 	public function insertarEnfermera(){

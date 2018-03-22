@@ -6,7 +6,7 @@ if(!isset($_SESSION["id"])){
 $mensaje='';
 if(isset($_POST["grabar"])){
 	if( filter_var( trim($_POST["nombre"]) ) == false){
-		$mensaje.='El campo nombre es obligatorio. <br>';
+		$mensaje.='Es necesario especificar el nombre de la vacuna. <br>';
 	}
 	if( filter_var( trim($_POST["tipo"]) ) == false){
 		$mensaje.='Es necesario seleccionar la el tipo de insumo. <br>';
@@ -83,22 +83,47 @@ if(isset($_POST["grabar"])){
 											</thead>
 											<tbody>
 												<tr>
+													<td>Nro. de comprobante: </td>
+													<td><input type="number" name="comprobante" id="comprobante" placeholder="Ingrese numero de comprobante" value="<?php echo set_value_input(array(),'comprobante','comprobante'); ?>" required="true"/></td>
+												</tr>
+												<tr>
+													<td>Lote del insumo: </td>
+													<td><input type="text" name="lote" id="lote" placeholder="Ingrese lote de la vacuna" value="<?php echo set_value_input(array(),'lote','lote'); ?>" required="true"/></td>
+												</tr>
+												<tr>
+													<td>Origen: </td>
+													<td><div class="select-wrapper">
+														<select name="origen" id="origen" required="true">
+															<option value="pai" selected>PAI SEDES LA PAZ</option>
+															<option value="otro">otro..</option>
+														</select>
+													</div></td>
+												</tr>
+												<tr>
+													<td>Red: </td>
+													<td><div class="select-wrapper">
+														<select name="red" id="red" required="true">
+															<option value="norte" selected>Nro.3 norte central</option>
+															<option value="otro">otro..</option>
+														</select>
+													</div></td>
+												</tr>
+												<tr>
 													<td>Nombre Insumo:</td>
-													<td><input type="text" name="nombre" id="nombre" placeholder="Ingrese Nombre" value="<?php echo set_value_input(array(),'nombre','nombre'); ?>" required="true" autofocus="true"  /></td>
+													<td>
+														<div class="select-wrapper">
+															<select name="nombre" id="nombre" required="true">
+																<?php $vacunas = ['difteria','sarampion','fiebre amarilla','influenza estacional','hepatitis b'];
+																for ($i = 0; $i < sizeof($vacunas) ; $i++) {
+																	echo "<option value=".$vacunas[$i].">Vacuna para ".$vacunas[$i]."</option>";
+																}
+																?>
+															</select>
+														</div>
+													</td>
 												</tr>
 												<tr>
-													<td>Tipo:</td>
-													<td><select name="tipo" id="tipo" required="true">
-														<option value="" <?php echo set_value_select(array(),'tipo','tipo',''); ?>>Seleccione.......</option>
-														<option value="jeringa" <?php echo set_value_select(array(),'tipo','tipo','jeringa'); ?>>Jeringa</option>
-														<option value="vacuna" <?php echo set_value_select(array(),'tipo','tipo','vacuna'); ?>>Vacuna</option>
-														<option value="inyectable" <?php echo set_value_select(array(),'tipo','tipo','inyectable'); ?>>Inyectable</option>
-														<option value="guantes" <?php echo set_value_select(array(),'tipo','tipo','guantes'); ?>>Guantes</option>
-													</select></td>
-												</tr>
-												<tr>
-													<td>Detalle</td>
-													<td><textarea name="detalle" id="detalle" placeholder="Ingresa las observaciones o detalles del producto" rows="6"></textarea></td>
+													<input type="hidden" name="tipo" id="tipo" value="vacuna">
 												</tr>
 												<tr>
 													<td>Fecha de ingreso:</td>
@@ -116,7 +141,7 @@ if(isset($_POST["grabar"])){
 													<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>
 												</tr>
 												<tr>
-													<td><center><input type="submit" value="Registrar" /></center></td>
+													<td><center><input type="submit" value="Registrar Vacuna" /></center></td>
 													<td><center><input type="reset" value="Limpiar Datos" class="alt" /></center></td>
 												</tr>
 											</tbody>

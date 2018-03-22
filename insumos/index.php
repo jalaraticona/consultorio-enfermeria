@@ -36,19 +36,21 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 		<title>..:: Lista de Insumos ::..</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="../assets/css/main.css" />
-		
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<script src="../assets/alertify/alertify.js"></script>
+		<link rel="stylesheet" href="../assets/alertify/css/alertify.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/default.min.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/bootstrap.min.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/semantic.css">
 	</head>
 	<body>
 		<script type="text/javascript">
 		a = <?php echo $_GET["m"];?>;
 		if(a == 1){
-			alertify.success('Datos del paciente registrados correctamente.');
+			alertify.success('Insumo registrado correctamente.');
 		}
 		if(a == 2){
-			alertify.warning('Datos del paciente modificados correctamente.');
+			alertify.warning('Insumo modificado correctamente.');
 		}
 		</script>
 		<div id="page-wrapper">
@@ -83,18 +85,20 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 							<!-- Text -->
 								<section class="box">
 									<h4>Cantidad de insumos registrados registrados: <?php echo $cantidad[0]->cuantos ?> insumos</h4>
-									<a href="add.php" class="button small icon fa-plus" >Agregar Insumo</a>
 									<div class="table-wrapper">
 										<table class="alt">
 											<thead>
 												<tr>
-													<th>Nro.</th>
+													<th>Comp.</th>
+													<th>Lote</th>
 													<th>Insumo</th>
 													<th>Tipo</th>
-													<th>Detalle</th>
+													<th>Origen</th>
+													<th>Coordinacion red</th>
 													<th>Fecha de Ingreso</th>
 													<th>Fecha de Expiración</th>
 													<th>Stock</th>
+													<th>Cant. disponible</th>
 													<th>Estado</th>
 													<th>Accion</th>
 												</tr>
@@ -106,13 +110,16 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 													$cont++;
 													?>
 													<tr>
-														<td><?php echo $cont ?></td>
+														<td><?php echo $dato->comprobante?></td>
+														<td><?php echo $dato->lote?></td>
 														<td><?php echo $dato->nombre?></td>
 														<td><?php echo $dato->tipo?></td>
-														<td><?php echo $dato->detalle?></td>
+														<td><?php echo $dato->origen?></td>
+														<td><?php echo $dato->red?></td>
 														<td><?php echo $dato->fec_ing?></td>
 														<td><?php echo $dato->fec_exp?></td>
 														<td><?php echo $dato->stock?></td>
+														<td><?php echo $dato->cant_disp?></td>
 														<td><?php echo $dato->estado?></td>
 														<td><a href="edit.php?id_insumo=<?php $enc = $u->encriptar($dato->id_insumo);
 														echo $enc;?>" class="icon fa-pencil">editar</a><br>
@@ -122,7 +129,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 												}
 												?>
 												<tr>
-													<td colspan="10">
+													<td colspan="11">
 														<div class="pull-right">
 															<ul class="pagination">
 															    <li><a href="index.php">Primera Página</a></li>
@@ -169,6 +176,9 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 											</tbody>
 										</table>
 									</div>
+									<br>
+									<center><a href="addVacuna.php" class="button small icon fa-plus" >Agregar VACUNA</a>
+									<a href="addJeringa.php" class="button small icon fa-plus" >Agregar JERINGAS</a></center>
 								</section>
 						
 						</div>

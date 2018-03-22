@@ -6,4 +6,6 @@ var $carreras = ['ingenieria agronomica','tecnica superior agropecuaria de viach
 
 var $atenciones = ['curacion pequeña','curacion mediana','inyectable','nebulizacion',''];
 
-var $vacunas = ['difteria','sarampion','fiebre amarilla','influenza estacional','hepatitis b']
+var $vacunas = ['difteria','sarampion','fiebre amarilla','influenza estacional','hepatitis b'];
+
+var jeringas = ['27G x 3/8 (BCG)','23G x 0,5ML (PENTA, NEOMO, IPV, dT)','23G x 1ML (INF.PED)','25G x 5/8 0,5ML (P/A SRP, FA, SR)','22G x 1ML (HB, P/P BCG)','22G x 0,5ML (Dt, INF.ADUL)','22G x 5ML (P/P FA, SR, BCG)','cajas de bioseguridad'];
