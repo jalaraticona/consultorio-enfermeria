@@ -24,8 +24,8 @@ else{
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
 $sql1 = "select count(*) as cuantos from insumos;";
 $cantidad = $u->getDatosInsumosSql($sql1);
-$sql2 = "select * from insumos
-		limit ".$empezar_desde.",".$cant_por_pagina." ";
+$sql2 = "SELECT * FROM insumos
+		LIMIT ".$empezar_desde.",".$cant_por_pagina." ";
 $datos = $u->getDatosInsumosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
@@ -92,7 +92,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 													<th>Comp.</th>
 													<th>Lote</th>
 													<th>Insumo</th>
-													<th>Tipo</th>
+													<th>Medida</th>
 													<th>Origen</th>
 													<th>Coordinacion red</th>
 													<th>Fecha de Ingreso</th>
@@ -113,7 +113,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														<td><?php echo $dato->comprobante?></td>
 														<td><?php echo $dato->lote?></td>
 														<td><?php echo $dato->nombre?></td>
-														<td><?php echo $dato->tipo?></td>
+														<td><?php echo $dato->medida?></td>
 														<td><?php echo $dato->origen?></td>
 														<td><?php echo $dato->red?></td>
 														<td><?php echo $dato->fec_ing?></td>

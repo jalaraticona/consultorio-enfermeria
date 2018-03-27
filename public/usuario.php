@@ -134,7 +134,6 @@ class usuario extends Conectar{
 		$lote = $_POST["lote"];
 		$origen = $_POST["origen"];
 		$red = $_POST["red"];
-		$nombre = $_POST["nombre"];
 		$tipo = $_POST["tipo"];
 		$fec_ing = $_POST["fec_ing"];
 		$fec_exp = $_POST["fec_exp"];
@@ -143,9 +142,11 @@ class usuario extends Conectar{
 		$id_enf = $_SESSION["id_enf"];
 		if($tipo == 'jeringa'){
 			$medida = $_POST["medida"];
+			$nombre = "Jeringa ".$_POST["medida"];
 		}
 		else{
 			$medida = "---";
+			$nombre = $_POST["nombre"];
 		}
 		$sql = "insert into insumos values (null,'".$nombre."','".$medida."','".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."') ";
 		$this->db->query($sql);
@@ -233,6 +234,18 @@ class usuario extends Conectar{
 		$id_ser = $_POST["servicio"];
 		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
+	}
+
+	public function insertarVacunacion(){
+		$motivo = "vacunacion";
+		$lugar = $_POST["lugar"];
+		$dosis = $_POST["dosis"];
+		$id_enf = $_SESSION["id_enf"];
+		$id_pac = $_POST["id_pac"];
+		$id_ser = $_POST["servicio"];
+		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$this->db->query($sql);
+		
 	}
 
 	/*public function insertarVacuna(){

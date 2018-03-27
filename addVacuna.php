@@ -66,6 +66,7 @@ if(isset($_POST["grabar"])){
 
 							<!-- Form -->
 								<section class="box">
+								<h3>Se pide por favor llenar el Nombre de los insumos bajo la siguiente lista:</h3>
 									<form method="post" action="">
 										<?php 
 										if($mensaje != ''){
@@ -78,7 +79,7 @@ if(isset($_POST["grabar"])){
 										?>
 										<table>
 											<thead>
-												<th colspan="2"><center><h3>..:: Datos de la Vacuna ::..</h3></center></th>
+												<th><h3>Datos del insumo</h3></th>
 											</thead>
 											<tbody>
 												<tr>
@@ -122,6 +123,9 @@ if(isset($_POST["grabar"])){
 													</td>
 												</tr>
 												<tr>
+													<input type="hidden" name="tipo" id="tipo" value="vacuna">
+												</tr>
+												<tr>
 													<td>Fecha de ingreso:</td>
 													<td><input type="date" name="fec_ing" id="fec_ing" value="<?php echo set_value_input(array(),'fec_ing','fec_ing'); ?>" required="true"/></td>
 												</tr>
@@ -135,7 +139,6 @@ if(isset($_POST["grabar"])){
 												</tr>
 												<tr>
 													<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>
-													<td><input type="hidden" name="tipo" id="tipo" value="vacuna"></td>
 												</tr>
 												<tr>
 													<td><center><input type="submit" value="Registrar Vacuna" /></center></td>

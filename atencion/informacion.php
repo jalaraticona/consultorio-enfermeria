@@ -12,15 +12,14 @@ function buscar($b) {
             echo "No se han encontrado resultados para '<b>".$b."</b>' debe registrar primero al paciente...";
       }
       else{
-            echo "<thead><tr><th colspan='2'>Informacion</th><th>Detalle Servicio</th></thead><tbody>";
+            echo "<tbody>";
             foreach($resultado as $inf){
-                  $id_servicio = $inf->id_servicio;
-                  $nombre = $inf->nombre;
+                  $nombre = "Vacuna contra ".$inf->nombre;
                   $detalle = $inf->detalle;
-                  $costo = $inf->costo;
+                  $costo = "Bs.".$inf->costo;
                   $tipo = $inf->tipo;
                    
-                  echo "<tr><td>Nro.: </td><td>".$id_servicio."</td><td rowspan='4'>".$detalle."</td><tr><td>Servicio: </td><td>".$nombre."</td></tr><tr><td>Costo: </td><td>Bs. ".$costo."</td></tr><tr><td>Tipo: </td><td>".$tipo."</td></tr>";    
+                  echo "<tr><td>Servicio: ".$nombre."</td><td>Costo: ".$costo."</td></tr><tr><td colspan='2'><center>Detalle del servicio</center><br>".$detalle."</td></tr>";    
             }
             echo "</tbody>";
       }

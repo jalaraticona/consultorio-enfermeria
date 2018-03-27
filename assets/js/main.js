@@ -46,7 +46,7 @@
 			//obtenemos el texto introducido en el campo de búsqueda
 			consulta = $("#servicio").val();
 
-			if (consulta == 7 || consulta == 8 || consulta == 9 || consulta == 10 || consulta == 11){
+			if (consulta == 7 || consulta == 9){
 				$('#dosis').removeAttr('disabled');
 			}
 			else{
