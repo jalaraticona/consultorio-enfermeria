@@ -9,14 +9,6 @@ $des = $u->desencriptar($var);
 if(!isset($_GET["ci"]) or !is_numeric($des)){
 	die("Error 404");
 }
-function edad1($fecha){
-      list($anyo,$mes,$dia) = explode("-",$fecha);
-      $anyo_dif  = date("Y") - $anyo;
-      $mes_dif = date("m") - $mes;
-      $dia_dif   = date("d") - $dia;
-      if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
-      return $anyo_dif;
-}
 $mensaje='';
 if(isset($_GET["ci"]) and is_numeric($des)){
 	$sql = "select pe.*, pa.id_paciente, pa.residencia, pa.categoria, pa.carrera_cargo from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$des."";
@@ -24,7 +16,7 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
 	$fecha = $datop[0]->fec_nac;
-	$edad = edad1($datop[0]->fec_nac);
+	$edad = $u->edad1($datop[0]->fec_nac);
 	$sexo = $datop[0]->sexo;
 	$residencia = $datop[0]->residencia;
 	$categoria = $datop[0]->categoria;
@@ -45,7 +37,6 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ORDER BY (fec_exp) ASC";
 	$jeringas = $u->getDatosPacienteSql($sql);
 }
-
 if (isset($_POST["id_pac"])) {
 	$u->insertarVacunacion();
 	header("Location: index.php");

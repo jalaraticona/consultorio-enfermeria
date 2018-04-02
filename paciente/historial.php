@@ -9,14 +9,6 @@ $des = $u->desencriptar($var);
 if(!isset($_GET["ci"]) or !is_numeric($des)){
 	header("Location: index.php");
 }
-function edad($fecha){
-      list($anyo,$mes,$dia) = explode("-",$fecha);
-      $anyo_dif  = date("Y") - $anyo;
-      $mes_dif = date("m") - $mes;
-      $dia_dif   = date("d") - $dia;
-      if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
-      return $anyo_dif;
-}
 $sql = "SELECT pe.*, pa.id_paciente, pa.residencia, pa.fec_reg, pa.categoria, pa.carrera_cargo FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$des." ";
 $datos = $u->getDatosPacienteSql($sql);
 $sql = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$des." ";
@@ -91,7 +83,7 @@ $enc = $u->encriptar($datos[0]->ci);
 												<td>Fecha de Nacimiento:</td>
 												<td><?php echo $datos[0]->fec_nac; ?></td>
 												<td>Edad:</td>
-												<td><?php echo edad($datos[0]->fec_nac); ?> años</td>
+												<td><?php echo $u->edad($datos[0]->fec_nac); ?> años</td>
 												<td>Sexo: </td>
 												<td><?php echo $datos[0]->sexo; ?></td>
 											</tr>
@@ -146,7 +138,7 @@ $enc = $u->encriptar($datos[0]->ci);
 										</div>
 									</div>
 									<br>
-									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $enc;?>" class="button special small icon fa-plus" >Realizar atención</a></center>
+									<center><a href="../atencion/RegistraHistoria.php?ci=<?php echo $enc;?>" class="button special small icon fa-plus" >Realizar Proc. Enfermero</a> &nbsp; <a href="../atencion/RegistraVacunacion.php?ci=<?php echo $enc;?>" class="button special small icon fa-plus" >Realizar Vacunacion</a></center>
 								</section>
 						</div>
 					</div>

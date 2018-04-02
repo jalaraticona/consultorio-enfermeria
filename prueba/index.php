@@ -48,9 +48,15 @@ echo "<br>";*/
 //echo $cadena_decodificada;
 
 //$sql = "SELECT MAX(rd.id_reg_diario) as dia FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria' ";
-$sql = "SELECT id_reg_diario, saldo FROM registrodiario
-    WHERE id_reg_diario = ( SELECT MAX(rd.id_reg_diario) FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria')";
+$fecha = date("Y-m-d");
+$sql = "SELECT fec_registro FROM registrodiario WHERE fec_registro = CURRENT_DATE()";
 $datos2 = $u->getDatosPacienteSql($sql);
-print_r(sizeof($datos2)." ".$datos2[0]->id_reg_diario." ".$datos2[0]->saldo);exit;
+$fecha2 = $datos2[0]->fec_registro;
+if($fecha2 == $fecha){
+	print_r("si compara");exit;
+}
+else{
+	print_r($fecha." no compara ".$fecha2);exit;
+}
 
 ?>

@@ -232,32 +232,115 @@ class usuario extends Conectar{
 		$id_enf = $_SESSION["id_enf"];
 		$id_pac = $_POST["id_pac"];
 		$id_ser = $_POST["servicio"];
-		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$sql = "INSERT INTO registrahistoria VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 	}
 
 	public function insertarVacunacion(){
+		$nomvac = "";
+		$nomjer = "";
+		$lotevacuna = "";
+		$lotejeringa = "";
 		$motivo = "vacunacion";
 		$lugar = $_POST["lugar"];
 		$dosis = $_POST["dosis"];
+		$lotvac = $_POST["lotevacunas"];
+		$lotjer = $_POST["lotejeringas"];
 		$id_enf = $_SESSION["id_enf"];
 		$id_pac = $_POST["id_pac"];
 		$id_ser = $_POST["servicio"];
+		//registro en la historia clinica
 		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
-		
-	}
+		//verificacion de stock del insumo jeringas y vacunas (disponible - no disponible), update de cantidad disponible del insumo y asignacion de disponibilidad del insumo
+		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotvac."' and estado = 'usable' ";
+		$vacuna = $this->db->query($sql);
+		$vac = array();
+		while ($reg = $vacuna->fetch_object()) {
+			$vac[] = $reg;
+		}
+		$res = $vac[0]->cant_disp-1;
+		$nomvac = $vac[0]->nombre;
+		$lotevacuna = $vac[0]->lote;
+		$estv = 'usable';
+		if($res == 0){
+			$estv = 'vacio';
+		}
+		$sql = "update insumos 
+				set 
+				cant_disp = '".$res."',
+				estado = '".$estv."'
+				where id_insumo = '".$lotvac."' ";
+		$this->db->query($sql);
+		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotjer."' and estado = 'usable' ";
+		$jeringa= $this->db->query($sql);
+		$jer = array();
+		while ($reg = $jeringa->fetch_object()) {
+			$jer[] = $reg;
+		}
+		$resj = $jer[0]->cant_disp-1;
+		$nomjer = $jer[0]->nombre;
+		$lotejeringa = $jer[0]->lote;
+		$estj = 'usable';
+		if($resj == 0){
+			$estj = 'vacio';
+		}
+		$sql = "update insumos 
+				set 
+				cant_disp = '".$resj."',
+				estado = '".$estj."'
+				where id_insumo = '".$lotjer."' ";
+		$this->db->query($sql);
 
-	/*public function insertarVacuna(){
-		$motivo = $_POST["motivo"];
-		$lugar = $_POST["lugar"];
-		$dosis = $_POST["dosis"];
-		$id_enf = $_SESSION["id_enf"];
-		$id_pac = $_POST["id_pac"];
-		$id_ser = $_POST["servicio"];
-		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
-		$this->db->query($sql);
-	}*/
+		//registro de vacunas y jeringas en el registro diario, verificacion de usabilidad
+		//VACUNAS
+		
+		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotvac."' )";
+		$datoo = $this->db->query($sql);
+		$dato = array();
+		while ($reg = $datoo->fetch_object()) {
+			$dato[] = $reg;
+		}
+		if(sizeof($dato) > 0){
+			$fec_actual = date("Y-m-d");
+			$idreg = $dato[0]->id_reg_diario;
+			$salant = $dato[0]->sal_ant;
+			$canegr = $dato[0]->cant_egre;
+			$saldo = $dato[0]->saldo;
+			$regi = $dato[0]->fec_registro;
+			if($dato[0]->id_insumo == $lotvac){
+				//Si existe ya un registro en el dia
+				if ($regi == $fec_actual) {
+					$canegr++;
+					$saldo--;
+					$sql = "update registrodiario
+							set 
+							cant_egre = '".$canegr."',
+							saldo = '".$saldo."'
+							where id_reg_diario = '".$idreg."' ";
+					$this->db->query($sql);
+				}
+				//si no existe un registro en el dia
+				else {
+					$salant = $saldo;
+					$egreso = 1;
+					$saldo--;
+					$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
+					$this->db->query($sql);
+				}
+			}
+			else{
+				$salant = $saldo;
+				$egreso = 1;
+				$saldo--;
+				$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
+				$this->db->query($sql);
+			}
+		}
+		else {
+			print_r("Error 404");exit;
+		}
+	}
 
 	//Usuario consultas
 	public function insertarEnfermera(){
@@ -305,6 +388,61 @@ class usuario extends Conectar{
         //$decrypted = rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode($cadena), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
         $dec = base64_decode($cadena);
         return $dec;  //Devuelve el string desencriptado
+    }
+    public function edad($fecha){
+		list($anyo,$mes,$dia) = explode("-",$fecha);
+		$anyo_dif  = date("Y") - $anyo;
+		$mes_dif = date("m") - $mes;
+		$dia_dif   = date("d") - $dia;
+		if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
+		return $anyo_dif;
+	}
+	public static function fecha($fecha)
+    {
+   	    $dia=substr($fecha,8,2);
+		$mes=substr($fecha,5,2);
+		$anio=substr($fecha,0,4);
+      
+        switch ($mes){
+        	case '01':
+        	$mes="Enero";
+        	break;
+        	case '02':
+        	$mes="Febrero";
+        	break;
+        	case '03':
+        	$mes="Marzo";
+        	break;
+        	case '04':
+        	$mes="Abril";
+        	break;
+        	case '05':
+        	$mes="Mayo";
+        	break;
+        	case '06':
+        	$mes="Junio";
+        	break;
+        	case '07':
+        	$mes="Julio";
+        	break;
+        	case '08':
+        	$mes="Agosto";
+        	break;
+        	case '09':
+        	$mes="Septiembre";
+        	break;
+        	case '10':
+        	$mes="Octubre";
+        	break;
+        	case '11':
+        	$mes="Noviembre";
+        	break;
+        	case '12':
+        	$mes="Diciembre";
+        	break;
+        }
+        $fecha=$dia." de ".$mes." de ".$anio;
+        return $fecha; 
     }
 }
 ?>
