@@ -139,6 +139,16 @@ $se = $datos[0]->sexo;
 								<p>Esta opcion permite al operador generar reportes sobre la produccion de servicios del consultorio de Enfermería.</p>
 							</section>
 						</div>
+						<div class="features-row">
+							<section>
+								<a href="../estadisticas" title=""><span class="icon major fa-copy accent4"></span></a>
+								<a href="../estadisticas" title=""><h3>Estadisticas del servicio</h3></a>
+								<p>Esta opcion permite al operador obtener y visualizar las estadisticas que requiere.</p>
+							</section>
+							<section>
+								
+							</section>
+						</div>
 					</section>
 
 				</section>

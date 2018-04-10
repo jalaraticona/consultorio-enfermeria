@@ -78,6 +78,82 @@ else{
 	$mess = $meses[$me-1];
 }
 
+
+$cantidad = array();
+$mensual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
+array_push($cantidad, 'Numero');
+for($i= 1; $i < 10; $i++){
+  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = 2 and id_servicio = ".$i."";
+  $datos = $u->getDatosPacienteSql($sql);
+  array_push($cantidad, (int) $datos[0]->cant);
+}
+array_push($mensual, $cantidad);
+$mensual = json_encode($mensual);
+
+$cant = array();
+$anual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
+$meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+for ($j=0; $j < date('m') ; $j++) { 
+	array_push($cant, $meses[$j]);
+	for($i= 1; $i < 10; $i++){
+		$a = $j+1;
+	  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
+	  $datos = $u->getDatosPacienteSql($sql);
+	  array_push($cant, (int) $datos[0]->cant);
+	}
+	array_push($anual, $cant);
+	$cant = array();
+}
+$anual = json_encode($anual);
+
+$html = <<<EOF
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(<?php echo $anual; ?>);
+
+    var options = {
+      title: 'grafica anual de atenciones por servicio',
+      hAxis: {title: 'Año <?php echo "20".date("y"); ?>',  titleTextStyle: {color: '#333'}},
+      vAxis: {tittle: 'Cantidad atendida',minValue: 0}
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  }
+</script>
+EOF;
+
+// output the HTML content
+$pdf->writeHTML($html, true, false, true, false, '');
+
+$html = '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+  google.charts.load("current", {"packages":["corechart"]});
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable($anual);
+
+    var options = {
+      title: "grafica anual de atenciones por servicio",
+      hAxis: {title: "Año $anio_actual",  titleTextStyle: {color: "#333"}},
+      vAxis: {title: "Cantidad atendida",minValue: 0}
+    };
+
+    var chart = new google.visualization.AreaChart(document.getElementById("chart_div"));
+    chart.draw(data, options);
+  }
+</script>
+<div id="chart_div" style="width: 900px; height: 500px;"></div>
+';
+
+// output the HTML content
+$pdf->writeHTML($html, true, false, true, false, '');
+
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="3">
 	<tr>

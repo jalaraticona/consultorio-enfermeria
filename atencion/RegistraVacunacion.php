@@ -16,7 +16,7 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
 	$fecha = $datop[0]->fec_nac;
-	$edad = $u->edad1($datop[0]->fec_nac);
+	$edad = $u->edad($datop[0]->fec_nac);
 	$sexo = $datop[0]->sexo;
 	$residencia = $datop[0]->residencia;
 	$categoria = $datop[0]->categoria;

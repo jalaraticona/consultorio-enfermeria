@@ -9,3 +9,12 @@ var $atenciones = ['curacion pequeña','curacion mediana','inyectable','nebuliza
 var $vacunas = ['difteria','sarampion','fiebre amarilla','influenza estacional','hepatitis b'];
 
 var jeringas = ['27Gx3/8','23Gx1/2','23Gx1','25Gx5/8','22Gx1','22Gx1/2','22Gx5','cajas de bioseguridad'];
+
+realizar validacioines de fechas, numeros de cedulas de identidad y digitacion de 1 sola vez, investigar datos minimos y maximos para el sistema
+
+..::observaciones marco teorico::..
+para referenciacion de fuguras Ver figura ... , Como se muestra en la figura .... , Se refleja en la figura ......
+seguridad ed los datos (Revisar criterios de seguridad, protocoloa para realizar backup)
+
+..::Mes de abril::..
+Documentacion del sistema desarrollado
