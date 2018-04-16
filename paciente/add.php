@@ -3,38 +3,34 @@ require_once("../public/usuario.php");
 if(!isset($_SESSION["id"])){
 	header("Location: ../iniciarSesion.php");
 }
+$u = new usuario();
 $mensaje='';
 if(isset($_POST["grabar"])){
-	if( filter_var( trim($_POST["nombre"]) ) == false){
-		$mensaje.='El campo nombre es obligatorio. <br>';
+	$nom = trim($_POST["nombre"]);
+	$pat = trim($_POST["paterno"]);
+	$mat = trim($_POST["materno"]);
+	$ci = trim($_POST["ci"]);
+	$exp = trim($_POST["expedido"]);
+	$fec = trim($_POST["fec_nac"]);
+	$sex = trim($_POST["sexo"]);
+	if(!$u->soloLetras($nom) or $nom == ''){
+		$mensaje.='Campo nombre es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["paterno"]) ) == false){
-		$mensaje.='El campo paterno es obligatorio. <br>';
+	if(!$u->soloLetras($pat) or $pat == ''){
+		$mensaje.='Campo apellido paterno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["materno"]) ) == false){
-		$mensaje.='El campo materno es obligatorio. <br>';
+	if(!$u->soloLetras($mat) or $mat == ''){
+		$mensaje.='Campo apellido materno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["ci"]) ) == false){
-		if(!is_numeric($_POST["ci"]) == false){
-			$mensaje.='El campo Cedula de Identidad debe ser numérico. <br>';
-		}
-		else{
-			$mensaje.='El campo Cedula de Identidad es obligatorio. <br>';
-		}
+	if(!$u->soloNumero($ci) and ($ci > 50000 and $ci < 50000000)){
+		$mensaje.='Ci debe ser numerico, debe ser mayor a 50000 y menor a 50000000. <br>';
 	}
-	if( filter_var( trim($_POST["expedido"]) ) == false){
-		$mensaje.='Es necesario seleccionar la ciudad de expedición. <br>';
-	}
-	if( filter_var( trim($_POST["fec_nac"]) ) == false){
-		$mensaje.='El campo Fecha de Naciemiento en obligatorio. <br>';
-	}
-	if( filter_var( trim($_POST["sexo"]) ) == false){
-		$mensaje.='Es necesario seleccionar su genero. <br>';
+	if(!$u->validaFecha($fec)){
+		$mensaje.='La fecha de nacimiento no puede ser posterior a la actual. <br>';
 	}
 	if($mensaje == ''){
 		$u = new usuario();
 		if(isset($_POST["nombre"])){
-			$u = new usuario();
 			$u->insertarPaciente();
 			header("Location: index.php?m=1");
 		}
@@ -92,7 +88,7 @@ if(isset($_POST["grabar"])){
 											<tbody>
 												<tr>
 													<td>Nombres: </td>
-													<td colspan="2"><input type="text" name="nombre" id="nombre" placeholder="Ingrese Nombre" value="<?php echo set_value_input(array(),'nombre','nombre'); ?>" required="true" autofocus="true"  /></td>
+													<td colspan="2"><input type="text" name="nombre" id="nombre" placeholder="Ingrese Nombre" minlength="5" maxlength="40" pattern="[A-Za-z]{2,}" value="<?php echo set_value_input(array(),'nombre','nombre'); ?>" required="true" autofocus="true"  /></td>
 												</tr>
 												<tr>
 													<td>Apellido paterno: </td>
@@ -104,13 +100,13 @@ if(isset($_POST["grabar"])){
 												</tr>
 												<tr>
 													<td>Numero C.I.: </td>
-													<td><input type="number" name="ci" id="ci" placeholder="Cedula Identidad" value="<?php echo set_value_input(array(),'ci','ci'); ?>" required="true"/>
+													<td><input type="number" name="ci" id="ci" min="50000" max="50000000" placeholder="Cedula Identidad" value="<?php echo set_value_input(array(),'ci','ci'); ?>" required="true"/>
 													</td>
 													<td>
 													<div class="select-wrapper">	
 													<select name="expedido" id="expedido" required="true">
 														<option value="" <?php echo set_value_select(array(),'expedido','expedido',''); ?>>Seleccione.......</option>
-														<option value="la paz"<?php echo set_value_select(array(),'expedido','expedido','la paz'); ?>>La Paz</option>
+														<option value="la paz" <?php echo set_value_select(array(),'expedido','expedido','la paz'); ?>>La Paz</option>
 														<option value="santa cruz"<?php echo set_value_select(array(),'expedido','expedido','santa cruz'); ?>>Santa Cruz</option>
 														<option value="cochabamba"<?php echo set_value_select(array(),'expedido','expedido','cochabamba'); ?>>Cochabamba</option>
 														<option value="pando"<?php echo set_value_select(array(),'expedido','expedido','pando'); ?>>Pando</option>
@@ -145,7 +141,9 @@ if(isset($_POST["grabar"])){
 															<select name="residencia" id="residencia" required="true">
 																<?php  $municipios = ['ixiamas','san buena ventura','sica sica','calamarca','collana','colquencha','patacamaya','umala','general juan jose perez (charazani)','curva','puerto acosta','mocomoco','puerto carabuco','escoma','humanata','caranavi','alto beni','apolo','pelechuco','san pedro de curahuara','chacarilla','papel pampa','viacha','andres de machaca','desaguadero','guaqui','jesús de machaca','taraco','tiahuanaco','inquisivi','cajuata','colquiri','ichoca','licoma pampa','quime','santiago de machaca','catacora','sorata','combaya','guanay','mapiri','quiabaya','tacacoma','teoponte','tipuani','luribay','cairoma','malla','sapahaqui','yaco','pucarani','batallas','laja','puerto perez','copacabana','san pedro de tiquina','tito yupanqui','chuma','aucapata','ayata','palca','achocalla','el alto','la paz','mecapaca','coroico','coripata','achacachi','ancoraimes','chua cocani','huarina','huatajata','santiago de huata','coro coro','calacoto','caquiaviri','charana','comanche','nazacara de pacajes','santiago de callapa','waldo ballivian','chulumani','irupana','la asunta','palos blancos','yanacachi'];
 																for ($i = 0; $i < sizeof($municipios) ; $i++) {
-																 	echo "<option value=".$municipios[$i]." >".$municipios[$i]."</option>";
+																	?>
+																	<option value="<?php echo $municipios[$i];?>"  <?php echo set_value_select(array(),'residencia','residencia',$municipios[$i]);?> ><?php echo $municipios[$i];?></option>
+																 	<?php
 																 } ?>
 														
 													</select>
@@ -159,7 +157,9 @@ if(isset($_POST["grabar"])){
 															<select name="categoria" id="categoria" required="true" >
 																<?php $categorias = ['universitario','docente','personal administrativo','externo'];
 																for ($i = 0; $i < sizeof($categorias); $i++) {
-																	echo "<option value=".$categorias[$i].">".$categorias[$i]."</option>";
+																	?>
+																	<option value="<?php echo $categorias[$i];?>"  <?php echo set_value_select(array(),'categoria','categoria',$categorias[$i]);?> ><?php echo $categorias[$i];?></option>
+																 	<?php
 																}
 																 ?>
 															</select>
@@ -173,7 +173,9 @@ if(isset($_POST["grabar"])){
 															<select name="carrera" id="carrera" required="true" >
 																<?php $carreras = ['ingenieria agronomica','tecnica superior agropecuaria de viacha','administracion de empresas','auditoria','economia','biologia','estadistica','fisica','informatica','matematicas','quimica','antropologia y arqueologia','ciencias de la comunicacion social','sociologia','trabajo social','bibliotecologia y cs. informacion','ciencias de la educacion','filosofia','historia','linguistica e idiomas','literatura','psicologia','turismo','derecho','ciencias politicas','bioquimica','quimica farmaceutica','ingenieria geografica','ingenieria geologica y medio ambiente','ing. civil','ing. electrica','ing. electronica','ing. industrial','ing. mecanica','ing. metalurgica y materiales','ing. petrolera','ing. quimica','medicina','enfermeria','nutricion y dietetica','odontologia','construcciones civiles','topografia y geodesia','electricidad','electronica y telecomunicaciones','electromecanica','mecanica automotriz','mecanica de aviacion','mecanica industrial','quimica industrial'];
 																for ($i = 0; $i < sizeof($carreras) ; $i++) {
-																 	echo "<option value=".$carreras[$i].">".$carreras[$i]."</option>";
+																 	?>
+																	<option value="<?php echo $carreras[$i];?>"  <?php echo set_value_select(array(),'carrera','carrera',$carreras[$i]);?> ><?php echo $carreras[$i];?></option>
+																 	<?php
 																 } ?>
 															</select>
 														</div>

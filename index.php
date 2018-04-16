@@ -3,6 +3,27 @@ require_once("public/usuario.php");
 if (isset($_SESSION["id"])){
     header('Location: principal/');
 }
+if(isset($_POST["user"])){
+	$u = new usuario();
+	$mensaje='';
+	$datos = $u->getLogin($_POST["user"], $_POST["password"]);
+	if(sizeof($datos) == 0){
+		$mensaje.='Usuario incorrecto';
+	}
+	else{
+		$estado = $datos[0]->estado;
+		if($estado == "activo"){
+			$_SESSION["id"] = $datos[0]->id_usuario;
+			$_SESSION["user"] = $datos[0]->user;
+			$_SESSION["tipo"] = $datos[0]->tipo;
+			$_SESSION["id_enf"] = $datos[0]->id_enf;
+			header("Location: principal/");
+		}
+		else{
+			$mensaje.='usuario inactivo';
+		}
+	}
+}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -33,7 +54,7 @@ if (isset($_SESSION["id"])){
 								    <li><a href="">Acerca del sistema</a></li>
 								</ul>
 							</li>
-							<li><a href="IniciarSesion.php" class="button">Iniciar Sesion</a></li>
+							<li><a href="#openModal" class="button">Iniciar Sesion</a></li>
 						</ul>
 					</nav>
 				</header>
@@ -53,6 +74,31 @@ if (isset($_SESSION["id"])){
 						</header>
 						<span class="image featured"><img src="images/pic01.jpg" alt="" /></span>
 					</section>
+
+					<!--MODAL-->
+					<div id="openModal" class="modalDialog">
+						<div>
+							<a href="#close" title="Close" class="close">X</a>
+							<center><h2>LOGIN</h2></center>
+							<p>Bienvenido, por favor ingrese sus datos para ingresar al sistema.</p>
+							<?php
+							if(!empty($mensaje)){
+								?>
+								<div class="alert alert-danger">
+									<h4><span class="icon fa-ban">&nbsp;<?php echo $mensaje; ?></span></h4>
+								</div>
+								<?php
+							}
+							?>
+							<form action="" method="post" accept-charset="utf-8">
+								<input type="text" name="user" id="user" placeholder="Ingrese Usuario">
+								<br>
+								<input type="password" name="password" id="password" placeholder="Ingrese contraseña">
+								<br>
+								<center><button type="submit" class="button">Iniciar sesion</button></center>
+							</form>
+						</div>
+					</div> 
 
 					<div class="row">
 						<div class="12u">
@@ -151,9 +197,6 @@ if (isset($_SESSION["id"])){
 					</div>
 
 				</section>
-
-			<!-- CTA -->
-				
 
 			<!-- Footer -->
 				<footer id="footer">

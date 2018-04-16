@@ -4,28 +4,33 @@ if(!isset($_SESSION["id"])){
 	header("Location: ../iniciarSesion.php");
 }
 $mensaje='';
+$u = new usuario();
 if(isset($_POST["grabar"])){
-	if( filter_var( trim($_POST["nombre"]) ) == false){
-		$mensaje.='Es necesario especificar el nombre de la vacuna. <br>';
+	$com = trim($_POST["comprobante"]);
+	$lot = trim($_POST["lote"]);
+	$ori = trim($_POST["origen"]);
+	$red = trim($_POST["red"]);
+	$nom = trim($_POST["nombre"]);
+	$feci = trim($_POST["fec_ing"]);
+	$fece = trim($_POST["fec_exp"]);
+	$sto = trim($_POST["stock"]);
+	if(!$u->soloNumero($com) and $com < 500){
+		$mensaje.='Nro de comprobante debe ser numerico y debe ser menor a 500. <br>';
 	}
-	if( filter_var( trim($_POST["tipo"]) ) == false){
-		$mensaje.='Es necesario seleccionar la el tipo de insumo. <br>';
+	if($lot == ''){
+		$mensaje.='ingrese el lote del insumo. <br>';
 	}
-	if( filter_var( trim($_POST["fec_exp"]) ) == false){
-		$mensaje.='El campo Fecha de Expiración en obligatorio. <br>';
+	if(!$u->validaFechaInsumo($feci)){
+		$mensaje.='El insumo solo puede ser registrado posterior al dia actual o un plazo maximo de dos dias. <br>';
 	}
-	if( filter_var( trim($_POST["stock"]) ) == false){
-		if(!is_numeric($_POST["stock"]) == false){
-			$mensaje.='El campo Cedula de Identidad debe ser numérico. <br>';
-		}
-		else{
-			$mensaje.='El campo Cedula de Identidad es obligatorio. <br>';
-		}
+	if(!$u->validaFechaM($fece)){
+		$mensaje.='No se admite fecha de expiracion pasadas, minimamente fecha de expiracion debe tener 10 dias. <br>';
+	}
+	if(!$u->soloNumero($sto) and ($sto > 10 and $sto < 1000)){
+		$mensaje.='El stock no puede ser gigantesco solo se acepta como maximo 1000. <br>';
 	}
 	if($mensaje == ''){
-		$u = new usuario();
 		if(isset($_POST["nombre"])){
-			$u = new usuario();
 			$u->insertarInsumo();
 			header("Location: index.php?m=1");
 		}
@@ -93,8 +98,8 @@ if(isset($_POST["grabar"])){
 													<td>Origen: </td>
 													<td><div class="select-wrapper">
 														<select name="origen" id="origen" required="true">
-															<option value="pai" selected>PAI SEDES LA PAZ</option>
-															<option value="otro">otro..</option>
+															<option value="pai" <?php echo set_value_select(array(),'origen','origen','pai'); ?> selected>PAI SEDES LA PAZ</option>
+															<option value="otro" <?php echo set_value_select(array(),'origen','origen','otro'); ?>>otro..</option>
 														</select>
 													</div></td>
 												</tr>
@@ -102,8 +107,8 @@ if(isset($_POST["grabar"])){
 													<td>Red: </td>
 													<td><div class="select-wrapper">
 														<select name="red" id="red" required="true">
-															<option value="norte" selected>Nro.3 norte central</option>
-															<option value="otro">otro..</option>
+															<option value="norte" <?php echo set_value_select(array(),'red','red','norte'); ?> selected>Nro.3 norte central</option>
+															<option value="otro" <?php echo set_value_select(array(),'red','red','otro'); ?>>otro..</option>
 														</select>
 													</div></td>
 												</tr>
@@ -114,7 +119,9 @@ if(isset($_POST["grabar"])){
 															<select name="nombre" id="nombre" required="true">
 																<?php $vacunas = ['difteria','sarampion','fiebre amarilla','influenza estacional','hepatitis b'];
 																for ($i = 0; $i < sizeof($vacunas) ; $i++) {
-																	echo "<option value=".$vacunas[$i].">Vacuna para ".$vacunas[$i]."</option>";
+																	?>
+																	<option value="<?php echo $vacunas[$i];?>">Vacuna para <?php echo $vacunas[$i]; ?></option>
+																	<?php
 																}
 																?>
 															</select>

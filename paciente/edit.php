@@ -15,26 +15,27 @@ if(sizeof($datos) == 0){
 }
 $mensaje='';
 if(isset($_POST["grabar"])){
-	if( filter_var( trim($_POST["nombre"]) ) == false){
-		$mensaje.='El campo nombre es obligatorio. <br>';
+	$nom = trim($_POST["nombre"]);
+	$pat = trim($_POST["paterno"]);
+	$mat = trim($_POST["materno"]);
+	$ci = trim($_POST["ci"]);
+	$exp = trim($_POST["expedido"]);
+	$fec = trim($_POST["fec_nac"]);
+	$sex = trim($_POST["sexo"]);
+	if(!$u->soloLetras($nom) or $nom == ''){
+		$mensaje.='Campo nombre es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["paterno"]) ) == false){
-		$mensaje.='El campo paterno es obligatorio. <br>';
+	if(!$u->soloLetras($pat) or $pat == ''){
+		$mensaje.='Campo apellido paterno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["materno"]) ) == false){
-		$mensaje.='El campo materno es obligatorio. <br>';
+	if(!$u->soloLetras($mat) or $mat == ''){
+		$mensaje.='Campo apellido materno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["ci"]) ) == false){
-		$mensaje.='El campo Cedula de Identidad es obligatorio. <br>';
+	if(!$u->soloNumero($nom) and ($b > 50000 and $b < 50000000)){
+		$mensaje.='Ci debe ser numerico, debe ser mayor a 50000 y menor a 50000000. <br>';
 	}
-	if( filter_var( trim($_POST["expedido"]) ) == false){
-		$mensaje.='Es necesario seleccionar la ciudad de expedición. <br>';
-	}
-	if( filter_var( trim($_POST["fec_nac"]) ) == false){
-		$mensaje.='El campo Fecha de Naciemiento en obligatorio. <br>';
-	}
-	if( filter_var( trim($_POST["sexo"]) ) == false){
-		$mensaje.='Es necesario seleccionar su genero. <br>';
+	if(!$u->validaFecha($fec)){
+		$mensaje.='La fecha de nacimiento no puede ser posterior a la actual. <br>';
 	}
 	if($mensaje == ''){
 		$u = new usuario();
@@ -80,6 +81,15 @@ if(isset($_POST["grabar"])){
 							<!-- Form -->
 								<section class="box">
 									<form method="post" action="#">
+										<?php 
+										if($mensaje != ''){
+											?>
+											<div class="alert alert-danger">
+												<?php echo $mensaje; ?>
+											</div>
+											<?php
+										}
+										?>
 										<table>
 											<thead>
 												<th colspan="3"><center><h3>..:: Editar Datos del paciente ::..</h3></center></th>

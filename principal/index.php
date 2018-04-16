@@ -30,7 +30,7 @@ $se = $datos[0]->sexo;
 	</head>
 	<body class="landing">
 		<?php 
-		$sql = "SELECT * FROM insumos WHERE estado='usable'";
+		$sql = "SELECT * FROM insumos WHERE estado='usable' and fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
 		$est = $u->getDatosInsumosSql($sql);
 		$sw = 0;
 		foreach($est as $info){
@@ -74,24 +74,25 @@ $se = $datos[0]->sexo;
 							
 							<li><a><?php 
 							if($se == "femenino"){
-								echo "Bienvenida ".$nombre_user;
+								echo "Bienvenida <b>".$nombre_user."</b>";
 							} 
 							else{
 								echo "Bienvenido ".$nombre_user;
 							}
 							?></a></li>
-							<li><a href="index.php">Inicio</a></li>
 							<li>
 								<a href="#" class="icon fa-angle-down">operaciones</a>
 								<ul>
-								    <li><a href="../enfermera/" >Usuarios Enfermeria</a></li>
-								    <li><a href="../enfermera/add.php" >Registrar Enfermera</a></li>
+								    <li><a href="../paciente/" >Pacientes registrados</a></li>
+								    <li><a href="../atencion/" >Real. Atencion</a></li>
 								  	<?php 
 								  	if($_SESSION["tipo"] == "administrador"){
-								  		echo "<li><a href='../reportes/'' >Reportes anuales</a>";
+								  		echo "<li><a href='../enfermera/'' >Personal Enfermero</a></li>";
 								  	}
 								  	?>
-								    </li>
+								    <li><a href="../insumos/" >Insumos registrados</a></li>
+								    <li><a href="../reportes/" >Reportes</a></li>
+								    <li><a href="../estadisticas/" >Estadisticas</a></li>
 								</ul>
 							</li>
 							<li><a href="../logout.php" class="button">Cerrar Sesion</a></li>
@@ -115,13 +116,13 @@ $se = $datos[0]->sexo;
 					<section class="box special features">
 						<div class="features-row">
 							<section>
-								<a href="../paciente" title=""><span class="icon major fa-users accent3"></span></a>
+								<a href="../paciente" title=""><span class="icon major fa-user-plus accent3"></span></a>
 								<a href="../paciente" title=""><h3>Registrar paciente</h3></a>
 								<p>Esta opcion nos permite realizar el registro de la información personal del paciente.</p>
 							</section>
 							<section>
 								<a href="../atencion/" title="">
-								<span class="icon major fa-heartbeat accent2"></span></a>
+								<span class="icon major fa-ambulance accent2"></span></a>
 								<a href="../atencion/" title="">
 								<h3>Realizar atencion al paciente</h3></a>
 								<p>Esta opción nos permite realizar la atencion al paciente.</p>
@@ -129,24 +130,32 @@ $se = $datos[0]->sexo;
 						</div>
 						<div class="features-row">
 							<section>
-								<a href="../insumos" title=""><span class="icon major fa-copy accent4"></span></a>
+								<a href="../insumos" title=""><span class="icon major fa-medkit accent4"></span></a>
 								<a href="../insumos" title=""><h3>Registro y verificacion de Insumos</h3></a>
 								<p>Esta opcion permite al operador registrar los insumos adquiridos, tambien permite obtener informacion acerca del stock disponible.</p>
 							</section>
 							<section>
-								<a href="../reportes/" title=""><span class="icon major fa-paste accent5"></a></span>
+								<a href="../reportes/" title=""><span class="icon major fa-file-pdf-o accent5"></a></span>
 								<a href="../reportes/"><h3>Reportes Produccion de Servicios</h3></a>
 								<p>Esta opcion permite al operador generar reportes sobre la produccion de servicios del consultorio de Enfermería.</p>
 							</section>
 						</div>
 						<div class="features-row">
 							<section>
-								<a href="../estadisticas" title=""><span class="icon major fa-copy accent4"></span></a>
+								<a href="../estadisticas" title=""><span class="icon major fa-line-chart accent4"></span></a>
 								<a href="../estadisticas" title=""><h3>Estadisticas del servicio</h3></a>
 								<p>Esta opcion permite al operador obtener y visualizar las estadisticas que requiere.</p>
 							</section>
 							<section>
-								
+								<?php 
+							  	if($_SESSION["tipo"] == "administrador"){
+							  	?>
+							  	<a href="../enfermera" title=""><span class="icon major fa-user-md accent4"></span></a>
+								<a href="../enfermera" title=""><h3>Registro de Personal Enfermero</h3></a>
+								<p>Puede visualizar y registrar al personal enfermero.</p>
+							  	<?php
+							  	}
+							  	?>
 							</section>
 						</div>
 					</section>

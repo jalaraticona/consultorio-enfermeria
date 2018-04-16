@@ -48,15 +48,40 @@ echo "<br>";*/
 //echo $cadena_decodificada;
 
 //$sql = "SELECT MAX(rd.id_reg_diario) as dia FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria' ";
-$fecha = date("Y-m-d");
-$sql = "SELECT fec_registro FROM registrodiario WHERE fec_registro = CURRENT_DATE()";
-$datos2 = $u->getDatosPacienteSql($sql);
-$fecha2 = $datos2[0]->fec_registro;
-if($fecha2 == $fecha){
-	print_r("si compara");exit;
-}
-else{
-	print_r($fecha." no compara ".$fecha2);exit;
+//$fecha = date("Y-m-d");
+//$sql = "SELECT fec_registro FROM registrodiario WHERE fec_registro = CURRENT_DATE()";
+//$datos2 = $u->getDatosPacienteSql($sql);
+//$fecha2 = $datos2[0]->fec_registro;
+
+if(isset($_POST["nombre"])){
+	$a = trim($_POST["nombre"]);
+	$b = trim($_POST["num"]);
+	$f = strtotime($_POST["fecha"]);
+	$dosmenos = date("Y-m-d", strtotime("-2 day", $f));
+	if($u->soloNumero($b) and $b > 5 and $b < 50000000){
+		print_r("son solo numeros ".$f);exit;
+	}
+	else {
+		print_r("son letras y numeros o caracteres especiales".$f);exit;
+	}
 }
 
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+</head>
+<body>
+	<form action="" method="POST" accept-charset="utf-8">
+		<input type="text" name="nombre" id="nombre" placeholder="ingrese nombre">
+		<br>
+		<input type="number" name="num" id="num" placeholder="ingrese numero">
+		<br>
+		<input type="date" name="fecha" id="fecha">
+		<br>
+		<button type="submit">Enviar</button>
+	</form>
+</body>
+</html>

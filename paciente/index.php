@@ -82,14 +82,12 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 										<table class="alt">
 											<thead>
 												<tr>
-													<th>Nro.</th>
-													<th>Nombres</th>
-													<th>Apellido Paterno</th>
-													<th>Apellido Materno</th>
+													<th>N°</th>
+													<th>Nombres_Apellidos</th>
 													<th>C.I.</th>
 													<th>Fecha de Nacimiento</th>
 													<th>Sexo</th>
-													<th>Municipio de residencia</th>
+													<th>Mpio. residencia</th>
 													<th>Categoría</th>
 													<th>Carrera/cargo</th>
 													<th>Accion</th>
@@ -106,9 +104,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 													?>
 													<tr>
 														<td><?php echo $cont ?></td>
-														<td><?php echo $dato->nombre?></td>
-														<td><?php echo $dato->paterno?></td>
-														<td><?php echo $dato->materno?></td>
+														<td><?php echo $dato->nombre." ".$dato->paterno." ".$dato->materno?></td>
 														<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
 														<td><?php echo $dato->fec_nac?></td>
 														<td><?php echo $dato->sexo?></td>
