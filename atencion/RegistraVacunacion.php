@@ -12,7 +12,7 @@ if(!isset($_GET["ci"]) or !is_numeric($des)){
 $mensaje='';
 if(isset($_GET["ci"]) and is_numeric($des)){
 	$sql = "select pe.*, pa.id_paciente, pa.residencia, pa.categoria, pa.carrera_cargo from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$des."";
-	$datop = $u->getDatosPacienteSql($sql);
+	$datop = $u->GetDatosSql($sql);
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
 	$fecha = $datop[0]->fec_nac;
@@ -25,7 +25,7 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	}
 	$ci = $datop[0]->ci;
 	$sql1 = "select * from servicio";
-	$datose = $u->getDatosPacienteSql($sql1);
+	$datose = $u->GetDatosSql($sql1);
 	$id_serv = $datose[0]->id_servicio;
 	$servicio = $datose[0]->nombre;
 	$detalle = $datose[0]->detalle;
@@ -33,9 +33,9 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$tipo = $datose[0]->tipo;
 
 	$sql = "SELECT * FROM insumos WHERE tipo = 'vacuna' ORDER BY (fec_exp) ASC";
-	$vacunas = $u->getDatosPacienteSql($sql);
+	$vacunas = $u->GetDatosSql($sql);
 	$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ORDER BY (fec_exp) ASC";
-	$jeringas = $u->getDatosPacienteSql($sql);
+	$jeringas = $u->GetDatosSql($sql);
 }
 if (isset($_POST["id_pac"])) {
 	$u->insertarVacunacion();

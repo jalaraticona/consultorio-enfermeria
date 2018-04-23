@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $cant_por_pagina = 10;
@@ -22,23 +22,37 @@ else{
 	$pagina = 1;
 }
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
-$sql1 = "select count(*) as cuantos from enfermera;";
-$cantidad = $u->getDatosPacienteSql($sql1);
-$sql2 = "select pe.* from enfermera as en, persona as pe where en.ci = pe.ci
+$sql1 = "SELECT count(*) AS cuantos FROM enfermera;";
+$cantidad = $u->GetDatosSql($sql1);
+$sql2 = "SELECT * FROM enfermera
 		limit ".$empezar_desde.",".$cant_por_pagina." ";
-$datos = $u->getDatosPacienteSql($sql2);
+$datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 ?>
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>..:: Lista de Pacientes ::..</title>
+	<title>..:: Personal Enfermero ::..</title>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="../assets/css/main.css" />
+	<script src="../assets/alertify/alertify.js"></script>
+	<link rel="stylesheet" href="../assets/alertify/css/alertify.css">
+	<link rel="stylesheet" href="../assets/alertify/css/themes/default.min.css">
+	<link rel="stylesheet" href="../assets/alertify/css/themes/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/alertify/css/themes/semantic.css">
 </head>
 <body>
+<script type="text/javascript">
+a = <?php echo $_GET["m"];?>;
+if(a == 1){
+	alertify.success('Datos del paciente registrados correctamente.');
+}
+if(a == 2){
+	alertify.warning('Datos del paciente modificados correctamente.');
+}
+</script>
 <div id="page-wrapper">
 
 <!-- Header -->
@@ -54,35 +68,8 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 <!-- Main -->
 	<section id="main" class="container">
 		<header>
-			<h2>Lista de Pacientes Registrados</h2>
+			<h2>..:: PERSONAL ENFERMERO ::..</h2>
 		</header>
-		<?php
-			if(isset($_GET["m"])){
-				switch ($_GET["m"]) {
-					case '1':
-						?>
-						<div class="alert alert-success">
-							Los datos personales del paciente se han registrado correctamente.
-						</div>
-						<?php
-					break;
-					case '2':
-						?>
-						<div class="alert alert-success">
-							Los datos personales del paciente se han modificado correctamente.
-						</div>
-						<?php
-					break;
-					case '3':
-						?>
-						<div class="alert alert-success">
-							Se ha eliminado correctamente el resgistro del paciente.
-						</div>
-						<?php
-					break;
-				}
-			}
-		?>
 		<div class="row">
 			<div class="12u">
 

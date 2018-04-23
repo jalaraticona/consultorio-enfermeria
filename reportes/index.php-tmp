@@ -9,7 +9,7 @@ $mensual  = array(array('Año', 'Inyectable', 'curacion pequeña', 'curacion med
 array_push($cantidad, 'Numero');
 for ($i = 1; $i < 10; $i++) {
 	$sql   = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = 2 and id_servicio = ".$i."";
-	$datos = $u->getDatosPacienteSql($sql);
+	$datos = $u->GetDatosSql($sql);
 	array_push($cantidad, (int) $datos[0]->cant);
 }
 array_push($mensual, $cantidad);
@@ -23,7 +23,7 @@ for ($j = 0; $j < date('m'); $j++) {
 	for ($i = 1; $i < 10; $i++) {
 		$a     = $j+1;
 		$sql   = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
-		$datos = $u->getDatosPacienteSql($sql);
+		$datos = $u->GetDatosSql($sql);
 		array_push($cant, (int) $datos[0]->cant);
 	}
 	array_push($anual, $cant);

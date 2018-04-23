@@ -20,7 +20,7 @@ function edad1($fecha){
 $mensaje='';
 if(isset($_GET["ci"]) and is_numeric($des)){
 	$sql = "select pe.*, pa.id_paciente, pa.residencia, pa.categoria, pa.carrera_cargo from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$des."";
-	$datop = $u->getDatosPacienteSql($sql);
+	$datop = $u->GetDatosSql($sql);
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
 	$fecha = $datop[0]->fec_nac;
@@ -33,7 +33,7 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	}
 	$ci = $datop[0]->ci;
 	$sql1 = "select * from servicio";
-	$datose = $u->getDatosPacienteSql($sql1);
+	$datose = $u->GetDatosSql($sql1);
 	$id_serv = $datose[0]->id_servicio;
 	$servicio = $datose[0]->nombre;
 	$detalle = $datose[0]->detalle;

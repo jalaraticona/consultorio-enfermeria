@@ -50,7 +50,7 @@ echo "<br>";*/
 //$sql = "SELECT MAX(rd.id_reg_diario) as dia FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = 'difteria' ";
 //$fecha = date("Y-m-d");
 //$sql = "SELECT fec_registro FROM registrodiario WHERE fec_registro = CURRENT_DATE()";
-//$datos2 = $u->getDatosPacienteSql($sql);
+//$datos2 = $u->GetDatosSql($sql);
 //$fecha2 = $datos2[0]->fec_registro;
 
 if(isset($_POST["nombre"])){

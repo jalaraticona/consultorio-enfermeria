@@ -23,10 +23,10 @@ else{
 }
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
 $sql1 = "select count(*) as cuantos from insumos;";
-$cantidad = $u->getDatosInsumosSql($sql1);
+$cantidad = $u->GetDatosSql($sql1);
 $sql2 = "SELECT * FROM insumos
 		LIMIT ".$empezar_desde.",".$cant_por_pagina." ";
-$datos = $u->getDatosInsumosSql($sql2);
+$datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 ?>

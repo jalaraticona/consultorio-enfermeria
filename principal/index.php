@@ -1,13 +1,19 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
-$sql = "SELECT pe.* FROM persona as pe, enfermera as en WHERE en.id_enf = ".$_SESSION["id_enf"]." and en.ci = pe.ci";
-$datos = $u->getDatosInsumosSql($sql);
-$nombre_user = $datos[0]->nombre;
-$se = $datos[0]->sexo;
+if($_SESSION["user"] == "superuser"){
+	$nombre_user = "superuser";
+	$se = 'masculino';
+}
+else{
+	$sql = "SELECT * FROM enfermera WHERE id_enfermera = '".$_SESSION["id_enf"]."' ";
+	$datos = $u->GetDatosSql($sql);
+	$nombre_user = $datos[0]->nombre;
+	$se = $datos[0]->sexo;
+}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -31,7 +37,7 @@ $se = $datos[0]->sexo;
 	<body class="landing">
 		<?php 
 		$sql = "SELECT * FROM insumos WHERE estado='usable' and fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
-		$est = $u->getDatosInsumosSql($sql);
+		$est = $u->GetDatosSql($sql);
 		$sw = 0;
 		foreach($est as $info){
 			$fec_exp = $info->fec_exp;

@@ -7,7 +7,7 @@ if(!empty($buscar)) {
 function buscar($b) {
       $pre = new usuario();
       $sql = "SELECT * FROM servicio WHERE id_servicio LIKE '%".$b."%' ";
-      $resultado = $pre->getDatosPacienteSql($sql);
+      $resultado = $pre->GetDatosSql($sql);
       if(sizeof($resultado) == 0){
             echo "No se han encontrado resultados para '<b>".$b."</b>' debe registrar primero al paciente...";
       }

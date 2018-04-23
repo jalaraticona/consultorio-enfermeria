@@ -10,9 +10,9 @@ if(!isset($_GET["ci"]) or !is_numeric($des)){
 	header("Location: index.php");
 }
 $sql = "SELECT pe.*, pa.id_paciente, pa.residencia, pa.fec_reg, pa.categoria, pa.carrera_cargo FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$des." ";
-$datos = $u->getDatosPacienteSql($sql);
+$datos = $u->GetDatosSql($sql);
 $sql = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$des." ";
-$datos2 = $u->getDatosPacienteSql($sql);
+$datos2 = $u->GetDatosSql($sql);
 if(sizeof($datos2) == 0){
 	header("Location: index.php");
 }

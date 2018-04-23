@@ -18,9 +18,9 @@ function edad($fecha) {
 }
 $u      = new usuario();
 $sql    = "SELECT pe.*, pa.id_paciente, pa.procedencia, pa.fec_reg FROM persona as pe, paciente as pa WHERE pe.ci = pa.ci and pe.ci = ".$_GET['ci']." ";
-$datos  = $u->getDatosPacienteSql($sql);
+$datos  = $u->GetDatosSql($sql);
 $sql    = "SELECT re.fec_reg, re.motivo, re.lugar, re.dosis, se.nombre, se.tipo FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_paciente = pa.id_paciente and se.id_servicio = re.id_servicio and pa.ci = ".$_GET['ci']." ";
-$datos2 = $u->getDatosPacienteSql($sql);
+$datos2 = $u->GetDatosSql($sql);
 if (sizeof($datos2) == 0) {
 	header("Location: index.php");
 }

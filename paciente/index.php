@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $cant_por_pagina = 10;
@@ -22,11 +22,10 @@ else{
 	$pagina = 1;
 }
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
-$sql1 = "select count(*) as cuantos from paciente;";
-$cantidad = $u->getDatosPacienteSql($sql1);
-$sql2 = "select pe.*, pa.residencia, pa.categoria, pa.carrera_cargo from paciente as pa, persona as pe where pa.ci = pe.ci
-		limit ".$empezar_desde.",".$cant_por_pagina." ";
-$datos = $u->getDatosPacienteSql($sql2);
+$sql1 = "SELECT count(*) AS cuantos FROM paciente;";
+$cantidad = $u->GetDatosSql($sql1);
+$sql2 = "SELECT * FROM paciente LIMIT ".$empezar_desde.",".$cant_por_pagina." ";
+$datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 ?>

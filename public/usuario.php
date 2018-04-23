@@ -11,7 +11,7 @@ class usuario extends Conectar{
 
 	//usuario consultas
 	public function getLogin($user, $password){
-		$sql = "select * from usuarios where user = '".$user."' and pass = '".$password."'";
+		$sql = "SELECT * FROM usuarios WHERE user = '".$user."' and password = '".$password."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -22,7 +22,7 @@ class usuario extends Conectar{
 
 	//pacientes consultas
 	public function getDatosPaciente(){
-		$sql = "select pe.* from paciente as pa, persona as pe where pa.ci = pe.ci";
+		$sql = "SELECT * FROM paciente";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -30,7 +30,7 @@ class usuario extends Conectar{
 		}
 		return $arreglo;
 	}
-	public function getDatosPacienteSql($sql){
+	public function GetDatosSql($sql){
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -54,9 +54,7 @@ class usuario extends Conectar{
 		else{
 			$carrera = "---";
 		}
-		$sql = "insert into persona values ('".$ci."','".$expedido."','".$nombre."','".$paterno."','".$materno."','".$fec_nac."','".$sexo."')";
-		$this->db->query($sql);
-		$sql = "insert into paciente values (null,CURRENT_DATE(),'".$residencia."','".$categoria."','".$carrera."','".$ci."')";
+		$sql = "insert into paciente values (null,'".$nombre."','".$paterno."','".$materno."','".$fec_nac."', '".$ci."','".$expedido."','".$sexo."',CURRENT_DATE(),'".$residencia."','".$categoria."','".$carrera."')";
 		$this->db->query($sql);
 	}
 	public function updatePaciente(){
@@ -77,20 +75,17 @@ class usuario extends Conectar{
 		}
 		$sql = "update persona 
 				set 
-				ci = '".$ci."',
-				expedido = '".$expedido."',
 				nombre = '".$nombre."',
 				paterno = '".$paterno."',
 				materno = '".$materno."',
 				fec_nac = '".$fec_nac."',
-				sexo = '".$sexo."'
-				where ci = '".$ci."'";
-		$this->db->query($sql);
-		$sql = "update paciente 
-				set residencia = '".$residencia."',
+				ci = '".$ci."',
+				expedido = '".$expedido."',
+				sexo = '".$sexo."',
+				residencia = '".$residencia."',
 				categoria = '".$categoria."',
 				carrera_cargo = '".$carrera."'
-				where ci = '".$ci."' ";
+				where ci = '".$ci."'";
 		$this->db->query($sql);
 	}
 	public function deletePaciente(){
@@ -102,7 +97,7 @@ class usuario extends Conectar{
 		//$this->db->query($sql);
 	}
 	public function getDatoPorCiPaciente($ci){
-		$sql = "SELECT pe.*, pa.residencia, pa.categoria, pa.carrera_cargo FROM persona as pe, paciente as pa WHERE pa.ci = pe.ci and pe.ci = '".$ci."'";
+		$sql = "SELECT * FROM paciente WHERE ci = '".$ci."' ";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -113,15 +108,7 @@ class usuario extends Conectar{
 
 	//insumos consultas
 	public function getDatosInsumos(){
-		$sql = "select * from insumos";
-		$datos = $this->db->query($sql);
-		$arreglo = array();
-		while ($reg = $datos->fetch_object()) {
-			$arreglo[] = $reg;
-		}
-		return $arreglo;
-	}
-	public function getDatosInsumosSql($sql){
+		$sql = "SELECT * FROM insumos";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -183,8 +170,8 @@ class usuario extends Conectar{
 		//}
 	}
 	public function updateVacuna(){
-		$sql = "update insumos 
-				set 
+		$sql = "UPDATE insumos 
+				SET 
 				nombre = '".$_POST["nombre"]."',
 				tipo = '".$_POST["tipo"]."',
 				detalle = '".$_POST["detalle"]."',
@@ -192,19 +179,19 @@ class usuario extends Conectar{
 				fec_exp = '".$_POST["fec_exp"]."',
 				stock = '".$_POST["stock"]."',
 				estado = '".$_POST["estado"]."'
-				where id_insumo = '".$_POST["id_insumo"]."'";
+				WHERE id_insumo = '".$_POST["id_insumo"]."'";
 		$this->db->query($sql);
 	}
 	public function deleteInsumo(){
-		$sql = "delete from insumos
-				where id_insumo = '".$_GET["id_insumo"]."'";
+		$sql = "DELETE FROM insumos
+				WHERE id_insumo = '".$_GET["id_insumo"]."'";
 		$this->db->query($sql);
 		//$sql = "delete from persona
 		//		where ci = '".$_GET["ci"]."'";
 		//$this->db->query($sql);
 	}
 	public function getDatoPorId($id_insumo){
-		$sql = "select * from insumos where id_insumo = '".$id_insumo."'";
+		$sql = "SELECT * FROM insumos WHERE id_insumo = '".$id_insumo."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -215,7 +202,7 @@ class usuario extends Conectar{
 
 	//servicios consultas
 	public function getDatosServicio(){
-		$sql = "select * from servicio";
+		$sql = "SELECT * FROM servicio";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -225,6 +212,7 @@ class usuario extends Conectar{
 	}
 
 	//Historia consultas
+	//Insertar proceso enfermero
 	public function insertarHistoria(){
 		$motivo = $_POST["motivo"];
 		$lugar = $_POST["lugar"];
@@ -236,6 +224,7 @@ class usuario extends Conectar{
 		$this->db->query($sql);
 	}
 
+	//insertar vacunacion a historia
 	public function insertarVacunacion(){
 		$nomvac = "";
 		$nomjer = "";
@@ -250,7 +239,7 @@ class usuario extends Conectar{
 		$id_pac = $_POST["id_pac"];
 		$id_ser = $_POST["servicio"];
 		//registro en la historia clinica
-		$sql = "insert into registrahistoria values (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$sql = "INSERT INTO registrahistoria VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 		//verificacion de stock del insumo jeringas y vacunas (disponible - no disponible), update de cantidad disponible del insumo y asignacion de disponibilidad del insumo
 		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotvac."' and estado = 'usable' ";
@@ -266,8 +255,8 @@ class usuario extends Conectar{
 		if($res == 0){
 			$estv = 'vacio';
 		}
-		$sql = "update insumos 
-				set 
+		$sql = "UPDATE insumos 
+				SET 
 				cant_disp = '".$res."',
 				estado = '".$estv."'
 				where id_insumo = '".$lotvac."' ";
@@ -313,8 +302,8 @@ class usuario extends Conectar{
 				if ($regi == $fec_actual) {
 					$canegr++;
 					$saldo--;
-					$sql = "update registrodiario
-							set 
+					$sql = "UPDATE registrodiario
+							SET 
 							cant_egre = '".$canegr."',
 							saldo = '".$saldo."'
 							where id_reg_diario = '".$idreg."' ";
@@ -342,37 +331,63 @@ class usuario extends Conectar{
 		}
 	}
 
-	//Usuario consultas
-	public function insertarEnfermera(){
-		$sql = "insert into persona values ('".$_POST["ci"]."','".$_POST["expedido"]."','".$_POST["nombre"]."','".$_POST["paterno"]."','".$_POST["materno"]."','".$_POST["fec_nac"]."','".$_POST["sexo"]."')";
-		$this->db->query($sql);
-		$anio  = date("Y");
-		$sql = "insert into enfermera values (null,'".$anio."','".$_POST["ci"]."')";
-		$this->db->query($sql);		 
-	}
-	public function updateUsuario(){
-		$sql = "update persona 
-				set 
-				ci = '".$_POST["ci"]."',
-				expedido = '".$_POST["expedido"]."',
-				nombre = '".$_POST["nombre"]."',
-				paterno = '".$_POST["paterno"]."',
-				materno = '".$_POST["materno"]."',
-				fec_nac = '".$_POST["fec_nac"]."',
-				sexo = '".$_POST["sexo"]."'
-				where ci = '".$_POST["ci"]."'";
-		$this->db->query($sql);
-	}
-
 	//Enfermera consultas
 	public function getDatoPorCiEnfermera($ci){
-		$sql = "select * from enfermera where ci = '".$ci."'";
+		$sql = "SELECT * FROM enfermera WHERE ci = '".$ci."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
 			$arreglo[] = $reg;
 		}
 		return $arreglo;
+	}
+
+	public function insertarEnfermera(){
+		$nombre = $_POST["nombre"];
+		$paterno = $_POST["paterno"];
+		$materno = $_POST["materno"];
+		$fec_nac = $_POST["fec_nac"];
+		$ci = $_POST["ci"];
+		$expedido = $_POST["expedido"];
+		$sexo = $_POST["sexo"];
+		$tipo = $_POST["tipo"];
+		$sql = "INSERT INTO enfermera VALUES (null,'".$nombre."','".$paterno."','".$materno."','".$fec_nac."','".$ci."','".$expedido."','".$sexo."',CURRENT_DATE())";
+		$this->db->query($sql);
+		$pa = substr($paterno, 0, 1);
+		$ma = substr($materno, 0, 1);
+		$no = substr($nombre, 0, 1);
+		$cod = $pa."".$ma."".$no."".$ci;
+		$estado = "activo";
+		$sql = "SELECT MAX(id_enfermera) AS id FROM enfermera";
+		$datoo = $this->db->query($sql);
+		$dato = array();
+		while ($reg = $datoo->fetch_object()) {
+			$dato[] = $reg;
+		}
+		$id_enf = $dato[0]->id;
+		$sql = "INSERT INTO usuarios VALUES (null,'".$cod."','".$ci."','".$tipo."','".$estado."','".$id_enf."')";
+		$datoo = $this->db->query($sql);
+	}
+
+	public function updateEnfermera(){
+		$ci = $_POST["ci"];
+		$expedido = $_POST["expedido"];
+		$nombre = $_POST["nombre"];
+		$paterno = $_POST["paterno"];
+		$materno = $_POST["materno"];
+		$fec_nac = $_POST["fec_nac"];
+		$sexo = $_POST["sexo"];
+		$sql = "UPDATE enfermera 
+				SET 
+				nombre = '".$nombre."',
+				paterno = '".$paterno."',
+				materno = '".$materno."',
+				fec_nac = '".$fec_nac."',
+				ci = '".$ci."',
+				expedido = '".$expedido."',
+				sexo = '".$sexo."'
+				WHERE ci = '".$ci."'";
+		$this->db->query($sql);
 	}
 
 	//funciones de ayuda
@@ -446,7 +461,7 @@ class usuario extends Conectar{
     }
 
 	public function soloLetras($palabra){
-		if(preg_match('/^[a-zA-Z áéíóúÁÉÍÓÚñÑ]+$/',$palabra)) return true;
+		if(preg_match('/^[a-zA-Z[:space:] áéíóúÁÉÍÓÚñÑ]+$/',$palabra)) return true;
 		else return false;
 	}
 

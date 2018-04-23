@@ -14,7 +14,7 @@ if(isset($_POST["mes"])){
 		array_push($cantidad, 'Numero');
 		for($i= 1; $i < 10; $i++){
 			$sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = ".$an." and MONTH(fec_reg) = ".$m." and id_servicio = ".$i." ";
-			$datos = $u->getDatosPacienteSql($sql);
+			$datos = $u->GetDatosSql($sql);
 			array_push($cantidad, (int) $datos[0]->cant);
 			array_push($porce, (int) $datos[0]->cant);
 		}
@@ -36,7 +36,7 @@ if(isset($_POST["mes"])){
 			for($i= 1; $i < 10; $i++){
 				$a = $j+1;
 			  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = ".$an." and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
-			  $datos = $u->getDatosPacienteSql($sql);
+			  $datos = $u->GetDatosSql($sql);
 			  array_push($cant, (int) $datos[0]->cant);
 			  array_push($porce, (int) $datos[0]->cant);
 			}
@@ -62,7 +62,7 @@ else{
 		for($i= 1; $i < 10; $i++){
 			$a = $j+1;
 		  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = ".$an." and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
-		  $datos = $u->getDatosPacienteSql($sql);
+		  $datos = $u->GetDatosSql($sql);
 		  array_push($cant, (int) $datos[0]->cant);
 		  array_push($porce, (int) $datos[0]->cant);
 		  $total+= (int) $datos[0]->cant;
