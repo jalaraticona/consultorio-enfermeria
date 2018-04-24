@@ -73,8 +73,8 @@ class usuario extends Conectar{
 		else{
 			$carrera = "---";
 		}
-		$sql = "update persona 
-				set 
+		$sql = "UPDATE paciente 
+				SET 
 				nombre = '".$nombre."',
 				paterno = '".$paterno."',
 				materno = '".$materno."',
@@ -85,7 +85,7 @@ class usuario extends Conectar{
 				residencia = '".$residencia."',
 				categoria = '".$categoria."',
 				carrera_cargo = '".$carrera."'
-				where ci = '".$ci."'";
+				WHERE ci = '".$ci."'";
 		$this->db->query($sql);
 	}
 	public function deletePaciente(){
@@ -135,7 +135,7 @@ class usuario extends Conectar{
 			$medida = "---";
 			$nombre = $_POST["nombre"];
 		}
-		$sql = "insert into insumos values (null,'".$nombre."','".$medida."','".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."') ";
+		$sql = "INSERT INTO insumos VALUES (null,'".$nombre."','".$medida."','".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."') ";
 		$this->db->query($sql);
 		$sql = "SELECT MAX(id_insumo) as id FROM insumos";
 		$dato = $this->db->query($sql);

@@ -22,11 +22,11 @@ else{
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="../assets/css/main.css" />
-		<script src="alertify/alertify.js"></script>
-		<link rel="stylesheet" href="alertify/css/alertify.css">
-		<link rel="stylesheet" href="alertify/css/themes/default.min.css">
-		<link rel="stylesheet" href="alertify/css/themes/bootstrap.min.css">
-		<link rel="stylesheet" href="alertify/css/themes/semantic.min.css">
+		<script src="../assets/alertify/alertify.js"></script>
+		<link rel="stylesheet" href="../assets/alertify/css/alertify.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/default.min.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/bootstrap.min.css">
+		<link rel="stylesheet" href="../assets/alertify/css/themes/semantic.css">
 		<style>
 		.icon:hover{
 			box-shadow:0px 0px 10px 2px rgba(0,0,0,.5);
@@ -36,16 +36,10 @@ else{
 	</head>
 	<body class="landing">
 		<?php 
-		$sql = "SELECT * FROM insumos WHERE estado='usable' and fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
+		$sql = "SELECT * FROM insumos WHERE estado = 'usable' and fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
 		$est = $u->GetDatosSql($sql);
 		$sw = 0;
-		foreach($est as $info){
-			$fec_exp = $info->fec_exp;
-			$fecha = date("m") - date('m', strtotime($fec_exp));
-			if($fecha == 0){
-				$sw = 1;
-			}
-		}
+		if(sizeof($est) > 0) $sw = 1;
 		?>
 		<script type="text/javascript">
 		<?php
@@ -56,15 +50,9 @@ else{
 				$nombre = $informacion->nombre;
 				$tipo = $informacion->tipo;
 				$fec_exp = $informacion->fec_exp;
-				$fecha = date("m") - date('m', strtotime($fec_exp));
 				$stock = $informacion->cant_disp;
 				$id_insumo = $informacion->id_insumo;
-				$dias = (strtotime(date("m/d/y"))-strtotime($fec_exp))/86400;
-				$dias = abs($dias);
-				$dias = floor($dias);
-				if($dias < 31){
-					$men.= "<tr><td>".$id_insumo."</td><td>".$nombre."</td><td>".$tipo."</td><td>".$fec_exp."</td><td>".$stock."</td></tr>";
-				}
+				$men.= "<tr><td>".$id_insumo."</td><td>".$nombre."</td><td>".$tipo."</td><td>".$fec_exp."</td><td>".$stock."</td></tr>";
 			}
 			$men.= "</tbody></table>";
 			echo "alertify.alert('..:: Alerta!!!..... ::..','".$men."');";

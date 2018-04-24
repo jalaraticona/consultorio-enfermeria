@@ -51,6 +51,9 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 		if(a == 2){
 			alertify.warning('Datos del paciente modificados correctamente.');
 		}
+		if(a == 3){
+			alertify.warning('El paciente no tiene expediente.');
+		}
 		</script>
 		<div id="page-wrapper">
 

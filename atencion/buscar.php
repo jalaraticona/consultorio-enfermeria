@@ -6,7 +6,7 @@ if(!empty($buscar)) {
 }
 function buscar($b) {
       $pre = new usuario();
-      $sql = "SELECT pe.*,pa.id_paciente FROM persona as pe, paciente as pa WHERE (pe.nombre LIKE '%".$b."%' or pa.ci LIKE '%".$b."%') and pa.ci = pe.ci";
+      $sql = "SELECT * FROM paciente WHERE nombre LIKE '%".$b."%' or ci LIKE '%".$b."%' ";
       $resultado = $pre->GetDatosSql($sql);
       if(sizeof($resultado) == 0){
             echo "No se han encontrado resultados para '<b>".$b."</b>' debe registrar primero al paciente...";

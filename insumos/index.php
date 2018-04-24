@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $cant_por_pagina = 10;
@@ -22,7 +22,7 @@ else{
 	$pagina = 1;
 }
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
-$sql1 = "select count(*) as cuantos from insumos;";
+$sql1 = "SELECT count(*) AS cuantos FROM insumos;";
 $cantidad = $u->GetDatosSql($sql1);
 $sql2 = "SELECT * FROM insumos
 		LIMIT ".$empezar_desde.",".$cant_por_pagina." ";

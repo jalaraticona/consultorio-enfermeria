@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $var = str_replace ( " " , "+" , $_GET["ci"] );
@@ -11,7 +11,7 @@ if(!isset($_GET["ci"]) or !is_numeric($des)){
 }
 $mensaje='';
 if(isset($_GET["ci"]) and is_numeric($des)){
-	$sql = "select pe.*, pa.id_paciente, pa.residencia, pa.categoria, pa.carrera_cargo from persona as pe, paciente as pa where pe.ci = pa.ci and pa.ci = ".$des."";
+	$sql = "SELECT * FROM paciente WHERE ci = ".$des."";
 	$datop = $u->GetDatosSql($sql);
 	$id_pac = $datop[0]->id_paciente;
 	$nombre = $datop[0]->nombre." ".$datop[0]->paterno." ".$datop[0]->materno;
@@ -24,7 +24,7 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 		$categoria.= " de ".$datop[0]->carrera_cargo;	
 	}
 	$ci = $datop[0]->ci;
-	$sql1 = "select * from servicio";
+	$sql1 = "SELECT * FROM servicio";
 	$datose = $u->GetDatosSql($sql1);
 	$id_serv = $datose[0]->id_servicio;
 	$servicio = $datose[0]->nombre;

@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
 if(!isset($_SESSION["id_enf"])){
-	header("Location: ../iniciarSesion.php");
+	header("Location: ../index.php");
 }
 $u = new usuario();
 if(!isset($_GET["ci"]) or !is_numeric($_GET["ci"])){
@@ -13,29 +13,28 @@ if(sizeof($datos) == 0){
 }
 $mensaje='';
 if(isset($_POST["grabar"])){
-	if( filter_var( trim($_POST["nombre"]) ) == false){
-		$mensaje.='El campo nombre es obligatorio. <br>';
+	$nom = trim($_POST["nombre"]);
+	$pat = trim($_POST["paterno"]);
+	$mat = trim($_POST["materno"]);
+	$ci = trim($_POST["ci"]);
+	$fec = $_POST["fec_nac"];
+	$sex = $_POST["sexo"];
+	if(!$u->soloLetras($nom) or $nom == ''){
+		$mensaje.='Campo nombre es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["paterno"]) ) == false){
-		$mensaje.='El campo paterno es obligatorio. <br>';
+	if(!$u->soloLetras($pat) or $pat == ''){
+		$mensaje.='Campo apellido paterno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["materno"]) ) == false){
-		$mensaje.='El campo materno es obligatorio. <br>';
+	if(!$u->soloLetras($mat) or $mat == ''){
+		$mensaje.='Campo apellido materno es necesario, debe contener solo letras. <br>';
 	}
-	if( filter_var( trim($_POST["ci"]) ) == false){
-		$mensaje.='El campo Cedula de Identidad es obligatorio. <br>';
+	if(!$u->soloNumero($ci) and ($ci > 50000 and $ci < 50000000)){
+		$mensaje.='Ci debe ser numerico, debe ser mayor a 50000 y menor a 50000000. <br>';
 	}
-	if( filter_var( trim($_POST["expedido"]) ) == false){
-		$mensaje.='Es necesario seleccionar la ciudad de expedición. <br>';
-	}
-	if( filter_var( trim($_POST["fec_nac"]) ) == false){
-		$mensaje.='El campo Fecha de Naciemiento en obligatorio. <br>';
-	}
-	if( filter_var( trim($_POST["sexo"]) ) == false){
-		$mensaje.='Es necesario seleccionar su genero. <br>';
+	if(!$u->validaFecha($fec)){
+		$mensaje.='La fecha de nacimiento no puede ser posterior a la actual. <br>';
 	}
 	if($mensaje == ''){
-		$u = new usuario();
 		if(isset($_POST["nombre"])){
 			$u->updatePaciente();
 			header("Location: index.php?m=2");

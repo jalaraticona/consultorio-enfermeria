@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $var = str_replace ( " " , "+" , $_GET["id_insumo"] );
@@ -33,7 +33,6 @@ if(isset($_POST["grabar"])){
 		}
 	}
 	if($mensaje == ''){
-		$u = new usuario();
 		if(isset($_POST["nombre"])){
 			$u->updateInsumo();
 			header("Location: index.php?m=2");

@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 $mensaje='';
@@ -120,7 +120,7 @@ if(isset($_POST["grabar"])){
 												<?php $jeringas = ['27Gx3/8','23Gx1/2','23Gx1','25Gx5/8','22Gx1','22Gx1/2','22Gx5'];
 												for ($i = 0; $i < sizeof($jeringas) ; $i++) {
 													?>
-													<option value="<'php echo $jeringas[$i]; ?>" <?php echo set_value_select(array(),'medida','medida',$jeringas[$i]); ?>>Jeringa <?php echo $jeringas[$i]; ?></option>
+													<option value="<?php echo $jeringas[$i]; ?>" <?php echo set_value_select(array(),'medida','medida',$jeringas[$i]); ?> >Jeringa <?php echo $jeringas[$i]; ?></option>
 													<?php
 												}
 												?>

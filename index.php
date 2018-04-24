@@ -1,6 +1,6 @@
 <?php
 require_once("public/usuario.php");
-if (isset($_SESSION["id"])){
+if (isset($_SESSION["id_enf"])){
     header('Location: principal/');
 }
 if(isset($_POST["user"])){

@@ -1,7 +1,7 @@
 <?php
 require_once("../public/usuario.php");
-if(!isset($_SESSION["id"])){
-	header("Location: ../iniciarSesion.php");
+if(!isset($_SESSION["id_enf"])){
+	header("Location: ../index.php");
 }
 $u = new usuario();
 if(!isset($_GET["ci"]) or !is_numeric($_GET["ci"])){
