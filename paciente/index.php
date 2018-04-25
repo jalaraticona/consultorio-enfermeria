@@ -91,7 +91,6 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 													<th>Sexo</th>
 													<th>Mpio. residencia</th>
 													<th>Categoría</th>
-													<th>Carrera/cargo</th>
 													<th>Accion</th>
 													<th>Realizar Atención</th>
 													<th>Historia clinica</th>
@@ -111,18 +110,17 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														<td><?php echo $dato->fec_nac?></td>
 														<td><?php echo $dato->sexo?></td>
 														<td><?php echo $dato->residencia?></td>
-														<td><?php echo $dato->categoria?></td>
-														<td><?php echo $dato->carrera_cargo?></td>
+														<td><?php echo $dato->categoria." ".$dato->carrera_cargo?></td>
 														<td><a href="edit.php?ci=<?php $enc = $u->encriptar($dato->ci);
 														echo $enc;?>" class="icon fa-pencil">editar</a><br>
 														<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
 														<td><a href="../atencion/RegistraHistoria.php?ci=<?php
-														 echo $enc;?>" class="icon fa-user"></a>
+														 echo $enc;?>" class="icon fa-stethoscope">&nbsp;Proc. Enf.</a><br>
 														 <a href="../atencion/RegistraVacunacion.php?ci=<?php
-														 echo $enc;?>" class="icon fa-user"></a></td>
+														 echo $enc;?>" class="icon fa-medkit">&nbsp;Vacunacion</a></td>
 														<td>
 														<a href="historial.php?ci=<?php
-														 echo $enc;?>" class="icon fa-file"></a>
+														 echo $enc;?>" class="icon fa-book">&nbsp;Ver</a>
 														</td>
 													</tr>
 													<?php

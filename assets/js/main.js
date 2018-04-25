@@ -74,6 +74,26 @@
 		});                                                 
 	});
 
+	$('#categoria').change(function(){
+		var valorCambiado =$(this).val();
+		if((valorCambiado == 'universitario') || (valorCambiado == 'docente')){
+			$('#selector').css('display','block');
+		}
+		else{
+			$('#selector').css('display','none');
+		}
+	});
+
+	$('#servicio').change(function(){
+		var valorCambiado =$(this).val();
+		if((valorCambiado == 'universitario') || (valorCambiado == 'docente')){
+			$('#selector').css('display','block');
+		}
+		else{
+			$('#selector').css('display','none');
+		}
+	});
+
 	$(function() {
 
 		var	$window = $(window),

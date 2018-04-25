@@ -104,16 +104,13 @@ if(isset($_POST["grabar"])){
 									<td>
 									<div class="select-wrapper">	
 									<select name="expedido" id="expedido" required="true">
-										<option value="" <?php echo set_value_select(array(),'expedido','expedido',''); ?>>Seleccione.......</option>
-										<option value="la paz" <?php echo set_value_select(array(),'expedido','expedido','la paz'); ?>>La Paz</option>
-										<option value="santa cruz"<?php echo set_value_select(array(),'expedido','expedido','santa cruz'); ?>>Santa Cruz</option>
-										<option value="cochabamba"<?php echo set_value_select(array(),'expedido','expedido','cochabamba'); ?>>Cochabamba</option>
-										<option value="pando"<?php echo set_value_select(array(),'expedido','expedido','pando'); ?>>Pando</option>
-										<option value="beni"<?php echo set_value_select(array(),'expedido','expedido','beni'); ?>>Beni</option>
-										<option value="oruro"<?php echo set_value_select(array(),'expedido','expedido','oruro'); ?>>Oruro</option>
-										<option value="potosi"<?php echo set_value_select(array(),'expedido','expedido','potosi'); ?>>Potosi</option>
-										<option value="chuquisaca"<?php echo set_value_select(array(),'expedido','expedido','chuquisaca'); ?>>Chuquisaca</option>
-										<option value="tarija"<?php echo set_value_select(array(),'expedido','expedido','tarija'); ?>>Tarija</option>
+										<?php $ciudades = ['LPZ','BNI','CHQ','CBA','ORU','PND','PSI','SCZ','TJA'];
+										for ($i = 0; $i < sizeof($ciudades) ; $i++) {
+											?>
+											<option value="<?php echo $ciudades[$i];?>" <?php echo set_value_select(array(),'expedido','expedido',$ciudades[$i]);?> ><?php echo $ciudades[$i];?></option>
+										 	<?php
+										} 
+										?>
 									</select></td>
 									</div>
 								</tr>
@@ -138,12 +135,21 @@ if(isset($_POST["grabar"])){
 									<td colspan="2">
 										<div class="select-wrapper">
 											<select name="residencia" id="residencia" required="true">
-												<?php  $municipios = ['ixiamas','san buena ventura','sica sica','calamarca','collana','colquencha','patacamaya','umala','general juan jose perez (charazani)','curva','puerto acosta','mocomoco','puerto carabuco','escoma','humanata','caranavi','alto beni','apolo','pelechuco','san pedro de curahuara','chacarilla','papel pampa','viacha','andres de machaca','desaguadero','guaqui','jesús de machaca','taraco','tiahuanaco','inquisivi','cajuata','colquiri','ichoca','licoma pampa','quime','santiago de machaca','catacora','sorata','combaya','guanay','mapiri','quiabaya','tacacoma','teoponte','tipuani','luribay','cairoma','malla','sapahaqui','yaco','pucarani','batallas','laja','puerto perez','copacabana','san pedro de tiquina','tito yupanqui','chuma','aucapata','ayata','palca','achocalla','el alto','la paz','mecapaca','coroico','coripata','achacachi','ancoraimes','chua cocani','huarina','huatajata','santiago de huata','coro coro','calacoto','caquiaviri','charana','comanche','nazacara de pacajes','santiago de callapa','waldo ballivian','chulumani','irupana','la asunta','palos blancos','yanacachi'];
+												<?php  $municipios = ['ixiamas','san buena ventura','sica sica','calamarca','collana','colquencha','patacamaya','umala','charazani','curva','puerto acosta','mocomoco','puerto carabuco','escoma','humanata','caranavi','alto beni','apolo','pelechuco','san pedro de curahuara','chacarilla','papel pampa','viacha','andres de machaca','desaguadero','guaqui','jesús de machaca','taraco','tiahuanaco','inquisivi','cajuata','colquiri','ichoca','licoma pampa','quime','santiago de machaca','catacora','sorata','combaya','guanay','mapiri','quiabaya','tacacoma','teoponte','tipuani','luribay','cairoma','malla','sapahaqui','yaco','pucarani','batallas','laja','puerto perez','copacabana','san pedro de tiquina','tito yupanqui','chuma','aucapata','ayata','palca','achocalla','el alto','la paz','mecapaca','coroico','coripata','achacachi','ancoraimes','chua cocani','huarina','huatajata','santiago de huata','coro coro','calacoto','caquiaviri','charana','comanche','nazacara de pacajes','santiago de callapa','waldo ballivian','chulumani','irupana','la asunta','palos blancos','yanacachi'];
 												for ($i = 0; $i < sizeof($municipios) ; $i++) {
+													$mun = $municipios[$i];
+													if($mun == "la paz"){
+														?>
+														<option value="<?php echo $mun ?>"  <?php echo set_value_select(array(),'residencia','residencia',$mun) ?> selected><?php echo $mun;?></option>
+														<?php
+													}
+													else{
 													?>
-													<option value="<?php echo $municipios[$i];?>"  <?php echo set_value_select(array(),'residencia','residencia',$municipios[$i]);?> ><?php echo $municipios[$i];?></option>
+													<option value="<?php echo $mun ?>"  <?php echo set_value_select(array(),'residencia','residencia',$mun) ?> ><?php echo $mun;?></option>
 												 	<?php
-												 } ?>
+													}
+												}
+												?>
 										
 									</select>
 										</div>
@@ -160,7 +166,7 @@ if(isset($_POST["grabar"])){
 													<option value="<?php echo $categorias[$i];?>"  <?php echo set_value_select(array(),'categoria','categoria',$categorias[$i]);?> ><?php echo $categorias[$i];?></option>
 												 	<?php
 												}
-												 ?>
+												?>
 											</select>
 										</div>
 									</td>
@@ -168,15 +174,19 @@ if(isset($_POST["grabar"])){
 								<tr>
 									<td>Carrera o cargo:</td>
 									<td colspan="2">
+										<div id="selector">
 										<div class="select-wrapper">
 											<select name="carrera" id="carrera" required="true" >
 												<?php $carreras = ['ingenieria agronomica','tecnica superior agropecuaria de viacha','administracion de empresas','auditoria','economia','biologia','estadistica','fisica','informatica','matematicas','quimica','antropologia y arqueologia','ciencias de la comunicacion social','sociologia','trabajo social','bibliotecologia y cs. informacion','ciencias de la educacion','filosofia','historia','linguistica e idiomas','literatura','psicologia','turismo','derecho','ciencias politicas','bioquimica','quimica farmaceutica','ingenieria geografica','ingenieria geologica y medio ambiente','ing. civil','ing. electrica','ing. electronica','ing. industrial','ing. mecanica','ing. metalurgica y materiales','ing. petrolera','ing. quimica','medicina','enfermeria','nutricion y dietetica','odontologia','construcciones civiles','topografia y geodesia','electricidad','electronica y telecomunicaciones','electromecanica','mecanica automotriz','mecanica de aviacion','mecanica industrial','quimica industrial'];
-												for ($i = 0; $i < sizeof($carreras) ; $i++) {
+												for ($i = 0; $i < sizeof($carreras); $i++) {
+													$car = $carreras[$i];
 												 	?>
-													<option value="<?php echo $carreras[$i];?>"  <?php echo set_value_select(array(),'carrera','carrera',$carreras[$i]);?> ><?php echo $carreras[$i];?></option>
+													<option value="<?php echo $car ?>" <?php echo set_value_select(array(),'carrera','carrera',$car)?> ><?php echo $car ?></option>
 												 	<?php
-												 } ?>
+												}
+												?>
 											</select>
+										</div>
 										</div>
 									</td>
 								</tr>

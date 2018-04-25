@@ -84,8 +84,7 @@ if(isset($_POST["user"])){
 					<div id="openModal" class="modalDialog">
 						<div>
 							<a href="#close" title="Close" class="close">X</a>
-							<center><h2>LOGIN</h2></center>
-							<p>Bienvenido, por favor ingrese sus datos para ingresar al sistema.</p>
+							<center><h3>LOGIN</h3></center>
 							<?php
 							if(!empty($mensaje)){
 								?>
@@ -96,8 +95,10 @@ if(isset($_POST["user"])){
 							}
 							?>
 							<form action="" method="post" accept-charset="utf-8">
+								<center><label>Usuario:</label></center>
 								<input type="text" name="user" id="user" placeholder="Ingrese Usuario">
 								<br>
+								<center><label>Contraseña:</label></center>
 								<input type="password" name="password" id="password" placeholder="Ingrese contraseña">
 								<br>
 								<center><button type="submit" class="button">Iniciar sesion</button></center>

@@ -102,15 +102,15 @@ if(isset($_POST["grabar"])){
 								<div class="select-wrapper">	
 								<select name="expedido" id="expedido" required="true">
 									<option value="<?php echo $datos[0]->expedido ?>"><?php echo $datos[0]->expedido ?></option>
-									<option value="la paz" <?php echo set_value_select(array(),'expedido','expedido','la paz'); ?>>La Paz</option>
-									<option value="santa cruz"<?php echo set_value_select(array(),'expedido','expedido','santa cruz'); ?>>Santa Cruz</option>
-									<option value="cochabamba"<?php echo set_value_select(array(),'expedido','expedido','cochabamba'); ?>>Cochabamba</option>
-									<option value="pando"<?php echo set_value_select(array(),'expedido','expedido','pando'); ?>>Pando</option>
-									<option value="beni"<?php echo set_value_select(array(),'expedido','expedido','beni'); ?>>Beni</option>
-									<option value="oruro"<?php echo set_value_select(array(),'expedido','expedido','oruro'); ?>>Oruro</option>
-									<option value="potosi"<?php echo set_value_select(array(),'expedido','expedido','potosi'); ?>>Potosi</option>
-									<option value="chuquisaca"<?php echo set_value_select(array(),'expedido','expedido','chuquisaca'); ?>>Chuquisaca</option>
-									<option value="tarija"<?php echo set_value_select(array(),'expedido','expedido','tarija'); ?>>Tarija</option>
+									<?php  $ciudades = ['LPZ','BNI','CHQ','CBA','ORU','PND','PSI','SCZ','TJA' ];
+									for ($i = 0; $i < sizeof($ciudades) ; $i++) {
+										if($datos[0]->expedido != $ciudades[$i]){
+										?>
+										<option value="<?php echo $ciudades[$i];?>"  <?php echo set_value_select(array(),'expedido','expedido',$ciudades[$i]);?> ><?php echo $ciudades[$i];?></option>
+									 	<?php
+										}
+									} 
+									?>
 								</select></td>
 								</div>
 							</tr>
