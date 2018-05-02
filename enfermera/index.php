@@ -24,11 +24,23 @@ else{
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
 $sql1 = "SELECT count(*) AS cuantos FROM enfermera;";
 $cantidad = $u->GetDatosSql($sql1);
-$sql2 = "SELECT * FROM enfermera
+$sql2 = "SELECT * FROM enfermera as en, usuarios as us WHERE en.id_enfermera = us.id_enfermera
 		limit ".$empezar_desde.",".$cant_por_pagina." ";
 $datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
+if(isset($_GET["id"])){
+	$des = $u->desencriptar($_GET["id"]);
+	$es = $u->desencriptar($_GET["es"]);
+	if($es == "activo") $val = "inactivo";
+	else $val ="activo";
+	$sql = "UPDATE usuarios 
+			SET 
+			estado = '".$val."'
+			WHERE id_enfermera = '".$des."' ";
+	$u->EjecutarSql($sql);
+	header("Location: index.php");
+}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -86,6 +98,7 @@ if(a == 2){
 									<th>Fecha de Nacimiento</th>
 									<th>Sexo</th>
 									<th>Accion</th>
+									<th>Estado</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -93,6 +106,9 @@ if(a == 2){
 								$cont = 0;
 								foreach($datos as $dato){
 									$cont++;
+									$enc = $u->encriptar($dato->ci);
+									$ide = $u->encriptar($dato->id_enfermera);
+									$e = $u->encriptar($dato->estado);
 									?>
 									<tr>
 										<td><?php echo $cont ?></td>
@@ -100,8 +116,16 @@ if(a == 2){
 										<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
 										<td><?php echo $dato->fec_nac?></td>
 										<td><?php echo $dato->sexo?></td>
-										<td><a href="edit.php?ci=<?php echo $dato->ci?>" class="icon fa-pencil">editar</a><br>
+										<td><a href="edit.php?ci=<?php echo $enc?>" class="icon fa-pencil">editar</a>
 										<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
+										<td><?php if($dato->estado == "activo") {?>
+											<a href="index.php?id=<?php echo $ide;?>&es=<?php echo $e; ?>" id="act" class="button small btn-success">Activo</a>
+											<?php }
+											else {
+											 	?>
+											<a href="index.php?id=<?php echo $ide?>&es=<?php echo $e; ?>" id="act" class="button small btn-danger">Inactivo</a>
+											 	<?php
+											 } ?></td>
 									</tr>
 									<?php
 								}

@@ -81,46 +81,10 @@ else{
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="../assets/css/main.css" />
-	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawVisualization);
-
-  function drawVisualization() {
-    // Some raw data (not necessarily accurate)
-    var data = google.visualization.arrayToDataTable(<?php echo $mensual; ?>);
-
-    var options = {
-      title : 'Grafica mensual de atenciones por servicio',
-      vAxis: {title: 'Cantidad atendida'},
-      hAxis: {title: 'meses'},
-      seriesType: 'bars',
-      series: {10: {type: 'line'}}
-    };
-
-    var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
-
-  //google.charts.setOnLoadCallback(drawChart);
-
-  /*function drawChart() {
-    var data = google.visualization.arrayToDataTable(<?php echo $anual; ?>);
-
-    var options = {
-      title: 'grafica anual de atenciones por servicio',
-      hAxis: {title: 'Año <?php echo "20".date("y"); ?>',  titleTextStyle: {color: '#333'}},
-      vAxis: {tittle: 'Cantidad atendida',minValue: 0}
-    };
-
-    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }*/
-</script>
+	<script src="../public/ChartJS/Chart.bundle.js"></script>
+	<script src="../public/ChartJS/samples/utils.js"></script>
 </head>
 <body>
-<div id="page-wrapper">
-<!-- Header -->
 <header id="header">
 	<h1>UNIVERSIDAD MAYOR DE SAN ANDRÉS - CARRERA DE ENFERMERÍA</h1>
 	<nav id="nav">
@@ -148,106 +112,75 @@ else{
 		<div class="12u">
 		<!-- Text -->
 			<section class="box">
-				<center><h2>Estadisticas de atencion de pacientes por servicio</h2></center>
-				<form action="" method="post" accept-charset="utf-8">
-				
-				<div class="row uniform 50%">
-					<div class="4u 12u">
-						<label for="mes">Selecciona el Mes</label>
-						<select name="mes" >
-						<option value="0" selected>Todos los meses</option>
-						<?php 
-						$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
-						$max = sizeof($meses);
-						$i = 0;
-						foreach ($meses as $val) {
-							$a = $i + 1;
-						    echo "<option value=".$a.">".$val."</option>";
-						    $i++;
-						}
-						?>
-						</select>
-					</div>
-					<div class="4u 12u">
-						<label for="gestion">Selecciona la Gestión</label>
-						<select name="anio" >
-						<?php 
-						for ($i=2010; $i <= date("Y"); $i++) { 
-							if($i == date("Y")){
-								echo "<option value=".$i." selected>".$i."</option>";
-							}
-							else{
-								echo "<option value=".$i.">".$i."</option>";
-							}
-						}
-						?>
-						</select>
-					</div>
-					<div class="4u 12u">
-						<label for="generar">Generar</label>
-						<button type="submit" class="button">Mostrar Estadisticas</button>
-					</div>
+				<div id="container" style="width: 100%;">
+					<canvas id="canvas"></canvas>
 				</div>
-				</form>
-				<center><h3><?php if(isset($_POST["mes"])){
-					if($m == 1) echo "Mes: enero ";
-					if($m == 2) echo "Mes: febrero ";
-					if($m == 3) echo "Mes: marzo ";
-					if($m == 4) echo "Mes: abril ";
-					if($m == 5) echo "Mes: mayo ";
-					if($m == 6) echo "Mes: junio ";
-					if($m == 7) echo "Mes: julio ";
-					if($m == 8) echo "Mes: agosto ";
-					if($m == 9) echo "Mes: septiembre ";
-					if($m == 10) echo "Mes: octubre ";
-					if($m == 11) echo "Mes: noviembre ";
-					if($m == 12) echo "Mes: diciembre ";
-				} ?>Gestion: <?php echo $an; ?></h3></center>
-				<div id="chart_div" style="width: 900px; height: 500px;"></div>
-				<?php
-				if(isset($_POST["mes"]) and $_POST["mes"] > 0){
-					?>
-					<table>
-						<thead>
-							<tr>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>data</td>
-							</tr>
-						</tbody>
-					</table>
-					<?php
-				}
-				else{
-					?>
-					<table>
-						<thead>
-							<tr>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-								<th>MES</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr>
-								<td>ENERO</td>
-							</tr>
-						</tbody>
-					</table>
-					<?php
-				}
-				?>
+				<script>
+					<?php $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+						$color = ['window.chartColors.red', 'window.chartColors.blue', 'window.chartColors.yellow', 'window.chartColors.grey', 'window.chartColors.orange', 'window.chartColors.green', 'window.chartColors.purple', 'window.chartColors.red', 'window.chartColors.blue', 'window.chartColors.orange', 'window.chartColors.yellow', 'window.chartColors.grey']; ?>
+					var MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+					var color = Chart.helpers.color;
+					var barChartData = {
+						labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+						datasets: [
+						<?php 
+						for($i = 0; $i < 12; $i++){
+							?>
+							{
+								label: '<?php echo $meses[$i]; ?>',
+								backgroundColor: color(<?php echo $color[$i]; ?>).alpha(0.5).rgbString(),
+								borderColor: <?php echo $color[$i]; ?>,
+								borderWidth: 2,
+								data: [
+									randomScalingFactor(),
+									randomScalingFactor(),
+									randomScalingFactor(),
+									randomScalingFactor(),
+									randomScalingFactor(),
+									randomScalingFactor(),
+									randomScalingFactor()
+								],fill: false,
+							},
+						<?php
+						}
+						?>
+						{
+							label: 'Difteria',
+							backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+							borderColor: window.chartColors.red,
+							borderWidth: 2,
+							data: [
+								randomScalingFactor(),
+								randomScalingFactor(),
+								randomScalingFactor(),
+								randomScalingFactor(),
+								randomScalingFactor(),
+								randomScalingFactor(),
+								randomScalingFactor()
+							],fill: false,
+						}
+						]
+					};
+
+					window.onload = function() {
+						var ctx = document.getElementById('canvas').getContext('2d');
+						window.myBar = new Chart(ctx, {
+							type: 'line',
+							data: barChartData,
+							options: {
+								responsive: true,
+								legend: {
+									position: 'top',
+								},
+								title: {
+									display: true,
+									text: 'Estadisticas de los servicios ofrecidos por el consultorio'
+								}
+							}
+						});
+
+					};
+				</script>
 			</section>
 		</div>
 	</div>
@@ -265,7 +198,6 @@ else{
 	</ul>
 </footer>
 
-</div>
 
 <!-- Scripts -->
 	<script src="../assets/js/jquery.min.js"></script>

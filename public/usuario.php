@@ -38,6 +38,11 @@ class usuario extends Conectar{
 		}
 		return $arreglo;
 	}
+
+	public function EjecutarSql($sql){
+		$this->db->query($sql);
+	}
+
 	public function insertarPaciente(){
 		$ci = $_POST["ci"];
 		$expedido = $_POST["expedido"];
@@ -333,13 +338,41 @@ class usuario extends Conectar{
 
 	//Enfermera consultas
 	public function getDatoPorCiEnfermera($ci){
-		$sql = "SELECT * FROM enfermera WHERE ci = '".$ci."'";
+		$sql = "SELECT * FROM enfermera as en, usuarios as us WHERE ci = '".$ci."' and en.id_enfermera = us.id_enfermera ";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
 			$arreglo[] = $reg;
 		}
 		return $arreglo;
+	}
+
+	public function editInformacion(){
+		$nombre = $_POST["nombre"];
+		$paterno = $_POST["paterno"];
+		$materno = $_POST["materno"];
+		$fec_nac = $_POST["fec_nac"];
+		$ci = $_POST["ci"];
+		$sexo = $_POST["sexo"];
+		$user = $_POST["user"];
+		$pass = $_POST["password"];
+		$id = $_POST["guardar"];
+		$sql = "UPDATE enfermera 
+				SET 
+				nombre = '".$nombre."',
+				paterno = '".$paterno."',
+				materno = '".$materno."',
+				fec_nac = '".$fec_nac."',
+				ci = '".$ci."',
+				sexo = '".$sexo."'
+				WHERE ci = '".$ci."'";
+		$this->db->query($sql);
+		$sql = "UPDATE usuarios 
+				SET 
+				user = '".$user."',
+				password = '".$pass."'
+				WHERE id_enfermera = '".$id."'";
+		$this->db->query($sql);
 	}
 
 	public function insertarEnfermera(){

@@ -4,13 +4,15 @@ if(!isset($_SESSION["id_enf"])){
 	header("Location: ../index.php");
 }
 $u = new usuario();
-if(!isset($_GET["ci"]) or !is_numeric($_GET["ci"])){
+$var = str_replace ( " " , "+" , $_GET["ci"] );
+$des = $u->desencriptar($var);
+if(!isset($_GET["ci"]) and !is_numeric($des)){
 	die("Error 404");
 }
-$datos = $u->getDatoPorCiEnfermera($_GET["ci"]);
+$datos = $u->getDatoPorCiEnfermera($des);
 if(sizeof($datos) == 0){
-	die("Error 404");
-}
+	die("Error 404 ");
+} 
 $mensaje='';
 if(isset($_POST["grabar"])){
 	$nom = trim($_POST["nombre"]);
@@ -36,7 +38,7 @@ if(isset($_POST["grabar"])){
 	}
 	if($mensaje == ''){
 		if(isset($_POST["nombre"])){
-			$u->updatePaciente();
+			$u->updateEnfermera();
 			header("Location: index.php?m=2");
 		}
 	}
@@ -79,7 +81,7 @@ if(isset($_POST["grabar"])){
 					<form method="post" action="">
 					<table>
 						<thead>
-							<th colspan="3"><center><h3>..:: Datos del paciente ::..</h3></center></th>
+							<th colspan="3"><center><h3>..:: Datos del Personal Enfermero ::..</h3></center></th>
 						</thead>
 						<tbody>
 							<tr>
@@ -146,67 +148,10 @@ if(isset($_POST["grabar"])){
 								<td><input type="hidden" name="grabar" id="grabar" value="si" /></td>
 							</tr>
 							<tr>
-								<td colspan="3"><center><input type="submit" value="Registrar" /></center></td>
+								<td colspan="3"><center><input type="submit" value="Guardar" /></center></td>
 							</tr>
 						</tbody>
 					</table>
-					</form>
-					<form method="post" action="#">
-						<div class="row uniform 50%">
-							<div class="12u">
-								<input type="text" name="nombre" id="nombre" placeholder="Ingrese Nombre" autofocus="true" required="true" value="<?php echo $datos[0]->nombre ?>" />
-							</div>
-							<div class="12u">
-								<input type="text" name="paterno" id="paterno" placeholder="Ingrese Apellido Paterno" required="true" value="<?php echo $datos[0]->paterno ?>"/>
-							</div>
-							<div class="12u">
-								<input type="text" name="materno" id="materno" placeholder="Ingrese Apellido Materno" required="true" value="<?php echo $datos[0]->materno ?>"/>
-							</div>
-							<div class="6u 12u(mobilep)">
-								<input type="text" name="ci" id="ci" placeholder="Cedula Identidad" required="true" value="<?php echo $datos[0]->ci ?>"/>
-							</div>
-							<div class="6u 12u(mobilep)">
-								<div class="select-wrapper">
-									<select name="expedido" id="expedido">
-									
-										<option value="<?php echo $datos[0]->expedido ?>" ><?php echo $datos[0]->expedido ?></option>
-										
-										<option value="" >Seleccione.......</option>
-										<option value="la paz">La Paz</option>
-										<option value="santa cruz">Santa Cruz</option>
-										<option value="cochabamba">Cochabamba</option>
-										<option value="pando">Pando</option>
-										<option value="beni">Beni</option>
-										<option value="oruro">Oruro</option>
-										<option value="potosi">Potosi</option>
-										<option value="chuquisaca">Chuquisaca</option>
-										<option value="tarija">Tarija</option>
-									</select>
-								</div>
-							</div>
-							<div class="12u">
-								<input type="date" name="fec_nac" id="fec_nac" required="true" value="<?php echo $datos[0]->fec_nac ?>"/>
-							</div>
-						</div>
-						<div class="row uniform 50%">
-							<div class="12u">
-								<div class="select-wrapper">
-									<select name="sexo" id="sexo" required="true">
-										<option value="" >Seleccione.......</option>
-										<option value="masculino" >Masculino</option>
-										<option value="femenino" >Femenino</option>
-									</select>
-								</div>
-							</div>
-						</div>
-						<div class="row uniform">
-							<div class="12u">
-								<ul class="actions">
-									<li><input type="submit" value="Modificar" /></li>
-									<li><input type="reset" value="Limpiar Datos" class="alt" /></li>
-								</ul>
-							</div>
-						</div>
 					</form>
 				</section>
 			</div>

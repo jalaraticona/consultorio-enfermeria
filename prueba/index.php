@@ -73,6 +73,17 @@ if(isset($_POST["nombre"])){
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<link rel="stylesheet" href="../assets/css/main.css" />
+	<script src="../public/ChartJS/Chart.bundle.js"></script>
+	<script src="../public/ChartJS/samples/utils.js"></script>
+	<script src="../public/jquery-1.10.2.js"></script>
+	<style>
+		canvas {
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+		}
+	</style>
+	
 	<title></title>
 	<style type="text/css" media="screen">
 		.social {
@@ -109,9 +120,27 @@ if(isset($_POST["nombre"])){
 	}
 
 
+
 	</style>
 </head>
 <body>
+	<header id="header">
+					<h1>UNIVERSIDAD MAYOR DE SAN ANDRÉS - CARRERA DE ENFERMERÍA</h1>
+					<nav id="nav">
+						<ul>
+							<li><a href="../principal/index.php">Inicio</a></li>
+							<li>
+								<a href="#" class="icon fa-angle-down">Operaciones</a>
+								<ul>
+									<li><a href="#">Agregar</a></li>
+									<li><a href="#">Contact</a></li>
+									<li><a href="#">Elements</a></li>
+								</ul>
+							</li>
+							<li><a href="../principal/index.php" class="button">Volver Atras</a></li>
+						</ul>
+					</nav>
+				</header>
 	<nav class="navbar navbar-default" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -131,6 +160,208 @@ if(isset($_POST["nombre"])){
     </ul>
   </div>
 </nav>
+
+<section class="box">
+<a href="#openModal" class="button">Iniciar Sesion</a>
+
+<div id="openModal" class="modalDialog">
+						<div>
+							<a href="#close" title="Close" class="close">X</a>
+							<center><h3>LOGIN</h3></center>
+							<?php
+							if(!empty($mensaje)){
+								?>
+								<div class="alert alert-danger">
+									<h4><span class="icon fa-ban">&nbsp;<?php echo $mensaje; ?></span></h4>
+								</div>
+								<?php
+							}
+							?>
+							<form action="" method="post" accept-charset="utf-8">
+								<center><label>Usuario:</label></center>
+								<input type="text" name="user" id="user" placeholder="Ingrese Usuario">
+								<br>
+								<center><label>Contraseña:</label></center>
+								<input type="password" name="password" id="password" placeholder="Ingrese contraseña">
+								<br>
+								<center><button type="submit" class="button">Iniciar sesion</button></center>
+							</form>
+						</div>
+					</div> 
+
+	<div id="container" style="width: 75%;">
+		<canvas id="canvas"></canvas>
+	</div>
+	<button id="randomizeData">Randomize Data</button>
+	<button id="addDataset">Add Dataset</button>
+	<button id="removeDataset">Remove Dataset</button>
+	<button id="addData">Add Data</button>
+	<button id="removeData">Remove Data</button>
+	<script>
+		var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		var color = Chart.helpers.color;
+		var barChartData = {
+			labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+			datasets: [{
+				label: 'Dataset 1',
+				backgroundColor: color(window.chartColors.red).alpha(0.5).rgbString(),
+				borderColor: window.chartColors.red,
+				borderWidth: 1,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 2',
+				backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				borderColor: window.chartColors.blue,
+				borderWidth: 1,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 3',
+				backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				borderColor: window.chartColors.blue,
+				borderWidth: 1,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 4',
+				backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				borderColor: window.chartColors.blue,
+				borderWidth: 1,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}, {
+				label: 'Dataset 5',
+				backgroundColor: color(window.chartColors.blue).alpha(0.5).rgbString(),
+				borderColor: window.chartColors.blue,
+				borderWidth: 1,
+				data: [
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor(),
+					randomScalingFactor()
+				]
+			}
+			]
+
+		};
+
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'bar',
+				data: barChartData,
+				options: {
+					responsive: true,
+					legend: {
+						position: 'top',
+					},
+					title: {
+						display: true,
+						text: 'Chart.js Bar Chart'
+					}
+				}
+			});
+
+		};
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			var zero = Math.random() < 0.2 ? true : false;
+			barChartData.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return zero ? 0.0 : randomScalingFactor();
+				});
+
+			});
+			window.myBar.update();
+		});
+
+		var colorNames = Object.keys(window.chartColors);
+		document.getElementById('addDataset').addEventListener('click', function() {
+			var colorName = colorNames[barChartData.datasets.length % colorNames.length];
+			var dsColor = window.chartColors[colorName];
+			var newDataset = {
+				label: 'Dataset ' + barChartData.datasets.length,
+				backgroundColor: color(dsColor).alpha(0.5).rgbString(),
+				borderColor: dsColor,
+				borderWidth: 1,
+				data: []
+			};
+
+			for (var index = 0; index < barChartData.labels.length; ++index) {
+				newDataset.data.push(randomScalingFactor());
+			}
+
+			barChartData.datasets.push(newDataset);
+			window.myBar.update();
+		});
+
+		document.getElementById('addData').addEventListener('click', function() {
+			if (barChartData.datasets.length > 0) {
+				var month = MONTHS[barChartData.labels.length % MONTHS.length];
+				barChartData.labels.push(month);
+
+				for (var index = 0; index < barChartData.datasets.length; ++index) {
+					// window.myBar.addData(randomScalingFactor(), index);
+					barChartData.datasets[index].data.push(randomScalingFactor());
+				}
+
+				window.myBar.update();
+			}
+		});
+
+		document.getElementById('removeDataset').addEventListener('click', function() {
+			barChartData.datasets.splice(0, 1);
+			window.myBar.update();
+		});
+
+		document.getElementById('removeData').addEventListener('click', function() {
+			barChartData.labels.splice(-1, 1); // remove the label first
+
+			barChartData.datasets.forEach(function(dataset) {
+				dataset.data.pop();
+			});
+
+			window.myBar.update();
+		});
+	</script>
+<br>
+	<a href="#popup" class="popup-link">Ver mas información</a>
+
+</section>
+
+
 	<div class="social">
 		<ul>
 			<li><a href="http://www.facebook.com/falconmasters" target="_blank" class="icon-facebook">fa</a></li>
@@ -163,6 +394,8 @@ if(isset($_POST["nombre"])){
 <div id="pax">
    Contenido del Div #pax.... (display en CSS es NONE)
 </div>
+
+
 	</section>
 	<script src="../paciente/funciones.js"></script>
 	<script src="../assets/js/jquery.min.js"></script>

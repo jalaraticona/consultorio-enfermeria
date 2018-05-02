@@ -74,6 +74,10 @@
 		});                                                 
 	});
 
+	$("#act").click(function(){
+		$(this).toggleClass("btn-danger btn-success");
+	});
+
 	$('#categoria').change(function(){
 		var valorCambiado =$(this).val();
 		if((valorCambiado == 'universitario') || (valorCambiado == 'docente')){
