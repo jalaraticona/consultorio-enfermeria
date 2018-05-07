@@ -29,6 +29,20 @@ $sql2 = "SELECT * FROM insumos
 $datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
+
+$sql = "SELECT * FROM insumos WHERE tipo = 'vacuna' ORDER BY (fec_exp) ASC";
+$vacunas = $u->GetDatosSql($sql);
+$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ORDER BY (fec_exp) ASC";
+$jeringas = $u->GetDatosSql($sql);
+
+if(isset($_POST["guardar1"])){
+	$u->insertarDesechoVacuna();
+	header("Location: index.php?m=3#closeEdit");
+}
+if(isset($_POST["guardar2"])){
+	$u->insertarDesechoJeringa();
+	header("Location: index.php?m=3#closeEdit");
+}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -52,6 +66,9 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 		if(a == 2){
 			alertify.warning('Insumo modificado correctamente.');
 		}
+		if(a == 3){
+			alertify.warning('Registro de desechos exitoso.');
+		}
 		</script>
 		<div id="page-wrapper">
 
@@ -62,11 +79,10 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 						<ul>
 							<li><a href="../principal/index.php">Inicio</a></li>
 							<li>
-								<a href="#" class="icon fa-angle-down">Operaciones</a>
+								<a href="#" class="icon fa-angle-down">Desechar</a>
 								<ul>
-									<li><a href="#">Agregar</a></li>
-									<li><a href="#">Contact</a></li>
-									<li><a href="#">Elements</a></li>
+									<li><a href="#openEdit">vacuna</a></li>
+									<li><a href="#openEdit1">jeringa</a></li>
 								</ul>
 							</li>
 							<li><a href="../principal/index.php" class="button">Volver Atras</a></li>
@@ -181,6 +197,72 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 									<a href="addJeringa.php" class="button small icon fa-plus" >Agregar JERINGAS</a></center>
 								</section>
 						
+						</div>
+					</div>
+
+					<div id="openEdit" class="modalEdit">
+						<div>
+							<a href="#close" title="Close" class="close">X</a>
+							<center><h3>..:: Reg vacunas desechadas ::..</h3></center>
+							<form action="" method="post" accept-charset="utf-8">
+								<label>F.A.:(frasco abierto)</label>
+								<input type="text" name="fa" id="fa" placeholder="Ingrese cantidad">
+								<label>F.R.:(frasco roto)</label>
+								<input type="text" name="fr" id="fr" placeholder="Ingrese cantidad">
+								<label>F.M.:(factor manipuleo)</label>
+								<input type="text" name="fm" id="fm" placeholder="Ingrese cantidad">
+								<label>F.E.:(factor expiracion)</label>
+								<input type="text" name="fe" id="fe" placeholder="Ingrese cantidad">
+								<label>Lote de vacuna</label>
+								<div class="select-wrapper">
+									<select name="lotevacunas" id="lotevacunas" >
+										<option value="" selected>..:: Selecciones el lote de vacuna ::..</option>
+										<?php
+										foreach ($vacunas as $data) {
+											$id_v = $data->id_insumo;
+										 	$nombre = $data->nombre." - ".$data->lote." - ".$data->cant_disp;
+										 	$estado = $data->estado;
+										 	if($estado == 'usable'){
+										 		echo "<option value=".$id_v.">".$nombre."</option>";
+										 	}
+										} 
+										?>
+									</select>
+								</div>
+								<br>
+								<input type="hidden" name="guardar1" id="guardar1" value="si">
+								<center><button type="submit" class="button">Guardar cambios</button></center>
+							</form>
+						</div>
+					</div>
+
+					<div id="openEdit1" class="modalEdit">
+						<div>
+							<a href="#close" title="Close" class="close">X</a>
+							<center><h3>..:: Reg jeringas desechadas ::..</h3></center>
+							<form action="" method="post" accept-charset="utf-8">
+								<label>Cantidad:</label>
+								<input type="text" name="cantidad" id="cantidad" placeholder="" ="Ingrese cantidad">
+								<label>Lote de vacuna</label>
+								<div class="select-wrapper">
+									<select name="lotejeringas" id="lotejeringas" >
+										<option value="" selected>..:: Selecciones el lote de jeringas a usar ::..</option>
+										<?php
+										foreach ($jeringas as $data) {
+											$id_j = $data->id_insumo;
+										 	$nombre = $data->nombre." - ".$data->medida." - ".$data->lote." - ".$data->cant_disp;
+										 	$estado = $data->estado;
+										 	if($estado == 'usable'){
+										 		echo "<option value=".$id_j.">".$nombre."</option>";
+										 	}
+										} 
+										?>
+									</select>
+								</div>
+								<br>
+								<input type="hidden" name="guardar2" id="guardar2" value="si">
+								<center><button type="submit" class="button">Guardar cambios</button></center>
+							</form>
 						</div>
 					</div>
 				</section>

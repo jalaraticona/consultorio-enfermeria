@@ -106,54 +106,6 @@ for ($j=0; $j < date('m') ; $j++) {
 }
 $anual = json_encode($anual);
 
-$html = <<<EOF
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load('current', {'packages':['corechart']});
-  google.charts.setOnLoadCallback(drawChart);
-
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable(<?php echo $anual; ?>);
-
-    var options = {
-      title: 'grafica anual de atenciones por servicio',
-      hAxis: {title: 'Año <?php echo "20".date("y"); ?>',  titleTextStyle: {color: '#333'}},
-      vAxis: {tittle: 'Cantidad atendida',minValue: 0}
-    };
-
-    var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
-</script>
-EOF;
-
-// output the HTML content
-$pdf->writeHTML($html, true, false, true, false, '');
-
-$html = '<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-  google.charts.load("current", {"packages":["corechart"]});
-  google.charts.setOnLoadCallback(drawChart);
-
-  function drawChart() {
-    var data = google.visualization.arrayToDataTable($anual);
-
-    var options = {
-      title: "grafica anual de atenciones por servicio",
-      hAxis: {title: "Año $anio_actual",  titleTextStyle: {color: "#333"}},
-      vAxis: {title: "Cantidad atendida",minValue: 0}
-    };
-
-    var chart = new google.visualization.AreaChart(document.getElementById("chart_div"));
-    chart.draw(data, options);
-  }
-</script>
-<div id="chart_div" style="width: 900px; height: 500px;"></div>
-';
-
-// output the HTML content
-$pdf->writeHTML($html, true, false, true, false, '');
-
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="3">
 	<tr>

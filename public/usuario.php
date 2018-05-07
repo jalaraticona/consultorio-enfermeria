@@ -174,6 +174,120 @@ class usuario extends Conectar{
 			//$sql = "insert into registrodiariovacuna values (null, CURRENT_DATE(), 0, '".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."')";
 		//}
 	}
+
+	public function insertarDesechoVacuna(){
+		$fav = $_POST["fa"];
+		$fev = $_POST["fe"];
+		$fmv = $_POST["fm"];
+		$frv = $_POST["fr"];
+		$tot = $fav+$fev+$fmv+$frv;
+		$lotvac = $_POST["lotevacunas"];
+
+		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotvac."' and estado = 'usable' ";
+		$vacuna = $this->db->query($sql);
+		$vac = array();
+		while ($reg = $vacuna->fetch_object()) {
+			$vac[] = $reg;
+		}
+		$res = $vac[0]->cant_disp-$tot;
+		$estv = 'usable';
+		if($res == 0){
+			$estv = 'vacio';
+		}
+		$sql = "UPDATE insumos 
+				SET 
+				cant_disp = '".$res."',
+				estado = '".$estv."'
+				where id_insumo = '".$lotvac."' ";
+		$this->db->query($sql);
+		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotvac."' )";
+		$datoo = $this->db->query($sql);
+		$dato = array();
+		while ($reg = $datoo->fetch_object()) {
+			$dato[] = $reg;
+		}
+		if(sizeof($dato) > 0){
+			$fec_actual = date("Y-m-d");
+			$idreg = $dato[0]->id_reg_diario;
+			$regi = $dato[0]->fec_registro;
+			$canegr = $dato[0]->cant_egre;
+			$saldo = $dato[0]->saldo;
+			if($fa > 0){ $fa = $fa+$fav; } else{ $fa = $fav; }
+			if($fr > 0){ $fr = $fr+$frv; } else{ $fr = $frv; }
+			if($fm > 0){ $fm = $fm+$fmv; } else{ $fm = $fmv; }
+			if($fe > 0){ $fe = $fe+$fev; } else{ $fe = $fev; }
+			if($dato[0]->id_insumo == $lotvac){
+				$canegr = $canegr+$tot;
+				$saldo = $saldo-$tot;
+				$sql = "UPDATE registrodiario
+						SET 
+						cant_egre = '".$canegr."',
+						fa = '".$fa."',
+						fr = '".$fr."',
+						fm = '".$fm."',
+						fe = '".$fe."',
+						saldo = '".$saldo."'
+						where id_reg_diario = '".$idreg."' ";
+				$this->db->query($sql);
+			}
+		}
+		else {
+			print_r("Error 404");exit;
+		}
+	}
+
+	public function insertarDesechoJeringa(){
+		$tot = $_POST["cantidad"];
+		$lotjer = $_POST["lotejeringas"];
+
+		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotjer."' and estado = 'usable' ";
+		$vacuna = $this->db->query($sql);
+		$vac = array();
+		while ($reg = $vacuna->fetch_object()) {
+			$vac[] = $reg;
+		}
+		$res = $vac[0]->cant_disp-$tot;
+		$estv = 'usable';
+		if($res == 0){
+			$estv = 'vacio';
+		}
+		$sql = "UPDATE insumos 
+				SET 
+				cant_disp = '".$res."',
+				estado = '".$estv."'
+				where id_insumo = '".$lotjer."' ";
+		$this->db->query($sql);
+		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotjer."' )";
+		$datoo = $this->db->query($sql);
+		$dato = array();
+		while ($reg = $datoo->fetch_object()) {
+			$dato[] = $reg;
+		}
+		if(sizeof($dato) > 0){
+			$fec_actual = date("Y-m-d");
+			$idreg = $dato[0]->id_reg_diario;
+			$regi = $dato[0]->fec_registro;
+			$canegr = $dato[0]->cant_egre;
+			$saldo = $dato[0]->saldo;
+			$cant_per = $dato[0]->cant_per;
+			if($cant_per > 0){ $cant_per = $cant_per+$tot; } else{ $cant_per = $tot; }
+			if($dato[0]->id_insumo == $lotjer){
+				$canegr = $canegr+$tot;
+				$saldo = $saldo-$tot;
+				$sql = "UPDATE registrodiario
+						SET 
+						cant_egre = '".$canegr."',
+						saldo = '".$saldo."',
+						cant_per = '".$cant_per."'
+						where id_reg_diario = '".$idreg."' ";
+				$this->db->query($sql);
+			}
+		}
+		else {
+			print_r("Error 404");exit;
+		}
+	}
+
 	public function updateVacuna(){
 		$sql = "UPDATE insumos 
 				SET 
@@ -216,6 +330,39 @@ class usuario extends Conectar{
 		return $arreglo;
 	}
 
+	public function getDatoPorIdServicio($id_servicio){
+		$sql = "SELECT * FROM servicio WHERE id_servicio = '".$id_servicio."' ";
+		$datos = $this->db->query($sql);
+		$arreglo = array();
+		while ($reg = $datos->fetch_object()) {
+			$arreglo[] = $reg;
+		}
+		return $arreglo;
+	}
+
+	public function insertarServicio(){
+		$nom = trim($_POST["nombre"]);
+		$cla = trim($_POST["clave"]);
+		$det = trim($_POST["detalle"]);
+		$cos = trim($_POST["costo"]);
+		$tip = trim($_POST["tipo"]);
+		if($tip == "vacuna"){ $dos = trim($_POST["dosis"]); }
+		else{ $dos = 0; }
+		$sql = "INSERT INTO servicio VALUES (null, '".$cla."', '".$nom."', '".$dos."', '".$det."','".$cos."','".$tip."')";
+		$this->db->query($sql);
+	}
+
+	public function upsateServicio(){
+		$nom = trim($_POST["nombre"]);
+		$cla = trim($_POST["clave"]);
+		$det = trim($_POST["detalle"]);
+		$cos = trim($_POST["costo"]);
+		$tip = trim($_POST["tipo"]);
+		if($tip == "vacuna"){ $dos = trim($_POST["dosis"]); }
+		else{ $dos = 0; }
+		$sql = "INSERT INTO servicio VALUES (null, '".$cla."', '".$nom."', '".$dos."', '".$det."','".$cos."','".$tip."')";
+		$this->db->query($sql);
+	}
 	//Historia consultas
 	//Insertar proceso enfermero
 	public function insertarHistoria(){
@@ -328,6 +475,52 @@ class usuario extends Conectar{
 				$egreso = 1;
 				$saldo--;
 				$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
+				$this->db->query($sql);
+			}
+		}
+		else {
+			print_r("Error 404");exit;
+		}
+
+		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotjer."' )";
+		$datoo = $this->db->query($sql);
+		$dato = array();
+		while ($reg = $datoo->fetch_object()) {
+			$dato[] = $reg;
+		}
+		if(sizeof($dato) > 0){
+			$fec_actual = date("Y-m-d");
+			$idreg = $dato[0]->id_reg_diario;
+			$salant = $dato[0]->sal_ant;
+			$canegr = $dato[0]->cant_egre;
+			$saldo = $dato[0]->saldo;
+			$regi = $dato[0]->fec_registro;
+			if($dato[0]->id_insumo == $lotjer){
+				//Si existe ya un registro en el dia
+				if ($regi == $fec_actual) {
+					$canegr++;
+					$saldo--;
+					$sql = "UPDATE registrodiario
+							SET 
+							cant_egre = '".$canegr."',
+							saldo = '".$saldo."'
+							where id_reg_diario = '".$idreg."' ";
+					$this->db->query($sql);
+				}
+				//si no existe un registro en el dia
+				else {
+					$salant = $saldo;
+					$egreso = 1;
+					$saldo--;
+					$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
+					$this->db->query($sql);
+				}
+			}
+			else{
+				$salant = $saldo;
+				$egreso = 1;
+				$saldo--;
+				$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
 				$this->db->query($sql);
 			}
 		}

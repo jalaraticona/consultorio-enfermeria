@@ -122,7 +122,7 @@ if (isset($_POST["id_pac"])) {
 											$id_s = $dato->id_servicio;
 										 	$servicio = $dato->nombre;
 										 	$tipo = $dato->tipo;
-										 	if($tipo == 'procedimiento enfermero'){
+										 	if($tipo == 'proceso enfermero'){
 										 		echo "<option value=".$id_s.">".$servicio."</option>";
 										 	}
 										} 

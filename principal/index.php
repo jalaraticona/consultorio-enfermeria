@@ -133,8 +133,8 @@ if($sw == 1){
 					<?php 
 				  	if($_SESSION["tipo"] == "administrador"){
 				  	?>
-				  	<a href="../servicio" title=""><span class="fa-stack fa-3x"><i class="fas fa-square fa-stack-2x"></i><i class="fas fa-briefcase-medical fa-stack-1x fa-inverse"></i></span></a>
-					<a href="../servicio" title=""><h3>Registro de Servicio</h3></a>
+				  	<a href="../servicios" title=""><span class="fa-stack fa-3x"><i class="fas fa-square fa-stack-2x"></i><i class="fas fa-briefcase-medical fa-stack-1x fa-inverse"></i></span></a>
+					<a href="../servicios" title=""><h3>Registro de Servicio</h3></a>
 					<p>Puede realizar el registro de un nuevo servicio.</p>
 				  	<?php
 				  	}
@@ -183,6 +183,7 @@ if($sw == 1){
 
 		<div id="openEdit" class="modalEdit">
 			<div>
+				<a href="#close" title="Close" class="close">X</a>
 				<center><h3>..:: Editar informacion ::..</h3></center>
 				<form action="" method="post" accept-charset="utf-8">
 					<label>Nombres</label>

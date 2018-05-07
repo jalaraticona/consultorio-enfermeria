@@ -97,6 +97,15 @@
 			$('#selector').css('display','none');
 		}
 	});
+	$('#tipo').change(function(){
+		var valorCambiado =$(this).val();
+		if((valorCambiado == 'vacuna')){
+			$('#dosis').css('display','block');
+		}
+		else{
+			$('#dosis').css('display','none');
+		}
+	});
 
 	$(function() {
 
