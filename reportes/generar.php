@@ -1,14 +1,13 @@
 <?php
 require_once("../public/usuario.php");
 require_once('tcpdf/tcpdf.php');
-function edad($fecha){
-      list($anyo,$mes,$dia) = explode("-",$fecha);
-      $anyo_dif  = date("Y") - $anyo;
-      $mes_dif = date("m") - $mes;
-      $dia_dif   = date("d") - $dia;
-      if ($dia_dif < 0 || $mes_dif < 0) $anyo_dif--;
-      return $anyo_dif;
-}
+
+$anio_actual = $_POST["anio"];
+$me = $_POST["mes"];
+$ti = $_POST["tipo"];
+
+//si es produccion de servicios
+if($ti == "servicios"){
 
 // create new PDF document
 $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
@@ -77,34 +76,6 @@ if($me == 0){
 else{
 	$mess = $meses[$me-1];
 }
-
-
-$cantidad = array();
-$mensual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
-array_push($cantidad, 'Numero');
-for($i= 1; $i < 10; $i++){
-  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = 2 and id_servicio = ".$i."";
-  $datos = $u->GetDatosSql($sql);
-  array_push($cantidad, (int) $datos[0]->cant);
-}
-array_push($mensual, $cantidad);
-$mensual = json_encode($mensual);
-
-$cant = array();
-$anual = array(array('Año','Inyectable', 'curacion pequeña', 'curacion mediana', 'oxigenoterapia', 'nebulizacion', 'retiro de puntos', 'difteria', 'tetanos', 'hepatitis b'));
-$meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
-for ($j=0; $j < date('m') ; $j++) { 
-	array_push($cant, $meses[$j]);
-	for($i= 1; $i < 10; $i++){
-		$a = $j+1;
-	  $sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = YEAR(CURRENT_DATE) and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
-	  $datos = $u->GetDatosSql($sql);
-	  array_push($cant, (int) $datos[0]->cant);
-	}
-	array_push($anual, $cant);
-	$cant = array();
-}
-$anual = json_encode($anual);
 
 $tbl = <<<EOD
 <table cellspacing="0" cellpadding="3">
@@ -522,7 +493,7 @@ if(sizeof($datos) > 0){
 		$lug = $dato->lugar;
 		$dos = $dato->dosis;
 		$fecha = $dato->fec_nac;
-		$edad = edad($fecha);
+		$edad = $u->edad($fecha);
 		if ($sex == "femenino") {
 			if($lug == "dentro"){
 				if($edad < 6){
@@ -710,7 +681,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-}
+}// fin produccion de servicios anual
 else{
 $tbl=<<<EOD
 <table cellspacing="0" cellpadding="1" border="1">
@@ -1296,7 +1267,93 @@ $tbl=<<<EOD
 EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
+}//fin produccion de servicios mensual
+}// fin produccion de servicios
+else{
+
+// create new PDF document
+$pdf = new TCPDF(PDF_PAGE_ORIENTATION2, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+// set document information
+$pdf->SetCreator(PDF_CREATOR);
+$pdf->SetAuthor('Unicersidad Mayor de San Andres - Facultad de Medicina, Enfermería, Nutrición y Tecnología Médica');
+$pdf->SetTitle('Carrera de Enfermería');
+$pdf->SetSubject('TCPDF Tutorial');
+$pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+// set default header data
+$pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.'', PDF_HEADER_STRING);
+
+// set header and footer fonts
+$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+// set default monospaced font
+$pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+// set margins
+$pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+$pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+$pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+// set auto page breaks
+$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+
+// set image scale factor
+$pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+// set some language-dependent strings (optional)
+if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
+	require_once(dirname(__FILE__).'/lang/eng.php');
+	$pdf->setLanguageArray($l);
 }
+
+// ---------------------------------------------------------
+
+// set font
+$pdf->SetFont('helvetica', 'B', 20);
+
+// add a page
+$pdf->AddPage();
+
+$pdf->Write(0, 'KARDEX DE EXISTENCIA DE INSUMOS', '', 0, 'L', true, 0, false, false, 0);
+
+$pdf->SetFont('helvetica', '', 9);
+
+// -----------------------------------------------------------------------------
+
+$u = new usuario();
+$sql = "SELECT * FROM enfermera WHERE id_enfermera = ".$_SESSION["id_enf"]." ";
+$datos = $u->GetDatosSql($sql);
+$nombre = $datos[0]->nombre." ".$datos[0]->paterno." ".$datos[0]->materno;
+
+$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
+if($me == 0){
+	$mess = "Enero - Diciembre";
+}
+else{
+	$mess = $meses[$me-1];
+}
+
+$tbl = <<<EOD
+<table cellspacing="0" cellpadding="3">
+	<tr>
+		<td><b>Establecimiento:</b> Consultorio Carrera de Enfermería - UMSA</td>
+		<td><b>Red de servicio:</b> </td>
+		<td><b>Responsable:</b> $nombre</td>
+	</tr>
+	<tr>
+		<td><b>Gestion:</b> $anio_actual</td>
+		<td><b>Mes:</b> $mess</td>
+		<td><b>Tipo de Reporte:</b> $ti</td>
+	</tr>
+</table>
+EOD;
+
+$pdf->writeHTML($tbl, true, false, false, false, '');
+$sql = "SELECT * FROM registrodiario WHERE ";
+}	
+
 
 //Close and output PDF document
 $pdf->Output('Reporte_Produccion_Servicios.pdf', 'I');

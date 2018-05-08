@@ -4,6 +4,8 @@ if(!isset($_SESSION["id_enf"])){
 	header("Location: ../index.php");
 }
 $u = new usuario();
+$sql = "SELECT * FROM servicio WHERE tipo = 'vacuna' ";
+$vacunas = $u->GetDatosSql($sql);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -84,9 +86,16 @@ $u = new usuario();
 							</div>
 							<div class="4u 12u(narrower)">
 								<label for="especificacion">tipo Informe</label>
-								<select name="tipo">
-									<option value="todo" selected>Todos los informes</option>
-									<option value="insumos">Estado de insumos</option>
+								<select name="tipo" id="tipo">
+									<option value="" selected>..:: Seleccione tipo ::..</option>
+									<option value="jeringas">Insumos (Jeringas)</option>
+									<?php
+									foreach ($vacunas as $dato) {
+										?>
+										<option value="<?php echo $dato->clave; ?>">Insumos (Vacuna <?php echo $dato->clave; ?>)</option>
+										<?php
+									}
+									?>
 									<option value="servicios">Produccion de Servicios</option>
 								</select>
 							</div>
