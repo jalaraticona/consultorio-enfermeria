@@ -1351,7 +1351,9 @@ $tbl = <<<EOD
 EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
+
 $sql = "SELECT * FROM registrodiario WHERE ";
+
 }	
 
 
