@@ -50,7 +50,7 @@ if(isset($_POST["guardar"])){
 </head>
 <body class="landing">
 <?php 
-$sql = "SELECT * FROM insumos WHERE estado = 'usable' and fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
+$sql = "SELECT ing.id_ingreso, ins.nombre, ins.tipo, ing.fec_exp, ing.cant_disp FROM ingresoinsumos as ing, insumos as ins WHERE ing.id_insumo = ins.id_insumo and ing.estado = 'usable' and ing.fec_exp BETWEEN CURRENT_DATE() and date_add(CURRENT_DATE(), interval 30 day)";
 $est = $u->GetDatosSql($sql);
 $sw = 0;
 if(sizeof($est) > 0) $sw = 1;
@@ -61,15 +61,15 @@ if($sw == 1){
 	$men = "Los siguientes insumos tienen fecha de caducidad en los siguientes 30 dias, tomar en cuenta....<br><br>";
 	$men.= "<table><thead><tr><th>Nro.</th><th>Nombres</th><th>Tipo</th><th> Fecha de expiración</th><th>Stock</th></tr></thead><tbody>";
 	foreach($est as $informacion){
-		$nombre = $informacion->nombre;
-		$tipo = $informacion->tipo;
-		$fec_exp = $informacion->fec_exp;
-		$stock = $informacion->cant_disp;
+		$nom = $informacion->nombre;
+		$tip = $informacion->tipo;
+		$exp = $informacion->fec_exp;
+		$disp = $informacion->cant_disp;
 		$id_insumo = $informacion->id_insumo;
-		$men.= "<tr><td>".$id_insumo."</td><td>".$nombre."</td><td>".$tipo."</td><td>".$fec_exp."</td><td>".$stock."</td></tr>";
+		$men.= "<tr><td>".$id_insumo."</td><td>".$nom."</td><td>".$tip."</td><td>".$exp."</td><td>".$disp."</td></tr>";
 	}
 	$men.= "</tbody></table>";
-	echo "alertify.alert('..:: Alerta!!!..... ::..','".$men."');";
+	echo "alertify.alert('<center>..:: Alerta!!!.. ::..</center>','".$men."');";
 }
 ?>
 </script>

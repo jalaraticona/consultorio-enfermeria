@@ -8,9 +8,6 @@ $mensaje='';
 if(isset($_POST["grabar"])){
 	$com = trim($_POST["comprobante"]);
 	$lot = trim($_POST["lote"]);
-	$ori = trim($_POST["origen"]);
-	$red = trim($_POST["red"]);
-	$med = trim($_POST["medida"]);
 	$feci = trim($_POST["fec_ing"]);
 	$fece = trim($_POST["fec_exp"]);
 	$sto = trim($_POST["stock"]);
@@ -30,12 +27,14 @@ if(isset($_POST["grabar"])){
 		$mensaje.='el stock no puede ser gigantesco solo se acepta como maximo 1000. <br>';
 	}
 	if($mensaje == ''){
-		if(isset($_POST["medida"])){
+		if(isset($_POST["insumo"])){
 			$u->insertarInsumo();
 			header("Location: index.php?m=1");
 		}
 	}
 }
+$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ";
+$ins = $u->GetDatosSql($sql);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -115,16 +114,16 @@ if(isset($_POST["grabar"])){
 									<td>Tamaño jeringa: </td>
 									<td>
 										<div class="select-wrapper">
-											<select name="medida" id="medida" required="true">
-												<option value="" selected>..::  Seleccione la medida de la jeringa ::..</option>
-												<?php $jeringas = ['27Gx3/8','23Gx1/2','23Gx1','25Gx5/8','22Gx1','22Gx1/2','22Gx5'];
-												for ($i = 0; $i < sizeof($jeringas) ; $i++) {
+											<select name="insumo" id="insumo" required="true">
+												<?php 
+												foreach ($ins as $dato) {
+													$clv = $dato->clave;
+													$idi = $dato->id_insumo;
 													?>
-													<option value="<?php echo $jeringas[$i]; ?>" <?php echo set_value_select(array(),'medida','medida',$jeringas[$i]); ?> >Jeringa <?php echo $jeringas[$i]; ?></option>
+													<option value="<?php echo $idi ?>" <?php echo set_value_select(array(),'insumo','insumo',$idi); ?> >Jeringa Tam. <?php echo $clv; ?></option>
 													<?php
 												}
 												?>
-												<option value='cajas de bioseguridad' <?php echo set_value_select(array(),'medida','medida','cajas de bioseguridad'); ?>>Cajas de bioseguridad</option>
 											</select>
 										</div>
 									</td>

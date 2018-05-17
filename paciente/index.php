@@ -77,104 +77,104 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 						<div class="12u">
 
 							<!-- Text -->
-								<section class="box">
-									<h4>Cantidad de pacientes registrados: <?php echo $cantidad[0]->cuantos ?> pacientes</h4>
-									<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
-									<div class="table-wrapper">
-										<table class="alt">
-											<thead>
-												<tr>
-													<th>N°</th>
-													<th>Nombres_Apellidos</th>
-													<th>C.I.</th>
-													<th>Fecha de Nacimiento</th>
-													<th>Sexo</th>
-													<th>Mpio. residencia</th>
-													<th>Categoría</th>
-													<th>Accion</th>
-													<th>Realizar Atención</th>
-													<th>Historia clinica</th>
-												</tr>
-											</thead>
-											<tbody>
-												<?php
-												$cont = 0;
-												foreach($datos as $dato){
-													$cont++;
-													$enc = $u->encriptar($dato->ci);
-													?>
-													<tr>
-														<td><?php echo $cont ?></td>
-														<td><?php echo $dato->nombre." ".$dato->paterno." ".$dato->materno?></td>
-														<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
-														<td><?php echo $dato->fec_nac?></td>
-														<td><?php echo $dato->sexo?></td>
-														<td><?php echo $dato->residencia?></td>
-														<td><?php echo $dato->categoria." ".$dato->carrera_cargo?></td>
-														<td><a href="edit.php?ci=<?php $enc = $u->encriptar($dato->ci);
-														echo $enc;?>" class="icon fa-pencil">editar</a><br>
-														<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
-														<td><a href="../atencion/RegistraHistoria.php?ci=<?php
-														 echo $enc;?>" class="icon fa-stethoscope">&nbsp;Proc. Enf.</a><br>
-														 <a href="../atencion/RegistraVacunacion.php?ci=<?php
-														 echo $enc;?>" class="icon fa-medkit">&nbsp;Vacunacion</a></td>
-														<td>
-														<a href="historial.php?ci=<?php
-														 echo $enc;?>" class="icon fa-book">&nbsp;Ver</a>
-														</td>
-													</tr>
-													<?php
-												}
+							<section class="box">
+								<h4>Cantidad de pacientes registrados: <?php echo $cantidad[0]->cuantos ?> pacientes</h4>
+								<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
+								<div class="table-wrapper">
+									<table class="alt">
+										<thead>
+											<tr>
+												<th>N°</th>
+												<th>Nombres_Apellidos</th>
+												<th>C.I.</th>
+												<th>Fecha de Nacimiento</th>
+												<th>Sexo</th>
+												<th>Mpio. residencia</th>
+												<th>Categoría</th>
+												<th>Accion</th>
+												<th>Realizar Atención</th>
+												<th>Historia clinica</th>
+											</tr>
+										</thead>
+										<tbody>
+											<?php
+											$cont = 0;
+											foreach($datos as $dato){
+												$cont++;
+												$enc = $u->encriptar($dato->ci);
 												?>
 												<tr>
-													<td colspan="13">
-														<div class="pull-right">
-															<ul class="pagination">
-															    <li><a href="index.php">Primera Página</a></li>
-															    <?php 
-															    if($pagina == 1){
-															    	?>
-															    	<li class="disabled"><a href="javascript:void(0);" title="">Anterior</a></li>
-															    	<?php
-															    }
-															    else{
-															    	$anterior = $pagina-1;
-															    	?>
-															    	<li><a href="index.php?pagina=<?php echo $anterior ?>">Anterior</a></li>
-															    	<?php
-															    }
-															    ?>
-
-															    <?php
-															    for($i=1; $i<$total_paginas; $i++){
-															    	?>
-															    	<li <?php if($pagina==$i){ echo 'class="active"'; } ?>><a href="index.php?pagina=<?php echo $i;?>"><?php echo $i; ?></a></li>
-															    	<?php
-															    }
-															    ?>
-
-															    <?php
-															    if($cont == $cant_por_pagina and $pagina < $total_paginas){
-															    	$proximo = $pagina+1;
-															    	?>
-															    	<li><a href="index.php?pagina=<?php echo $proximo ?>">Siguiente</a></li>
-															    	<?php
-															    }
-															    else{
-															    	?>
-															    	<li class="disabled"><a href="javascript:void(0);">Siguiente</a></li>
-															    	<?php
-															    }
-															    ?>
-															    <li><a href="index.php?pagina=<?php echo $total_paginas; ?>">Ultima Pagina</a></li>
-															</ul>
-														</div>
+													<td><?php echo $cont ?></td>
+													<td><?php echo $dato->nombre." ".$dato->paterno." ".$dato->materno?></td>
+													<td><?php echo $dato->ci?> <?php echo $dato->expedido?></td>
+													<td><?php echo $dato->fec_nac?></td>
+													<td><?php echo $dato->sexo?></td>
+													<td><?php echo $dato->residencia?></td>
+													<td><?php echo $dato->categoria." ".$dato->carrera_cargo?></td>
+													<td><a href="edit.php?ci=<?php $enc = $u->encriptar($dato->ci);
+													echo $enc;?>" class="icon fa-pencil">editar</a><br>
+													<!--<a href="javascript:void(0);" onclick="eliminar('delete.php?ci=<?php echo $dato->ci?>');" class="icon fa-trash">eliminar</a>--></td>
+													<td><a href="../atencion/RegistraHistoria.php?ci=<?php
+													 echo $enc;?>" class="icon fa-stethoscope">&nbsp;Proc. Enf.</a><br>
+													 <a href="../atencion/RegistraVacunacion.php?ci=<?php
+													 echo $enc;?>" class="icon fa-medkit">&nbsp;Vacunacion</a></td>
+													<td>
+													<a href="historial.php?ci=<?php
+													 echo $enc;?>" class="icon fa-book">&nbsp;Ver</a>
 													</td>
 												</tr>
-											</tbody>
-										</table>
-									</div>
-								</section>
+												<?php
+											}
+											?>
+											<tr>
+												<td colspan="13">
+													<div class="pull-right">
+														<ul class="pagination">
+														    <li><a href="index.php">Primera Página</a></li>
+														    <?php 
+														    if($pagina == 1){
+														    	?>
+														    	<li class="disabled"><a href="javascript:void(0);" title="">Anterior</a></li>
+														    	<?php
+														    }
+														    else{
+														    	$anterior = $pagina-1;
+														    	?>
+														    	<li><a href="index.php?pagina=<?php echo $anterior ?>">Anterior</a></li>
+														    	<?php
+														    }
+														    ?>
+
+														    <?php
+														    for($i=1; $i<$total_paginas; $i++){
+														    	?>
+														    	<li <?php if($pagina==$i){ echo 'class="active"'; } ?>><a href="index.php?pagina=<?php echo $i;?>"><?php echo $i; ?></a></li>
+														    	<?php
+														    }
+														    ?>
+
+														    <?php
+														    if($cont == $cant_por_pagina and $pagina < $total_paginas){
+														    	$proximo = $pagina+1;
+														    	?>
+														    	<li><a href="index.php?pagina=<?php echo $proximo ?>">Siguiente</a></li>
+														    	<?php
+														    }
+														    else{
+														    	?>
+														    	<li class="disabled"><a href="javascript:void(0);">Siguiente</a></li>
+														    	<?php
+														    }
+														    ?>
+														    <li><a href="index.php?pagina=<?php echo $total_paginas; ?>">Ultima Pagina</a></li>
+														</ul>
+													</div>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</section>
 						</div>
 					</div>
 				</section>

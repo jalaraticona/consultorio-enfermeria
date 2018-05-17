@@ -22,17 +22,18 @@ else{
 	$pagina = 1;
 }
 $empezar_desde = ($pagina-1)*$cant_por_pagina;
-$sql1 = "SELECT count(*) AS cuantos FROM insumos;";
+$sql1 = "SELECT count(*) AS cuantos FROM ingresoinsumos;";
 $cantidad = $u->GetDatosSql($sql1);
-$sql2 = "SELECT * FROM insumos
+$sql2 = "SELECT * FROM ingresoinsumos as ing, insumos as ins
+		WHERE ing.id_insumo = ins.id_insumo
 		LIMIT ".$empezar_desde.",".$cant_por_pagina." ";
 $datos = $u->GetDatosSql($sql2);
 
 $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 
-$sql = "SELECT * FROM insumos WHERE tipo = 'vacuna' ORDER BY (fec_exp) ASC";
+$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ing.id_insumo = ins.id_insumo and ins.tipo = 'vacuna' ORDER BY (fec_exp) ASC";
 $vacunas = $u->GetDatosSql($sql);
-$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ORDER BY (fec_exp) ASC";
+$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ing.id_insumo = ins.id_insumo and ins.tipo = 'jeringa' ORDER BY (fec_exp) ASC";
 $jeringas = $u->GetDatosSql($sql);
 
 if(isset($_POST["guardar1"])){
@@ -108,13 +109,11 @@ if(isset($_POST["guardar2"])){
 													<th>Comp.</th>
 													<th>Lote</th>
 													<th>Insumo</th>
-													<th>Medida</th>
 													<th>Origen</th>
 													<th>Coordinacion red</th>
-													<th>Fecha de Ingreso</th>
-													<th>Fecha de Expiración</th>
-													<th>Stock</th>
-													<th>Cant. disponible</th>
+													<th>Fec. Ing</th>
+													<th>Fec. Exp.</th>
+													<th>Cant. disp.</th>
 													<th>Estado</th>
 													<th>Accion</th>
 												</tr>
@@ -124,29 +123,29 @@ if(isset($_POST["guardar2"])){
 												$cont = 0;
 												foreach($datos as $dato){
 													$cont++;
+													$enc = $u->encriptar($dato->id_ingreso);
 													?>
 													<tr>
 														<td><?php echo $dato->comprobante?></td>
 														<td><?php echo $dato->lote?></td>
 														<td><?php echo $dato->nombre?></td>
-														<td><?php echo $dato->medida?></td>
 														<td><?php echo $dato->origen?></td>
 														<td><?php echo $dato->red?></td>
 														<td><?php echo $dato->fec_ing?></td>
 														<td><?php echo $dato->fec_exp?></td>
-														<td><?php echo $dato->stock?></td>
 														<td><?php echo $dato->cant_disp?></td>
 														<td><?php echo $dato->estado?></td>
-														<td><a href="edit.php?id_insumo=<?php $enc = $u->encriptar($dato->id_insumo);
+														<td><!--<a href="edit.php?id_insumo=<?php $enc = $u->encriptar($dato->id_insumo);
 														echo $enc;?>" class="icon fa-pencil">editar</a><br>
-														<a href="javascript:void(0);" onclick="eliminar('delete.php?id_insumo=<?php echo $dato->id_insumo?>');" class="icon fa-trash">eliminar</a></td>
+														<a href="javascript:void(0);" onclick="eliminar('delete.php?id_insumo=<?php echo $dato->id_insumo?>');" class="icon fa-trash">eliminar</a>-->
+														<a href="usos.php?id=<?php echo $enc;?>" class="icon fa-pencil">Ver Uso</a></td>
 													</tr>
 													<?php
 												}
 												?>
 												<tr>
 													<td colspan="11">
-														<div class="pull-right">
+														<center>
 															<ul class="pagination">
 															    <li><a href="index.php">Primera Página</a></li>
 															    <?php 
@@ -186,7 +185,7 @@ if(isset($_POST["guardar2"])){
 															    ?>
 															    <li><a href="index.php?pagina=<?php echo $total_paginas; ?>">Ultima Pagina</a></li>
 															</ul>
-														</div>
+														</center>
 													</td>
 												</tr>
 											</tbody>

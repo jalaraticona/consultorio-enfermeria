@@ -273,21 +273,33 @@ else{
 					window.onload = function() {
 						var ctx = document.getElementById('canvas').getContext('2d');
 						
+						//<?php 
+						//if($_POST["mes"] > 0){
+						//	?>
+						//	window.myDoughnut = new Chart(ctx, config);
+						//	<?php
+						//}
+						//else{
+						//	?>
+						
 						window.myBar = new Chart(ctx, {
-							type: 'line',
-							data: barChartData,
-							options: {
-								responsive: true,
-								legend: {
-									position: 'top',
-								},
-								title: {
-									display: true,
-									text: 'Estadisticas de los servicios ofrecidos por el consultorio'
+								type: 'line',
+								data: barChartData,
+								options: {
+									responsive: true,
+									legend: {
+										position: 'top',
+									},
+									title: {
+										display: true,
+										text: 'Estadisticas de los servicios ofrecidos por el consultorio'
+									}
 								}
-							}
-						});
-					};
+							});
+						};
+						//<?php
+						//}
+						//?>
 				</script>
 				<br>
 				<table>

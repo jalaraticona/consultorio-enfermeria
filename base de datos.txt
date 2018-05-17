@@ -37,9 +37,13 @@ create table paciente(
 
 create table insumos(
     id_insumo int not null AUTO_INCREMENT PRIMARY KEY,
-    nombre varchar(100),
-    medida varchar(100),
-    tipo varchar(50),
+    clave varchar(50),
+    nombre varchar(50),
+    tipo varchar(20)
+)
+
+create table ingresoInsumos(
+    id_ingreso int not null AUTO_INCREMENT PRIMARY KEY,
     fec_ing date,
     fec_exp date,
     stock int,
@@ -50,7 +54,9 @@ create table insumos(
     red varchar(100),
     estado varchar(20),
     id_enfermera int,
-    FOREIGN KEY (id_enfermera) REFERENCES enfermera(id_enfermera)
+    id_insumo int,
+    FOREIGN KEY (id_enfermera) REFERENCES enfermera(id_enfermera),
+    FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo)
 )
 
 create table servicio(
@@ -62,12 +68,12 @@ create table servicio(
 	tipo varchar(50)
 )
 
-create table registrahistoria(
-    id_historia int not null AUTO_INCREMENT PRIMARY KEY,
+create table historia(
+    id_historia int NOT NULL AUTO_INCREMENT PRIMARY KEY,
     motivo text,
     fec_reg date,
     lugar varchar(100),
-    dosis varchar(50),
+    dosis varchar(20),
     id_enfermera int,
     id_paciente int,
     id_servicio int,
@@ -76,14 +82,12 @@ create table registrahistoria(
     FOREIGN KEY (id_servicio) REFERENCES servicio(id_servicio)
 )
 
-create table registrodiario(
-    id_reg_diario int not null AUTO_INCREMENT PRIMARY KEY,
-    fec_registro date,
+create table salidaInsumos(
+    id_salida int NOT null AUTO_INCREMENT PRIMARY KEY,
+    fec_reg date,
     sal_ant int,
-    cant_ing int,
     cant_disp int,
     cant_egre int,
-    ori_dest varchar(100),
     fa int,
     fr int,
     fm int,
@@ -91,7 +95,7 @@ create table registrodiario(
     cant_per int,
     saldo int,
     id_enfermera int,
-    id_insumo int,
+    id_ingreso int,
     FOREIGN KEY (id_enfermera) REFERENCES enfermera(id_enfermera),
-    FOREIGN KEY (id_insumo) REFERENCES insumos(id_insumo)
+    FOREIGN KEY (id_ingreso) REFERENCES ingresoinsumos(id_ingreso)
 )

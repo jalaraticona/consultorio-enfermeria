@@ -130,29 +130,24 @@ class usuario extends Conectar{
 		$fec_ing = $_POST["fec_ing"];
 		$fec_exp = $_POST["fec_exp"];
 		$stock = $_POST["stock"];
-		$estado = "usable";
+		$est = "usable";
 		$id_enf = $_SESSION["id_enf"];
-		if($tipo == 'jeringa'){
-			$medida = $_POST["medida"];
-			$nombre = "Jeringa ".$_POST["medida"];
-		}
-		else{
-			$medida = "---";
-			$nombre = $_POST["nombre"];
-		}
-		$sql = "INSERT INTO insumos VALUES (null,'".$nombre."','".$medida."','".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."') ";
+		$id_ins = $_POST["insumo"];
+		$sql = "INSERT INTO ingresoinsumos VALUES (null,'".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$est."','".$id_enf."','".$id_ins."') ";
 		$this->db->query($sql);
-		$sql = "SELECT MAX(id_insumo) as id FROM insumos";
+		//verificamos el ultimo id ingresado
+		$sql = "SELECT MAX(id_ingreso) as id FROM ingresoinsumos";
 		$dato = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $dato->fetch_object()) {
 			$arreglo[] = $reg;
 		}
-		$id = $arreglo[0]->id;
-		$sql = "SELECT saldo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(rd.id_reg_diario) FROM registrodiario as rd, insumos as ins where ins.id_insumo = rd.id_insumo and ins.nombre = '".$nombre."' )";
+		$nro_id = $arreglo[0]->id;
+		//verificamos si existe un registro en la salida de insumos de ser positivo se crea un nuevo de ser lo contrario de toma el saldo anterior y se crea otro
+		$sql = "SELECT saldo FROM salidainsumos WHERE id_salida = ( SELECT MAX(sal.id_salida) FROM salidainsumos as sal, ingresoinsumos as ing where ing.id_ingreso = sal.id_ingreso and sal.id_ingreso = '".$nro_id."' )";
 		$dato = $this->db->query($sql);
 		if(sizeof($dato) == 0){
-			$sql = "INSERT INTO registrodiario VALUES (null, '".$fec_ing."', '0', '".$stock."', '".$stock."', '0', '".$origen."', '0', '0', '0', '0', '0', '".$stock."', '".$id_enf."', '".$id."' ) ";
+			$sql = "INSERT INTO salidainsumos VALUES (null, '".$fec_ing."', '0', '".$stock."', '0', '0', '0', '0', '0', '0', '".$stock."', '".$id_enf."', '".$nro_id."' ) ";
 			$this->db->query($sql);
 		}
 		else{
@@ -162,17 +157,9 @@ class usuario extends Conectar{
 			}
 			$saldo = $otro[0]->saldo;
 			$total = $saldo + $stock;
-			$sql = "INSERT INTO registrodiario VALUES (null, '".$fec_ing."', '".$saldo."', '".$stock."', '".$total."', '0', '".$origen."', '0', '0', '0', '0', '0', '".$total."', '".$id_enf."', '".$id."' ) ";
+			$sql = "INSERT INTO salidainsumos VALUES (null, '".$fec_ing."', '".$saldo."', '".$total."', '0', '0', '0', '0', '0', '0', '".$total."', '".$id_enf."', '".$nro_id."' ) ";
 			$this->db->query($sql);
 		}
-
-		//$sql = "SELECT MAX(id_insumo) AS id FROM insumos where nombre=".$nombre." ";
-		//$dato = $this->db->query($sql);
-		//$num = $dato[0]->id;
-		//$sql = "SELECT MAX(id_reg_diario) as id, saldo  FROM registrodiariovacuna WHERE id_insumo = ".$num." ";
-		//if(!isset($datos)){
-			//$sql = "insert into registrodiariovacuna values (null, CURRENT_DATE(), 0, '".$tipo."','".$fec_ing."','".$fec_exp."','".$stock."','".$stock."','".$comprobante."','".$lote."','".$origen."','".$red."','".$estado."','".$id_enf."')";
-		//}
 	}
 
 	public function insertarDesechoVacuna(){
@@ -372,7 +359,7 @@ class usuario extends Conectar{
 		$id_enf = $_SESSION["id_enf"];
 		$id_pac = $_POST["id_pac"];
 		$id_ser = $_POST["servicio"];
-		$sql = "INSERT INTO registrahistoria VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$sql = "INSERT INTO historia VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 	}
 
@@ -391,7 +378,7 @@ class usuario extends Conectar{
 		$id_pac = $_POST["id_pac"];
 		$id_ser = $_POST["servicio"];
 		//registro en la historia clinica
-		$sql = "INSERT INTO registrahistoria VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
+		$sql = "INSERT INTO historia VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 		//verificacion de stock del insumo jeringas y vacunas (disponible - no disponible), update de cantidad disponible del insumo y asignacion de disponibilidad del insumo
 		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotvac."' and estado = 'usable' ";

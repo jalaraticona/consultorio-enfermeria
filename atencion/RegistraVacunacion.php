@@ -32,9 +32,9 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$costo = $datose[0]->costo;
 	$tipo = $datose[0]->tipo;
 
-	$sql = "SELECT * FROM insumos WHERE tipo = 'vacuna' ORDER BY (fec_exp) ASC";
+	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ins.id_insumo and ins.tipo = 'vacuna' ORDER BY (ing.fec_exp) ASC";
 	$vacunas = $u->GetDatosSql($sql);
-	$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ORDER BY (fec_exp) ASC";
+	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ins.id_insumo and ins.tipo = 'jeringa' ORDER BY (ing.fec_exp) ASC";
 	$jeringas = $u->GetDatosSql($sql);
 }
 if (isset($_POST["id_pac"])) {
