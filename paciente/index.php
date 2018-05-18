@@ -71,7 +71,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 			<!-- Main -->
 				<section id="main" class="container">
 					<header>
-						<h2>Lista de Pacientes Registrados</h2>
+						<h2>Pacientes Registrados</h2>
 					</header>
 					<div class="row">
 						<div class="12u">
@@ -79,7 +79,6 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 							<!-- Text -->
 							<section class="box">
 								<h4>Cantidad de pacientes registrados: <?php echo $cantidad[0]->cuantos ?> pacientes</h4>
-								<a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a>
 								<div class="table-wrapper">
 									<table class="alt">
 										<thead>
@@ -128,7 +127,7 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 											?>
 											<tr>
 												<td colspan="13">
-													<div class="pull-right">
+													<center>
 														<ul class="pagination">
 														    <li><a href="index.php">Primera Página</a></li>
 														    <?php 
@@ -168,12 +167,13 @@ $total_paginas = ceil($cantidad[0]->cuantos/$cant_por_pagina);
 														    ?>
 														    <li><a href="index.php?pagina=<?php echo $total_paginas; ?>">Ultima Pagina</a></li>
 														</ul>
-													</div>
+													</center>
 												</td>
 											</tr>
 										</tbody>
 									</table>
 								</div>
+								<center><a href="add.php" class="button small icon fa-plus" >Agregar Paciente</a></center>
 							</section>
 						</div>
 					</div>

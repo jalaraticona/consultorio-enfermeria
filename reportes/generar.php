@@ -14,7 +14,7 @@ $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8',
 
 // set document information
 $pdf->SetCreator(PDF_CREATOR);
-$pdf->SetAuthor('Unicersidad Mayor de San Andres - Facultad de Medicina, Enfermería, Nutrición y Tecnología Médica');
+$pdf->SetAuthor('Universidad Mayor de San Andres - Facultad de Medicina, Enfermería, Nutrición y Tecnología Médica');
 $pdf->SetTitle('Carrera de Enfermería');
 $pdf->SetSubject('TCPDF Tutorial');
 $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
@@ -106,7 +106,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo FROM registrahistoria as re, servicio as se WHERE re.id_servicio = se.id_servicio and year(re.fec_reg) = ".$anio_actual." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo FROM historia as re, servicio as se WHERE re.id_servicio = se.id_servicio and year(re.fec_reg) = ".$anio_actual." ";
 $datos = $u->GetDatosSql($sql);
 $cur = 0; $iny = 0; $ven = 0; $sue = 0; $vac = 0; $neb = 0;
 if(sizeof($datos) > 0){
@@ -175,7 +175,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'difteria' and year(re.fec_reg) = ".$anio_actual." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'difteria' and year(re.fec_reg) = ".$anio_actual." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -350,7 +350,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -481,7 +481,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -614,7 +614,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -693,7 +693,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo FROM registrahistoria as re, servicio as se WHERE re.id_servicio = se.id_servicio and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo FROM historia as re, servicio as se WHERE re.id_servicio = se.id_servicio and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
 $datos = $u->GetDatosSql($sql);
 $cur = 0; $iny = 0; $ven = 0; $sue = 0; $vac = 0; $neb = 0;
 if(sizeof($datos) > 0){
@@ -760,7 +760,7 @@ $tbl=<<<EOD
 </table>
 EOD;
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'difteria' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'difteria' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -937,7 +937,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'hepatitis b' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -1068,7 +1068,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'influenza estacional' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;
@@ -1201,7 +1201,7 @@ EOD;
 
 $pdf->writeHTML($tbl, true, false, false, false, '');
 
-$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM registrahistoria as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
+$sql = "SELECT re.fec_reg, se.clave, se.tipo, pa.sexo, re.dosis, re.lugar, pa.fec_nac FROM historia as re, servicio as se, paciente as pa WHERE re.id_servicio = se.id_servicio and pa.id_paciente = re.id_paciente and se.clave = 'fiebre amarilla' and year(re.fec_reg) = ".$anio_actual." and month(re.fec_reg) = ".$me." ";
 $datos = $u->GetDatosSql($sql);
 $prifefu = 0; $prifede = 0; $primafu = 0; $primade = 0;
 $segfefu = 0; $segfede = 0; $segmafu = 0; $segmade = 0;

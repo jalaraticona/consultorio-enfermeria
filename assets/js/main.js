@@ -88,6 +88,18 @@
 		}
 	});
 
+	$('#serv').change(function(){
+		var valor =$(this).val();
+		if((valor == '1') || (valor == '3')){
+			$('#unica').css('display','none');
+			$('#varias').css('display','block');
+		}
+		else{
+			$('#unica').css('display','block');
+			$('#varias').css('display','none');
+		}
+	});
+
 	$('#servicio').change(function(){
 		var valorCambiado =$(this).val();
 		if((valorCambiado == 'universitario') || (valorCambiado == 'docente')){

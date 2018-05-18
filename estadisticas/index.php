@@ -71,7 +71,7 @@ else{
 	$totales = array();
 	if($an == date('Y')) { $mee = date('m'); }
 	else { $mee = 12; }
-	$sql = "SELECT count(*) as total FROM registrahistoria WHERE YEAR(fec_reg) = ".$an." ";
+	$sql = "SELECT count(*) as total FROM historia WHERE YEAR(fec_reg) = ".$an." ";
 	$datos = $u->GetDatosSql($sql);
 	$total = (float) $datos[0]->total;
 	for($i = 1; $i <= sizeof($serv); $i++){
@@ -79,7 +79,7 @@ else{
 		$porce = array();
 		for ($j = 0; $j < $mee; $j++) {
 			$a = $j+1;
-			$sql = "SELECT count(*) as cant FROM registrahistoria WHERE YEAR(fec_reg) = ".$an." and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
+			$sql = "SELECT count(*) as cant FROM historia WHERE YEAR(fec_reg) = ".$an." and MONTH(fec_reg) = ".$a." and id_servicio = ".$i." ";
 			$datos = $u->GetDatosSql($sql);
 			$cantidad = $datos[0]->cant;
 			array_push($cant, (int) $cantidad);

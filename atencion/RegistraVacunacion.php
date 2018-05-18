@@ -32,9 +32,9 @@ if(isset($_GET["ci"]) and is_numeric($des)){
 	$costo = $datose[0]->costo;
 	$tipo = $datose[0]->tipo;
 
-	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ins.id_insumo and ins.tipo = 'vacuna' ORDER BY (ing.fec_exp) ASC";
+	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ing.id_insumo and ins.tipo = 'vacuna' ORDER BY (ing.fec_exp) ASC";
 	$vacunas = $u->GetDatosSql($sql);
-	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ins.id_insumo and ins.tipo = 'jeringa' ORDER BY (ing.fec_exp) ASC";
+	$sql = "SELECT * FROM ingresoinsumos as ing, insumos as ins WHERE ins.id_insumo = ing.id_insumo and ins.tipo = 'jeringa' ORDER BY (ing.fec_exp) ASC";
 	$jeringas = $u->GetDatosSql($sql);
 }
 if (isset($_POST["id_pac"])) {
@@ -115,7 +115,7 @@ if (isset($_POST["id_pac"])) {
 									<td>Vacuna proporcionada: </td>
 									<td>	
 										<div class="select-wrapper">
-										<select name="servicio" name="servicio" id="servicio">
+										<select name="serv" id="serv">
 											<option value="" selected>..:: Seleccione el tipo de vacuna ::..</option>
 										<?php
 										foreach ($datose as $dato) {
@@ -135,14 +135,20 @@ if (isset($_POST["id_pac"])) {
 									<td>Nro de dosis: </td>
 									<td>
 										<div class="select-wrapper">
-										<select name="dosis" id="dosis" disabled="true">
-											<option value="primera" selected>Dosis unica</option>
-											<option value="segunda">2da dosis</option>
-											<option value="tercera">3ra dosis</option>
-											<!--<option value="cuarta">4ta dosis</option>
-											<option value="quinta">5ta dosis</option>-->
-										</select></td>
+											<div id="unica">
+												<select name="dosis" id="dosis" style="display: block;">
+													<option value="primera" selected>Dosis unica</option>
+												</select>
+											</div>
+											<div id="varias">
+												<select name="dosis" id="dosis" style="display: block;">
+													<option value="primera" selected>Primera dosis</option>
+													<option value="segunda" selected>Segunda dosis</option>
+													<option value="tercera" selected>Tercera dosis</option>
+												</select>
+											</div>
 										</div>
+									</td>
 								</tr>
 								<tr>
 									<td>Lote de vacuna a aplicar: </td>
@@ -151,7 +157,7 @@ if (isset($_POST["id_pac"])) {
 											<option value="" selected>..:: Selecciones el lote de vacunas a usar ::..</option>
 											<?php
 											foreach ($vacunas as $data) {
-												$id_s = $data->id_insumo;
+												$id_s = $data->id_ingreso;
 											 	$nombre = $data->fec_exp." - ".$data->nombre." - ".$data->lote." - ".$data->cant_disp;
 											 	$estado = $data->estado;
 											 	if($estado == 'usable'){
@@ -169,7 +175,7 @@ if (isset($_POST["id_pac"])) {
 											<option value="" selected>..:: Selecciones el lote de jeringas a usar ::..</option>
 											<?php
 											foreach ($jeringas as $data) {
-												$id_s = $data->id_insumo;
+												$id_s = $data->id_ingreso;
 											 	$nombre = $data->fec_exp." - ".$data->nombre." - ".$data->medida." - ".$data->lote." - ".$data->cant_disp;
 											 	$estado = $data->estado;
 											 	if($estado == 'usable'){

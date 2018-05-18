@@ -296,8 +296,8 @@ class usuario extends Conectar{
 		//		where ci = '".$_GET["ci"]."'";
 		//$this->db->query($sql);
 	}
-	public function getDatoPorId($id_insumo){
-		$sql = "SELECT * FROM insumos WHERE id_insumo = '".$id_insumo."'";
+	public function getDatoPorId($id_ingreso){
+		$sql = "SELECT * FROM insumos AS ins, ingresoinsumos AS ing WHERE ins.id_insumo = ing.id_insumo AND id_iingreso = '".$id_ingreso."'";
 		$datos = $this->db->query($sql);
 		$arreglo = array();
 		while ($reg = $datos->fetch_object()) {
@@ -376,54 +376,50 @@ class usuario extends Conectar{
 		$lotjer = $_POST["lotejeringas"];
 		$id_enf = $_SESSION["id_enf"];
 		$id_pac = $_POST["id_pac"];
-		$id_ser = $_POST["servicio"];
+		$id_ser = $_POST["serv"];
 		//registro en la historia clinica
 		$sql = "INSERT INTO historia VALUES (null, '".$motivo."', CURRENT_DATE(), '".$lugar."', '".$dosis."', '".$id_enf."','".$id_pac."','".$id_ser."')";
 		$this->db->query($sql);
 		//verificacion de stock del insumo jeringas y vacunas (disponible - no disponible), update de cantidad disponible del insumo y asignacion de disponibilidad del insumo
-		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotvac."' and estado = 'usable' ";
+		$sql = "SELECT cant_disp, estado FROM ingresoinsumos WHERE id_ingreso = '".$lotvac."' AND estado = 'usable' ";
 		$vacuna = $this->db->query($sql);
 		$vac = array();
 		while ($reg = $vacuna->fetch_object()) {
 			$vac[] = $reg;
 		}
 		$res = $vac[0]->cant_disp-1;
-		$nomvac = $vac[0]->nombre;
-		$lotevacuna = $vac[0]->lote;
 		$estv = 'usable';
 		if($res == 0){
 			$estv = 'vacio';
 		}
-		$sql = "UPDATE insumos 
+		$sql = "UPDATE ingresoinsumos 
 				SET 
 				cant_disp = '".$res."',
 				estado = '".$estv."'
-				where id_insumo = '".$lotvac."' ";
+				where id_ingreso = '".$lotvac."' ";
 		$this->db->query($sql);
-		$sql = "SELECT cant_disp, estado, nombre, lote FROM insumos WHERE id_insumo = '".$lotjer."' and estado = 'usable' ";
+		$sql = "SELECT cant_disp, estado FROM ingresoinsumos WHERE id_ingreso = '".$lotjer."' and estado = 'usable' ";
 		$jeringa= $this->db->query($sql);
 		$jer = array();
 		while ($reg = $jeringa->fetch_object()) {
 			$jer[] = $reg;
 		}
 		$resj = $jer[0]->cant_disp-1;
-		$nomjer = $jer[0]->nombre;
-		$lotejeringa = $jer[0]->lote;
 		$estj = 'usable';
 		if($resj == 0){
 			$estj = 'vacio';
 		}
-		$sql = "update insumos 
+		$sql = "UPDATE ingresoinsumos 
 				set 
 				cant_disp = '".$resj."',
 				estado = '".$estj."'
-				where id_insumo = '".$lotjer."' ";
+				where id_ingreso = '".$lotjer."' ";
 		$this->db->query($sql);
 
 		//registro de vacunas y jeringas en el registro diario, verificacion de usabilidad
 		//VACUNAS
 		
-		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotvac."' )";
+		$sql = "SELECT * FROM salidainsumos WHERE id_salida = ( SELECT MAX(id_salida) FROM salidainsumos where id_ingreso = '".$lotvac."' )";
 		$datoo = $this->db->query($sql);
 		$dato = array();
 		while ($reg = $datoo->fetch_object()) {
@@ -431,21 +427,21 @@ class usuario extends Conectar{
 		}
 		if(sizeof($dato) > 0){
 			$fec_actual = date("Y-m-d");
-			$idreg = $dato[0]->id_reg_diario;
+			$idreg = $dato[0]->id_salida;
 			$salant = $dato[0]->sal_ant;
 			$canegr = $dato[0]->cant_egre;
 			$saldo = $dato[0]->saldo;
-			$regi = $dato[0]->fec_registro;
-			if($dato[0]->id_insumo == $lotvac){
+			$regi = $dato[0]->fec_reg;
+			if($dato[0]->id_ingreso == $lotvac){
 				//Si existe ya un registro en el dia
 				if ($regi == $fec_actual) {
 					$canegr++;
 					$saldo--;
-					$sql = "UPDATE registrodiario
+					$sql = "UPDATE salidainsumos
 							SET 
 							cant_egre = '".$canegr."',
 							saldo = '".$saldo."'
-							where id_reg_diario = '".$idreg."' ";
+							where id_salida = '".$idreg."' ";
 					$this->db->query($sql);
 				}
 				//si no existe un registro en el dia
@@ -453,7 +449,7 @@ class usuario extends Conectar{
 					$salant = $saldo;
 					$egreso = 1;
 					$saldo--;
-					$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
+					$sql = "INSERT INTO salidainsumos VALUES (null, CURRENT_DATE(), '".$salant."', '".$salant."', '".$egreso."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
 					$this->db->query($sql);
 				}
 			}
@@ -461,7 +457,7 @@ class usuario extends Conectar{
 				$salant = $saldo;
 				$egreso = 1;
 				$saldo--;
-				$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
+				$sql = "INSERT INTO salidainsumos VALUES (null, CURRENT_DATE(), '".$salant."', '".$salant."', '".$egreso."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotvac."'  )";
 				$this->db->query($sql);
 			}
 		}
@@ -469,7 +465,7 @@ class usuario extends Conectar{
 			print_r("Error 404");exit;
 		}
 
-		$sql = "SELECT id_reg_diario, fec_registro, sal_ant, cant_egre, saldo, id_insumo FROM registrodiario WHERE id_reg_diario = ( SELECT MAX(id_reg_diario) FROM registrodiario where id_insumo = '".$lotjer."' )";
+		$sql = "SELECT * FROM salidainsumos WHERE id_salida = ( SELECT MAX(id_salida) FROM salidainsumos where id_ingreso = '".$lotjer."' )";
 		$datoo = $this->db->query($sql);
 		$dato = array();
 		while ($reg = $datoo->fetch_object()) {
@@ -477,21 +473,21 @@ class usuario extends Conectar{
 		}
 		if(sizeof($dato) > 0){
 			$fec_actual = date("Y-m-d");
-			$idreg = $dato[0]->id_reg_diario;
+			$idreg = $dato[0]->id_salida;
 			$salant = $dato[0]->sal_ant;
 			$canegr = $dato[0]->cant_egre;
 			$saldo = $dato[0]->saldo;
-			$regi = $dato[0]->fec_registro;
-			if($dato[0]->id_insumo == $lotjer){
+			$regi = $dato[0]->fec_reg;
+			if($dato[0]->id_ingreso == $lotjer){
 				//Si existe ya un registro en el dia
 				if ($regi == $fec_actual) {
 					$canegr++;
 					$saldo--;
-					$sql = "UPDATE registrodiario
+					$sql = "UPDATE salidainsumos
 							SET 
 							cant_egre = '".$canegr."',
 							saldo = '".$saldo."'
-							where id_reg_diario = '".$idreg."' ";
+							where id_salida = '".$idreg."' ";
 					$this->db->query($sql);
 				}
 				//si no existe un registro en el dia
@@ -499,7 +495,7 @@ class usuario extends Conectar{
 					$salant = $saldo;
 					$egreso = 1;
 					$saldo--;
-					$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
+					$sql = "INSERT INTO salidainsumos VALUES (null, CURRENT_DATE(), '".$salant."', '".$salant."', '".$egreso."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
 					$this->db->query($sql);
 				}
 			}
@@ -507,7 +503,7 @@ class usuario extends Conectar{
 				$salant = $saldo;
 				$egreso = 1;
 				$saldo--;
-				$sql = "INSERT INTO registrodiario VALUES (null, CURRENT_DATE(), '".$salant."', '0', '".$salant."', '".$egreso."', '".$motivo."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
+				$sql = "INSERT INTO salidainsumos VALUES (null, CURRENT_DATE(), '".$salant."', '".$salant."', '".$egreso."', '0', '0', '0', '0', '0', '".$saldo."', '".$id_enf."', '".$lotjer."'  )";
 				$this->db->query($sql);
 			}
 		}

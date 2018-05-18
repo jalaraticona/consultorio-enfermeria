@@ -70,6 +70,9 @@ if(isset($_POST["guardar2"])){
 		if(a == 3){
 			alertify.warning('Registro de desechos exitoso.');
 		}
+		if(a == 4){
+			alertify.warning('No se tiene registro de uso del insumo.');
+		}
 		</script>
 		<div id="page-wrapper">
 
@@ -135,10 +138,7 @@ if(isset($_POST["guardar2"])){
 														<td><?php echo $dato->fec_exp?></td>
 														<td><?php echo $dato->cant_disp?></td>
 														<td><?php echo $dato->estado?></td>
-														<td><!--<a href="edit.php?id_insumo=<?php $enc = $u->encriptar($dato->id_insumo);
-														echo $enc;?>" class="icon fa-pencil">editar</a><br>
-														<a href="javascript:void(0);" onclick="eliminar('delete.php?id_insumo=<?php echo $dato->id_insumo?>');" class="icon fa-trash">eliminar</a>-->
-														<a href="usos.php?id=<?php echo $enc;?>" class="icon fa-pencil">Ver Uso</a></td>
+														<td><a href="usos.php?id=<?php echo $enc;?>" class="icon fa-pencil">Ver Uso</a></td>
 													</tr>
 													<?php
 												}
