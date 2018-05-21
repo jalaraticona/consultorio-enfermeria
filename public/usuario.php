@@ -327,6 +327,7 @@ class usuario extends Conectar{
 		return $arreglo;
 	}
 
+	//CONSULTAS SERVICIO
 	public function insertarServicio(){
 		$nom = trim($_POST["nombre"]);
 		$cla = trim($_POST["clave"]);
@@ -350,6 +351,26 @@ class usuario extends Conectar{
 		$sql = "INSERT INTO servicio VALUES (null, '".$cla."', '".$nom."', '".$dos."', '".$det."','".$cos."','".$tip."')";
 		$this->db->query($sql);
 	}
+
+	//CONSULTAS MATERIALES
+	public function insertarMaterial(){
+		$nom = trim($_POST["nombre"]);
+		$cla = trim($_POST["clave"]);
+		$tip = trim($_POST["tipo"]);
+		$sql = "INSERT INTO servicio VALUES (null, '".$cla."', '".$nom."', '".$dos."', '".$tip."')";
+		$this->db->query($sql);
+	}
+
+	public function upsateMaterial(){
+		$nom = trim($_POST["nombre"]);
+		$cla = trim($_POST["clave"]);
+		$tip = trim($_POST["tipo"]);
+		if($tip == "vacuna"){ $dos = trim($_POST["dosis"]); }
+		else{ $dos = 0; }
+		$sql = "INSERT INTO servicio VALUES (null, '".$cla."', '".$nom."', '".$dos."', '".$tip."')";
+		$this->db->query($sql);
+	}
+
 	//Historia consultas
 	//Insertar proceso enfermero
 	public function insertarHistoria(){

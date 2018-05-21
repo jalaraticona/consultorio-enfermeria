@@ -143,8 +143,8 @@ if (isset($_POST["id_pac"])) {
 											<div id="varias">
 												<select name="dosis" id="dosis" style="display: block;">
 													<option value="primera" selected>Primera dosis</option>
-													<option value="segunda" selected>Segunda dosis</option>
-													<option value="tercera" selected>Tercera dosis</option>
+													<option value="segunda" >Segunda dosis</option>
+													<option value="tercera" >Tercera dosis</option>
 												</select>
 											</div>
 										</div>

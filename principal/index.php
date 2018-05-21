@@ -179,6 +179,19 @@ if($sw == 1){
 				  	?>
 				</section>
 			</div>
+			<div class="features-row">
+				<section>
+					<?php 
+				  	if($_SESSION["tipo"] == "administrador"){
+				  	?>
+				  	<a href="../materiales" title=""><span class="fa-stack fa-3x"><i class="fas fa-square fa-stack-2x"></i><i class="fas fa-user-kit fa-stack-1x fa-inverse"></i></span></a>
+					<a href="../materiales" title=""><h3>Registro de materiales</h3></a>
+					<p>Puede agregar materiales para la base de datos y asi poder registrar los insumos nuevos.</p>
+				  	<?php
+				  	}
+				  	?>
+				</section>
+			</div>
 		</section>
 
 		<div id="openEdit" class="modalEdit">

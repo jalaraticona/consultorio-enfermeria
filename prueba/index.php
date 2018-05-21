@@ -83,7 +83,26 @@ if(isset($_POST["nombre"])){
 			-ms-user-select: none;
 		}
 	</style>
-	
+	<script type="text/javascript">
+function AbrirPopUp()
+{
+var strFeatures = "left=200,top=100,width=650,height=550,fullscreen=no"
+var Pagina = "Plan de control pop up.aspx";
+objNewWindow = window.open(Pagina,"newWin", strFeatures);
+objNewWindow.focus();
+}
+</script>
+
+
+<script language=javascript>
+function SimularPopUpModal()
+{
+if (window.opener.focus){
+window.opener.focus = false;
+self.focus();
+}
+}
+</script>
 	<title></title>
 	<style type="text/css" media="screen">
 		.social {
@@ -123,7 +142,7 @@ if(isset($_POST["nombre"])){
 
 	</style>
 </head>
-<body>
+<body onfocus="window.focus = true;">
 	<header id="header">
 					<h1>UNIVERSIDAD MAYOR DE SAN ANDRÉS - CARRERA DE ENFERMERÍA</h1>
 					<nav id="nav">
@@ -379,6 +398,10 @@ if(isset($_POST["nombre"])){
 		<input type="date" name="fecha" id="fecha">
 		<br>
 		<button type="submit">Enviar</button>
+		<input type="checkbox" id="copy" name="copy">
+		<label for="copy">Email me a copy of this message</label>
+		<input type="checkbox" id="human" name="human" checked>
+		<label for="human">I am a human and not a robot</label>
 	</form>
 
 	<section class="box">

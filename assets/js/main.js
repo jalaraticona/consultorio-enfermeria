@@ -100,6 +100,27 @@
 		}
 	});
 
+	$('#tipo').change(function(){
+		var valor =$(this).val();
+		if(valor == "servicios"){
+			$('#servicios').css('display','block');
+			$('#vacunas').css('display','none');
+			$('#jeringas').css('display','none');
+		}
+		else{
+			if(valor == "vacunas"){
+				$('#servicios').css('display','none');
+				$('#vacunas').css('display','block');
+				$('#jeringas').css('display','none');
+			}
+			else{
+				$('#servicios').css('display','none');
+				$('#vacunas').css('display','none');
+				$('#jeringas').css('display','block');
+			}
+		}
+	});
+
 	$('#servicio').change(function(){
 		var valorCambiado =$(this).val();
 		if((valorCambiado == 'universitario') || (valorCambiado == 'docente')){

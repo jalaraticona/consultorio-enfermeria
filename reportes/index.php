@@ -4,8 +4,14 @@ if(!isset($_SESSION["id_enf"])){
 	header("Location: ../index.php");
 }
 $u = new usuario();
-$sql = "SELECT * FROM servicio WHERE tipo = 'vacuna' ";
+$sql = "SELECT * FROM insumos WHERE tipo = 'vacuna' ";
 $vacunas = $u->GetDatosSql($sql);
+$sql = "SELECT * FROM insumos WHERE tipo = 'jeringa' ";
+$jeringas = $u->GetDatosSql($sql);
+$sql = "SELECT * FROM servicio WHERE tipo = 'vacuna' ";
+$serv_vac = $u->GetDatosSql($sql);
+$sql = "SELECT * FROM servicio WHERE tipo = 'proceso enfermero' ";
+$serv_jer = $u->GetDatosSql($sql);
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -37,71 +43,99 @@ $vacunas = $u->GetDatosSql($sql);
 		</nav>
 	</header>
 
-<!-- Main -->
+	<!-- Main -->
 	<section id="main" class="container">
-		<header>
-			<h2>Produccion de servicios</h2>
-		</header>
 		
 		<div class="row">
 			<div class="12u">
 
 				<section class="box">
 					<center><h2>Reportes de produccion de servicios</h2></center>
-					<br>
-					<h4>Por favor Seleccione las opciones para poder generar el reporte correspondiente.</h4>
-					<br>
 					<form action="generar.php" method="post" target="_blank">
-					<div class="row uniform 50%">
-							<div class="4u 12u(narrower)">
-								<label for="mes">Selecciona el Mes</label>
-								<select name="mes" >
-								<option value="0" selected>Todos los meses</option>
-								<?php 
-								$meses = array('enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','noviembre','diciembre');
-								$max = sizeof($meses);
-								$i = 0;
-								foreach ($meses as $val) {
-									$a = $i + 1;
-								    echo "<option value=".$a.">".$val."</option>";
-								    $i++;
-								}
-								?>
-								</select>
-							</div>
-							<div class="4u 12u(narrower)">
-								<label for="gestion">Selecciona la Gestión</label>
-								<select name="anio" >
-								<?php 
-								for ($i=2010; $i <= date("Y"); $i++) { 
-									if($i == date("Y")){
-										echo "<option value=".$i." selected>".$i."</option>";
-									}
-									else{
-										echo "<option value=".$i.">".$i."</option>";
-									}
-								}
-								?>
-								</select>
-							</div>
-							<div class="4u 12u(narrower)">
-								<label for="especificacion">tipo Informe</label>
-								<select name="tipo" id="tipo">
-									<option value="" selected>..:: Seleccione tipo ::..</option>
-									<option value="jeringas">Insumos (Jeringas)</option>
-									<?php
-									foreach ($vacunas as $dato) {
-										?>
-										<option value="<?php echo $dato->clave; ?>">Insumos (Vacuna <?php echo $dato->clave; ?>)</option>
-										<?php
-									}
-									?>
-									<option value="servicios">Produccion de Servicios</option>
-								</select>
-							</div>
-						</div>
-						<br>
-					<button type="submit" class="button">Generar Reporte</button>
+					<div class="table-wrapper">
+						<table>
+							<thead>
+								<tr>
+									<th colspan="4"><center><h4>Por favor Seleccione las opciones para poder generar el reporte correspondiente.</h4></center></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Fecha de inicio:</td>
+									<td><input type="date" name="inicio" id="inicio" ></td>
+									<td>Fecha de Final:</td>
+									<td><input type="date" name="final" id="final" ></td>
+								</tr>
+								<tr>
+									<td>Tipo de reporte:</td>
+									<td colspan="3">
+										<div class="select-wrapper">
+											<select name="tipo" id="tipo">
+												<option value="">..:: Sel. Opción ::..</option>
+												<option value="servicios">Reporte de Produccion de Servicios</option>
+												<option value="vacunas">Reporte de Estado de Vacunas</option>
+												<option value="jeringas">Reporte de Estado de Jeringas</option>
+											</select>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td>Tipo de Servicio: </td>
+									<td colspan="3">
+										<div id="servicios">
+											<?php 
+											$sql = "SELECT clave, nombre FROM servicio WHERE tipo = 'vacuna' ";
+											$datos = $u->GetDatosSql($sql);
+											foreach ($datos as $dato) {
+											 	?>
+											 	<h5><input type="checkbox" name="servi[]" id="servi[]" value="<?php echo $dato->clave; ?>"><?php echo $dato->nombre; ?></h5><br>
+											 	<?php
+											} 
+											?>
+										</div>
+									</td>
+										
+								</tr>
+								<tr>
+									<td>Tipo de Vacuna:</td>
+									<td colspan="3">
+									<div class="select-wrapper">
+										<div id="vacunas">
+											<select name="vac" id="vac">
+												<?php 
+												foreach ($vacunas as $dato) {
+												?>
+												<option value="<?php echo $dato->id_insumo; ?>"><?php echo $dato->nombre; ?></option>
+												<?php
+												}
+												?>
+											</select>
+										</div>
+									</td>
+									</div>
+								</tr>
+								<tr>
+									<td>Tipo de Jeringa:</td>
+									<td colspan="3">
+									<div id="jeringas">
+										<div class="select-wrapper">
+											<select name="jer" id="jer">
+												<?php 
+												foreach ($jeringas as $dato) {
+												?>
+												<option value="<?php echo $dato->id_insumo; ?>"><?php echo $dato->nombre; ?></option>
+												<?php
+												}
+												?>
+											</select>
+										</div>
+									</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<center><button type="submit" class="button">Generar Reporte</button></center>
 					</form>
 				</section>
 			</div>
